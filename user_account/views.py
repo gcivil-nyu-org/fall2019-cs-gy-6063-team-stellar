@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
-from .forms import UserSignUpForm
+from django.contrib.auth import login, authenticate,logout
+from .forms import UserSignUpForm,UserSignInForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -10,6 +10,10 @@ from .token_generator import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
+def index(request):
+    # if not request.session.get('is_login', None):
+    #     return redirect('/login/')
+    return render(request, 'index.html')
 
 def usersignup(request):
     if request.method == 'POST':
@@ -33,6 +37,38 @@ def usersignup(request):
     else:
         form = UserSignUpForm()
     return render(request, 'signup.html', {'form': form})
+def userlogin(request):
+    if request.session.get('is_login', None):  # no repeat log in
+        return redirect('/index/')
+    login_form = UserSignInForm(request.POST)
+    if login_form.is_valid():
+        username = login_form.cleaned_data.get('username')
+        password = login_form.cleaned_data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            print(user)
+            request.session['is_login'] = True
+            request.session['user_id'] = user.id
+            request.session['user_name'] = user.first_name
+            return redirect('/index/')
+            # Redirect to a success page.
+        else:
+            # Return an 'invalid login' error message.
+
+            message = 'Incorrect username or password!'
+            return render(request, 'login.html', locals())
+
+
+
+    return render(request, 'login.html', locals())
+def userlogout(request):
+    if not request.session.get('is_login', None):
+        # user must log in
+        return redirect("/login/")
+    request.session.flush()
+    logout(request)
+    return redirect("/login/")
 
 
 def activate_account(request, uidb64, token):
@@ -48,4 +84,7 @@ def activate_account(request, uidb64, token):
         return HttpResponse('Your account has been activate successfully')
     else:
         return HttpResponse('Activation link is invalid!')
+
+
+
 
