@@ -24,7 +24,7 @@ class UserSignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 class UserSignInForm(forms.Form):
-    username = forms.CharField(label="username", max_length=128,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Username",'autofocus': ''}))
-    password = forms.CharField(label="password", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder': "Password"}))
-    captcha = CaptchaField(label='verifycode')
+    username = forms.CharField(label="username", max_length=128,widget=forms.TextInput(attrs={'class': "input100", 'placeholder': "Username",'autofocus': ''}))
+    password = forms.CharField(label="password", max_length=256, widget=forms.PasswordInput(attrs={'class': "input100",'placeholder': "Password"}))
+    # captcha = CaptchaField(label='verifycode')
 

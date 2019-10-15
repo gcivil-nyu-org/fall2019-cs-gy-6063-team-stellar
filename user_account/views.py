@@ -58,10 +58,8 @@ def userlogin(request):
 
             message = 'Incorrect username or password!'
             return render(request, 'login.html', locals())
-
-
-
     return render(request, 'login.html', locals())
+
 def userlogout(request):
     if not request.session.get('is_login', None):
         # user must log in
