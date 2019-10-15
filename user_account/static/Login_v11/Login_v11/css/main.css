@@ -233,7 +233,7 @@ iframe {
 
 .login100-form-title {
   font-family: Raleway-Black;
-  font-size: 30px;
+  font-size: 20px;
   color: #333333;
   line-height: 1.2;
   text-transform: uppercase;
@@ -299,7 +299,14 @@ iframe {
     opacity: 0;
   }
 }
+.back-lunchninja {
+    margin-left: auto;
+    margin-right:auto;
+    display:block;
+  max-width:15%;
+  max-height:15%
 
+}
 .symbol-input100 {
   font-size: 24px;
   color: #999999;
