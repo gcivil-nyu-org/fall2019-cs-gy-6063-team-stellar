@@ -16,10 +16,11 @@ def index(request):
     return render(request, 'index.html')
 
 def usersignup(request):
+
     if request.method == 'POST':
-        form = UserSignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
+        signup_form = UserSignUpForm(request.POST)
+        if signup_form.is_valid():
+            user = signup_form.save(commit=False)
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
@@ -30,13 +31,13 @@ def usersignup(request):
                 'uid':  urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            to_email = form.cleaned_data.get('email')
+            to_email = signup_form.cleaned_data.get('email')
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
             return HttpResponse('We have sent you an email, please confirm your email address to complete registration')
     else:
-        form = UserSignUpForm()
-    return render(request, 'signup.html', {'form': form})
+        signup_form = UserSignUpForm()
+    return render(request, 'signup.html',locals())
 def userlogin(request):
     if request.session.get('is_login', None):  # no repeat log in
         return redirect('/index/')
