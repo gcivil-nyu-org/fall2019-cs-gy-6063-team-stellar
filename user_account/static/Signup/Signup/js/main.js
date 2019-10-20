@@ -33,6 +33,15 @@
                 return false;
             }
         }
+        else if($(input).attr('type') == 'password' || $(input).attr('name') == 'password'){
+            var newpwd = $(input).val();
+            var reg = /^.{4,16}$/;
+            var flag = reg.test(newpwd);
+if(flag == false){
+alert("新密码必须由 4-16位字母、数字、特殊符号线组成.");
+return false;
+
+        }
         else {
             if($(input).val().trim() == ''){
                 return false;

@@ -19,7 +19,9 @@ def usersignup(request):
 
     if request.method == 'POST':
         signup_form = UserSignUpForm(request.POST)
+        print(signup_form)
         if signup_form.is_valid():
+            print("AAAAAAAAAAAA")
             user = signup_form.save(commit=False)
             user.is_active = False
             user.save()
@@ -42,10 +44,12 @@ def userlogin(request):
     if request.session.get('is_login', None):  # no repeat log in
         return redirect('/index/')
     login_form = UserSignInForm(request.POST)
+
     if login_form.is_valid():
         username = login_form.cleaned_data.get('username')
         password = login_form.cleaned_data.get('password')
         user = authenticate(request, username=username, password=password)
+        print("AAAAAAAA")
         if user is not None:
             login(request, user)
             print(user)
