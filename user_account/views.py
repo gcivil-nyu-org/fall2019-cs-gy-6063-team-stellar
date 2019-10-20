@@ -57,14 +57,13 @@ def userlogin(request):
             message = 'Incorrect username or password!'
             return render(request, 'login.html', locals())
 
-
-
     return render(request, 'login.html', locals())
 
 def userlogout(request):
     if not request.session.get('is_login', None):
         # user must log in
         return redirect("/login/")
+
     request.session.flush()
     logout(request)
     return redirect("/login/")
@@ -75,6 +74,7 @@ def activate_account(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
+
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
