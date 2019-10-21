@@ -21,6 +21,7 @@ def usersignup(request):
         signup_form = UserSignUpForm(request.POST)
 
         error = signup_form.errors.get_json_data()
+        # print(signup_form)
         if signup_form.is_valid():
             user = signup_form.save(commit=False)
             user.is_active = False
@@ -57,7 +58,7 @@ def userlogin(request):
         username = login_form.cleaned_data.get('username')
         password = login_form.cleaned_data.get('password')
         user = authenticate(request, username=username, password=password)
-        print("AAAAAAAA")
+
         if user is not None:
             login(request, user)
             print(user)
