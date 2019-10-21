@@ -9,15 +9,21 @@ from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+import json
 
 def index(request):
+    # if not request.session.get('is_login', None):
+    #     return redirect('/login/')
     return render(request, 'index.html')
 
 def usersignup(request):
     if request.method == 'POST':
-        form = UserSignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
+        signup_form = UserSignUpForm(request.POST)
+
+        error = signup_form.errors.get_json_data()
+        # print(signup_form)
+        if signup_form.is_valid():
+            user = signup_form.save(commit=False)
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
@@ -28,22 +34,31 @@ def usersignup(request):
                 'uid':  urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            to_email = form.cleaned_data.get('email')
+            to_email = signup_form.cleaned_data.get('email')
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
             return HttpResponse('We have sent you an email, please confirm your email address to complete registration')
-    else:
-        form = UserSignUpForm()
-    return render(request, 'signup.html', {'form': form})
+        errordict={}
+        for key in error:
+            error_message=error[key]
+            messagetext = error_message[0]['message']
+            errordict[key]=messagetext
+        errordict['signup_form']= signup_form
+        return render(request, 'signup.html', errordict)
 
+    else:
+        signup_form = UserSignUpForm()
+        return render(request, 'signup.html',{'signup_form': signup_form})
 def userlogin(request):
     if request.session.get('is_login', None):  # no repeat log in
         return redirect('/index/')
     login_form = UserSignInForm(request.POST)
+
     if login_form.is_valid():
         username = login_form.cleaned_data.get('username')
         password = login_form.cleaned_data.get('password')
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
             print(user)
@@ -54,19 +69,19 @@ def userlogin(request):
             # Redirect to a success page.
         else:
             # Return an 'invalid login' error message.
-            message = 'Incorrect username or password!'
-            return render(request, 'login.html', locals())
 
+            message = 'Incorrect username or password!'
+            return render(request, 'login.html', {'login_form':login_form,'message':message})
     return render(request, 'login.html', locals())
 
 def userlogout(request):
     if not request.session.get('is_login', None):
         # user must log in
         return redirect("/login/")
-
     request.session.flush()
     logout(request)
     return redirect("/login/")
+
 
 def activate_account(request, uidb64, token):
     try:
@@ -74,7 +89,6 @@ def activate_account(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
