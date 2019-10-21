@@ -29,13 +29,18 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30">
-				<form class="login100-form validate-form" action="/signup/" method="post">
+				<form class="login100-form " action="/signup/" method="post">
+
                     {% csrf_token %}
                     <img  class="back-lunchninja" src="{% static 'Signup/Signup/images/background.png'%}" alt=" ">
 					<span class="login100-form-title p-t-30 p-b-15 ">
 						Sign up to lunch ninja
 					</span>
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Invalid username">
+                    {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                    {% endif %}
+
+					<div class="wrap-input100  m-b-16" data-validate = "Invalid username">
 {#                        <input class="input100" type="text" name="username" placeholder="Username">#}
                         {{signup_form.username}}
 						<span class="focus-input100"></span>
@@ -43,7 +48,10 @@
 							<span class="lnr lnr-user"></span>
 						</span>
 					</div>
-                    <div class="wrap-input100 validate-input m-b-16" data-validate = "Valid email is required: ex@abc.xyz">
+                        {% if username %}
+                          <div class="alert alert-warning">{{ username }}</div>
+                        {% endif %}
+                    <div class="wrap-input100  m-b-16" data-validate = "Valid email is required: ex@abc.xyz">
 {#						<input class="input100" type="text" name="email" placeholder="Email">#}
                         {{signup_form.email}}
 						<span class="focus-input100"></span>
@@ -51,7 +59,10 @@
 							<span class="lnr lnr-envelope"></span>
 						</span>
 					</div>
-                    <div class="wrap-input100 validate-input m-b-16" data-validate = "Enter first name">
+                         {% if email %}
+                          <div class="alert alert-warning">{{ email }}</div>
+                        {% endif %}
+                    <div class="wrap-input100  m-b-16" data-validate = "Enter first name">
 
 {#                        <input class="input100" type="text" name="username" placeholder="Username">#}
                         {{ signup_form.first_name }}
@@ -60,7 +71,10 @@
 							<span class="lnr lnr-users"></span>
 						</span>
 					</div>
-                    <div class="wrap-input100 validate-input m-b-16" data-validate = "Enter last name">
+                         {% if firstname %}
+                          <div class="alert alert-warning">{{ firstname }}</div>
+                        {% endif %}
+                    <div class="wrap-input100  m-b-16" data-validate = "Enter last name">
 
 {#                        <input class="input100" type="text" name="username" placeholder="Username">#}
                         {{ signup_form.last_name }}
@@ -69,8 +83,10 @@
 							<span class="lnr lnr-users"></span>
 						</span>
 					</div>
-                    <div class="wrap-input100 validate-input m-b-16" data-validate = "Enter Phone number">
-
+                        {% if lastname %}
+                          <div class="alert alert-warning">{{ lastname }}</div>
+                        {% endif %}
+                    <div class="wrap-input100  m-b-16" data-validate = "Enter Phone number">
 {#                        <input class="input100" type="text" name="username" placeholder="Username">#}
                         {{ signup_form.Phone }}
 						<span class="focus-input100"></span>
@@ -78,8 +94,10 @@
 							<span class="lnr lnr-smartphone"></span>
 						</span>
 					</div>
-                    <div class="wrap-input100 validate-input m-b-16" data-validate = "Enter school">
-
+                        {% if Phone %}
+                          <div class="alert alert-warning">{{ Phone }}</div>
+                        {% endif %}
+                    <div class="wrap-input100  m-b-16" data-validate = "Enter school">
 {#                        <input class="input100" type="text" name="username" placeholder="Username">#}
                         {{ signup_form.school }}
 						<span class="focus-input100"></span>
@@ -87,7 +105,10 @@
 							<span class="lnr lnr-book"></span>
 						</span>
 					</div>
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Enter department">
+                        {% if school %}
+                          <div class="alert alert-warning">{{ school }}</div>
+                        {% endif %}
+					<div class="wrap-input100  m-b-16" data-validate = "Enter department">
 
 {#                        <input class="input100" type="text" name="username" placeholder="Department">#}
                         {{ signup_form.department }}
@@ -96,9 +117,11 @@
 							<span class="lnr lnr-book"></span>
 						</span>
 					</div>
-
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Password is too short">
-{#						<input class="input100" type="password" name="pass" placeholder="Password">#}
+                        {% if department %}
+                          <div class="alert alert-warning">{{ department }}</div>
+                        {% endif %}
+					<div class="wrap-input100  m-b-16" data-validate = "Password is too short">
+{#						<input class="" type="password" name="pass" placeholder="Password">#}
                         {{ signup_form.password1 }}
 
 						<span class="focus-input100"></span>
@@ -106,7 +129,10 @@
 							<span class="lnr lnr-lock"></span>
 						</span>
 					</div>
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Password is too short">
+                         {% if password1 %}
+                          <div class="alert alert-warning">{{ password1 }}</div>
+                        {% endif %}
+					<div class="wrap-input100  m-b-16" data-validate = "Password is too short">
 {#						<input class="input100" type="password" name="pass" placeholder="Password">#}
                         {{ signup_form.password2 }}
 
@@ -115,7 +141,9 @@
 							<span class="lnr lnr-lock"></span>
 						</span>
 					</div>
-
+                         {% if password2 %}
+                          <div class="alert alert-warning">{{ password2 }}</div>
+                        {% endif %}
 					<div class="contact100-form-checkbox m-l-4">
 						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
 						<label class="label-checkbox100" for="ckb1">

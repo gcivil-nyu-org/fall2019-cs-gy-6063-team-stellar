@@ -36,7 +36,9 @@
 					<span class="login100-form-title p-t-30 p-b-15 ">
 						Login to lunch ninja
 					</span>
-
+                    {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                    {% endif %}
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Invalid username">
 
 {#                        <input class="input100" type="text" name="username" placeholder="Username">#}

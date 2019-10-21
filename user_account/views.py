@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+import json
 
 def index(request):
     # if not request.session.get('is_login', None):
@@ -16,12 +17,11 @@ def index(request):
     return render(request, 'index.html')
 
 def usersignup(request):
-
     if request.method == 'POST':
         signup_form = UserSignUpForm(request.POST)
-        print(signup_form)
+
+        error = signup_form.errors.get_json_data()
         if signup_form.is_valid():
-            print("AAAAAAAAAAAA")
             user = signup_form.save(commit=False)
             user.is_active = False
             user.save()
@@ -37,9 +37,17 @@ def usersignup(request):
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
             return HttpResponse('We have sent you an email, please confirm your email address to complete registration')
+        errordict={}
+        for key in error:
+            error_message=error[key]
+            messagetext = error_message[0]['message']
+            errordict[key]=messagetext
+        errordict['signup_form']= signup_form
+        return render(request, 'signup.html', errordict)
+
     else:
         signup_form = UserSignUpForm()
-    return render(request, 'signup.html',locals())
+        return render(request, 'signup.html',{'signup_form': signup_form})
 def userlogin(request):
     if request.session.get('is_login', None):  # no repeat log in
         return redirect('/index/')
@@ -62,7 +70,7 @@ def userlogin(request):
             # Return an 'invalid login' error message.
 
             message = 'Incorrect username or password!'
-            return render(request, 'login.html', locals())
+            return render(request, 'login.html', {'login_form':login_form,'message':message})
     return render(request, 'login.html', locals())
 
 def userlogout(request):
