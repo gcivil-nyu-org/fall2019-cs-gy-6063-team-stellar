@@ -9,14 +9,19 @@ class UserSignUpFormTest(TestCase):
 		form = UserSignUpForm()
 		self.assertTrue(form.fields['email'].label == None or form.fields['email'].label == 'email')
 
-	def test_email_text(self):
-		form = UserSignUpForm()
-		self.assertEqual(form.fields['email'].help_text, 'Required(NYU Email ID)')
+	# def test_email_text(self):
+	# 	form = UserSignUpForm()
+	# 	self.assertEqual(form.fields['email'].help_text, 'Required(NYU Email ID)')
 
 	def test_email_is_nyu(self):
 		data = {
-			'email':'up@nyu.edu',
 			'username':'testUser',
+			'email': 'up@nyu.edu',
+			'first_name':'donald',
+			'last_name':'trump',
+			'Phone':'1234567890',
+			'school':'other school',
+			'department':'other department',
 			'password1':'Pass12345',
 			'password2':'Pass12345',
 		}
@@ -25,8 +30,13 @@ class UserSignUpFormTest(TestCase):
 
 	def test_email_is_not_nyu(self):
 		data = {
-			'email':'up@usc.edu',
 			'username':'testUser',
+			'email': 'up@usc.edu',
+			'first_name':'donald',
+			'last_name':'trump',
+			'Phone':'1234567890',
+			'school':'other school',
+			'department':'other department',
 			'password1':'Pass12345',
 			'password2':'Pass12345',
 		}

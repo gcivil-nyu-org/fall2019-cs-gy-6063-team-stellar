@@ -19,7 +19,6 @@ def index(request):
 def usersignup(request):
     if request.method == 'POST':
         signup_form = UserSignUpForm(request.POST)
-
         error = signup_form.errors.get_json_data()
         # print(signup_form)
         if signup_form.is_valid():

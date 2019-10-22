@@ -2,3 +2,4 @@ gunicorn
 django-heroku
 django-simple-captcha
 phonenumbers
+mock
