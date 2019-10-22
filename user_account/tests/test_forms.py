@@ -33,6 +33,7 @@ class UserSignUpFormTest(TestCase):
 		form = UserSignUpForm(data=data)
 		self.assertFalse(form.is_valid())
 
+
 class UserSignInFormTest(TestCase):
 
 	def test_username(self):
@@ -45,7 +46,7 @@ class UserSignInFormTest(TestCase):
 		self.assertTrue(form.fields['password'].label == 'password')
 		self.assertTrue(form.fields['password'].max_length == 256)
 
-	def test_captcha_label(self):
-		form = UserSignInForm()
-		self.assertTrue(form.fields['captcha'].label == 'verifycode')
+	# def test_captcha_label(self):
+	# 	form = UserSignInForm()
+	# 	self.assertTrue(form.fields['captcha'].label == 'verifycode')
 
