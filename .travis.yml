@@ -2,7 +2,7 @@
 language: python
 
 python:
-  - 3.7
+  - 3.6
 
 install:
   # Get all of the dependencies you need
@@ -18,7 +18,7 @@ script:
   # should make the build pass or fail
   - black --check .
   - flake8 .
-  - coverage run --source=user_account manage.py test user_account\tests
+  - coverage run --source=user_account manage.py test user_account/tests
 
 after_script:
   - coveralls
