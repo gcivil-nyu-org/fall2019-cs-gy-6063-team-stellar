@@ -8,7 +8,11 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.contrib.auth.models import User
+
 from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model
+
+from .models import LunchNinjaUser
 
 
 def index(request):
@@ -21,11 +25,16 @@ def usersignup(request):
     if request.method == "POST":
         signup_form = UserSignUpForm(request.POST)
         error = signup_form.errors.get_json_data()
-        print(signup_form)
         if signup_form.is_valid():
             user = signup_form.save(commit=False)
             user.is_active = False
             user.save()
+            school = signup_form.cleaned_data.get('school')
+            department = signup_form.cleaned_data.get('department')
+            Phone = signup_form.cleaned_data.get('Phone')
+            user.school=school
+            user.department=department
+            user.Phone=Phone
             current_site = get_current_site(request)
             email_subject = "Activate Your Account"
             message = render_to_string(
@@ -97,8 +106,8 @@ def userlogout(request):
 def activate_account(request, uidb64, token):
     try:
         uid = force_bytes(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = LunchNinjaUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, LunchNinjaUser.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True

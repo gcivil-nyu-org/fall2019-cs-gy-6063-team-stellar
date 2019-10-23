@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import LunchNinjaUser
 
 
 class UserSignUpForm(UserCreationForm):
@@ -111,7 +112,7 @@ class UserSignUpForm(UserCreationForm):
         return user
 
     class Meta:
-        model = User
+        model = LunchNinjaUser
         fields = (
             "username",
             "first_name",
@@ -139,4 +140,18 @@ class UserSignInForm(forms.Form):
             attrs={"class": "input100", "placeholder": "Password"}
         ),
     )
+
+    class Meta:
+        model = LunchNinjaUser
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "Phone",
+            "school",
+            "email",
+            "password1",
+            "password2",
+        )
+
     # captcha = CaptchaField(label='verifycode')

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from user_account.token_generator import account_activation_token
-from django.contrib.auth.models import User
+
 import mock
 
 
@@ -83,7 +83,7 @@ class ValidateViewTest(TestCase):
         return userObj()
 
     @mock.patch("user_account.views.login")
-    @mock.patch("user_account.views.User.objects.get", side_effect=get_user_obj)
+    @mock.patch("user_account.views.LunchNinjaUser.objects.get", side_effect=get_user_obj)
     @mock.patch(
         "user_account.token_generator.account_activation_token.check_token",
         side_effect=check_token,

@@ -14,10 +14,10 @@ class LunchNinjaUser(AbstractUser):
     Username, password and email are required. Other fields are optional.
     """
 
-
     Phone = models.CharField(max_length=20)
     school = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
+
     class Meta(AbstractUser.Meta):
-        swappable = 'AUTH_USER_MODEL'
+        pass
 
