@@ -111,6 +111,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# extension user
+AUTH_USER_MODEL = 'user_account.LunchNinjaUser'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -123,5 +125,5 @@ EMAIL_HOST = "smtp.mailtrap.io"
 EMAIL_HOST_USER = "c3ad93d6737c1e"
 EMAIL_HOST_PASSWORD = "f5a014dcafbc59"
 EMAIL_PORT = "2525"
-
+# heroku settings
 django_heroku.settings(locals())
