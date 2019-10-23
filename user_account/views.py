@@ -7,10 +7,8 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .token_generator import account_activation_token
-from django.contrib.auth.models import User
-
 from django.core.mail import EmailMessage
-from django.contrib.auth import get_user_model
+
 
 from .models import LunchNinjaUser
 
@@ -29,12 +27,12 @@ def usersignup(request):
             user = signup_form.save(commit=False)
             user.is_active = False
             user.save()
-            school = signup_form.cleaned_data.get('school')
-            department = signup_form.cleaned_data.get('department')
-            Phone = signup_form.cleaned_data.get('Phone')
-            user.school=school
-            user.department=department
-            user.Phone=Phone
+            school = signup_form.cleaned_data.get("school")
+            department = signup_form.cleaned_data.get("department")
+            Phone = signup_form.cleaned_data.get("Phone")
+            user.school = school
+            user.department = department
+            user.Phone = Phone
             current_site = get_current_site(request)
             email_subject = "Activate Your Account"
             message = render_to_string(

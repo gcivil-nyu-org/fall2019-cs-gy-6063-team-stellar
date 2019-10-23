@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+
 from .models import LunchNinjaUser
 
 
@@ -90,7 +90,7 @@ class UserSignUpForm(UserCreationForm):
         # valid phone numbers US number only
         data = self.cleaned_data["Phone"]
         try:
-            phonenumber = int(data)
+            int(data)
             if not len(data) == 10:
                 raise forms.ValidationError("Please enter a Valid Phone Number")
         except Exception:

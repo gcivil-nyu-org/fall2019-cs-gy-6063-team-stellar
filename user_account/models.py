@@ -17,4 +17,3 @@ class LunchNinjaUser(AbstractUser):
 
     class Meta(AbstractUser.Meta):
         pass
-
