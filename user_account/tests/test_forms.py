@@ -1,13 +1,12 @@
 from django.test import TestCase
 from user_account.forms import UserSignUpForm, UserSignInForm
-from django import forms
 
 
 class UserSignUpFormTest(TestCase):
     def test_email_label(self):
         form = UserSignUpForm()
         self.assertTrue(
-            form.fields["email"].label == None or form.fields["email"].label == "email"
+            form.fields["email"].label is None or form.fields["email"].label == "email"
         )
 
     # def test_email_text(self):

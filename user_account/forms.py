@@ -1,8 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
-import phonenumbers
 
 
 class UserSignUpForm(UserCreationForm):
@@ -88,13 +86,13 @@ class UserSignUpForm(UserCreationForm):
 
     def clean_Phone(self):
 
-        ### valid phone numbers US number only
+        # valid phone numbers US number only
         data = self.cleaned_data["Phone"]
         try:
             phonenumber = int(data)
             if not len(data) == 10:
                 raise forms.ValidationError("Please enter a Valid Phone Number")
-        except:
+        except Exception:
             raise forms.ValidationError("Please enter a Valid Phone Number")
         return data
 

@@ -3,13 +3,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import UserSignUpForm, UserSignInForm
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-import json
 
 
 def index(request):
@@ -42,7 +41,8 @@ def usersignup(request):
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
             return HttpResponse(
-                "We have sent you an email, please confirm your email address to complete registration"
+                "We have sent you an email, "
+                "please confirm your email address to complete registration"
             )
         errordict = {}
         for key in error:

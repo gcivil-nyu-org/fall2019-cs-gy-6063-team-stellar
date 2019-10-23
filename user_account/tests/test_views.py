@@ -13,10 +13,6 @@ class SignupViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
-        response = self.client.get(reverse("signup"))
-        self.assertEqual(response.status_code, 200)
-
-    def test_view_url_accessible_by_name(self):
         response = self.client.get("/signup/")
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "signup.html")
@@ -50,10 +46,6 @@ class SignupViewTest(TestCase):
 class LoginViewTest(TestCase):
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get("/login/")
-        self.assertEqual(response.status_code, 200)
-
-    def test_view_url_accessible_by_name(self):
-        response = self.client.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
