@@ -129,5 +129,5 @@ EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_HOST_USER = 'c3ad93d6737c1e'
 EMAIL_HOST_PASSWORD = 'f5a014dcafbc59'
 EMAIL_PORT = '2525'
-
-django_heroku.settings(locals())
+django_heroku.settings(locals(), test_runner=False)
+# django_heroku.settings(locals())
