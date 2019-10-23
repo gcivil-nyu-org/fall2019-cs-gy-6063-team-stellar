@@ -2,3 +2,7 @@ gunicorn
 django-heroku
 django-simple-captcha
 mock
+flake8
+black
+coverage
+coveralls

@@ -1,0 +1,25 @@
+
+
+language: python
+
+python:
+  - 3.7
+
+install:
+  # Get all of the dependencies you need
+  - pip install -r requirements.txt
+
+before_script:
+  # Execute all of the commands which need to be executed
+  # before running actual tests
+  - python manage.py migrate
+
+script:
+  # Execute all of the commands which
+  # should make the build pass or fail
+  - black --check .
+  - flake8 .
+  - coverage run --source=user_account manage.py test user_account/tests
+
+after_script:
+  - coveralls
