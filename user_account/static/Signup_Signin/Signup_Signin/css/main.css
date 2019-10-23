@@ -149,6 +149,7 @@ iframe {
 
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
+
 .txt1 {
   font-family: Raleway-Regular;
   font-size: 16px;
@@ -541,7 +542,13 @@ iframe {
   visibility: visible;
   opacity: 1;
 }
-
+.back-lunchninja {
+    margin-left: auto;
+    margin-right:auto;
+    display:block;
+  max-width:15%;
+  max-height:15%
+}
 @media (max-width: 992px) {
   .alert-validate::before {
     visibility: visible;

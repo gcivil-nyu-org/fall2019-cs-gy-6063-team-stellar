@@ -32,8 +32,10 @@
 				<form class="login100-form " action="/signup/" method="post">
 
                     {% csrf_token %}
-                    <img  class="back-lunchninja" src="{% static 'Signup_Signin/Signup_Signin/images/background.png'%}" alt=" ">
-					<span class="login100-form-title p-t-30 p-b-15 ">
+
+					<img class="back-lunchninja" src="{% static 'Signup_Signin/Signup_Signin/images/background.png'%}" alt=" ">
+
+                    <span class="login100-form-title p-t-30 p-b-15 ">
 						Sign up to lunch ninja
 					</span>
                     {% if message %}
