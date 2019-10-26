@@ -43,6 +43,7 @@ def importschool():
     conn.close()
     return ()
 
+
 def importdepartment():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(database="lunchninja", host="localhost")
@@ -65,6 +66,7 @@ def importdepartment():
     conn.close()
     return ()
 
+
 def importrestaurant():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(database="lunchninja", host="localhost")
@@ -86,9 +88,9 @@ def importrestaurant():
         ]  # tandon, college of art and science , nursing
         for i in dr3:
             if (
-                    i["Latitude"] in ("", None)
-                    or i["Longitude"] in ("", None)
-                    or i["SCORE"] in ("", None)
+                i["Latitude"] in ("", None)
+                or i["Longitude"] in ("", None)
+                or i["SCORE"] in ("", None)
             ):
                 continue
             latitude = float(i["Latitude"])
@@ -129,6 +131,7 @@ def importrestaurant():
     conn.close()
     return ()
 
+
 def importcuisine():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(database="lunchninja", host="localhost")
@@ -140,10 +143,7 @@ def importcuisine():
     count = cur.fetchall()
     id = 0
     for each in count:
-        cur.execute(
-            "INSERT INTO school (name, id) VALUES (%s, %s)",
-            (each, id),
-        )
+        cur.execute("INSERT INTO school (name, id) VALUES (%s, %s)", (each, id))
         id = id + 1
 
     conn.commit()
