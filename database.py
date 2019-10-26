@@ -22,23 +22,13 @@ def deg2rad(deg):
     return deg * (math.pi / 180)
 
 
-def main():
+def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(database="lunchninja", host="localhost")
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
-
     cur.execute("DROP TABLE IF EXISTS school")
-    cur.execute("DROP TABLE IF EXISTS department")
-    cur.execute("DROP TABLE IF EXISTS restaurant")
     cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
-    cur.execute(
-        "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
-    )
-    cur.execute(
-        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode VARCHAR, phone VARCHAR, latitude VARCHAR, longitude VARCHAR)"
-    )
-
     filepath = "datasource/School.csv"
     with open(filepath, "r") as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
@@ -49,6 +39,19 @@ def main():
                 (i["schoolname"], i["id"]),
             )
 
+    conn.commit()
+    conn.close()
+    return ()
+
+def importdepartment():
+    # let postgres start: pg_ctl -D /usr/local/var/postgres start
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS department")
+    cur.execute(
+        "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
+    )
     filepath2 = "datasource/Department.csv"
     with open(filepath2, "r") as fin2:  # `with` statement available in 2.5+
         dr2 = csv.DictReader(fin2)  # comma is default delimiter
@@ -58,6 +61,19 @@ def main():
                 (i["departmentname"], i["School"], i["id"], i["Description"]),
             )
 
+    conn.commit()
+    conn.close()
+    return ()
+
+def importrestaurant():
+    # let postgres start: pg_ctl -D /usr/local/var/postgres start
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS restaurant")
+    cur.execute(
+        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode VARCHAR, phone VARCHAR, latitude VARCHAR, longitude VARCHAR)"  # noqa: E501
+    )
     filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
     with open(filepath3, "r") as fin3:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
@@ -70,9 +86,9 @@ def main():
         ]  # tandon, college of art and science , nursing
         for i in dr3:
             if (
-                i["Latitude"] in ("", None)
-                or i["Longitude"] in ("", None)
-                or i["SCORE"] in ("", None)
+                    i["Latitude"] in ("", None)
+                    or i["Longitude"] in ("", None)
+                    or i["SCORE"] in ("", None)
             ):
                 continue
             latitude = float(i["Latitude"])
@@ -86,7 +102,7 @@ def main():
                 )
                 if distance <= 1.5:
                     cur.execute(
-                        "INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",  # noqa: E501
                         (
                             i["CAMIS"],
                             i["DBA"],
@@ -101,11 +117,6 @@ def main():
                             i["Longitude"],
                         ),
                     )
-
-    #    cur.execute("SELECT COUNT(*) FROM restaurant")
-    #    count = cur.fetchall()
-    #    print(count)
-
     cur.execute(
         "DELETE FROM restaurant a USING restaurant b WHERE a.score > b.score AND a.id = b.id"
     )
@@ -114,12 +125,37 @@ def main():
         "DELETE FROM restaurant a WHERE a.ctid <> (SELECT min(b.ctid) FROM   restaurant b WHERE  a.id = b.id)"
     )
 
-    #    cur.execute("SELECT COUNT(*) FROM restaurant")
-    #    count = cur.fetchall()
-    #    print(count)
+    conn.commit()
+    conn.close()
+    return ()
+
+def importcuisine():
+    # let postgres start: pg_ctl -D /usr/local/var/postgres start
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS cuisine")
+    cur.execute("CREATE TABLE cuisine (name VARCHAR, id INTEGER)")
+    cur.execute("SELECT DISTINCT cuisine FROM restaurant")
+    count = cur.fetchall()
+    id = 0
+    for each in count:
+        cur.execute(
+            "INSERT INTO school (name, id) VALUES (%s, %s)",
+            (each, id),
+        )
+        id = id + 1
 
     conn.commit()
     conn.close()
+    return ()
+
+
+def main():
+    importschool()
+    importdepartment()
+    importrestaurant()
+    importcuisine()
     return ()
 
 
