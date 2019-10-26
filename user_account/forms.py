@@ -3,8 +3,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import LunchNinjaUser
 import psycopg2
-import csv
-from psycopg2 import sql
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
@@ -126,11 +124,11 @@ class UserSignUpForm(UserCreationForm):
         cur.execute("SELECT name  FROM school")
         count = cur.fetchall()
         # print(count)
-        l = []
+        schoollist = []
         for i in count:
-            l.append((i[0], i[0]))
+            schoollist.append((i[0], i[0]))
         # print(l)
-        return l
+        return schoollist
 
     def grabdepartment(self, schoolid):
         conn = psycopg2.connect(database="lunchninja", host="localhost")
@@ -139,11 +137,11 @@ class UserSignUpForm(UserCreationForm):
         cur.execute("SELECT name  FROM department")
         count = cur.fetchall()
         # print(count)
-        l = []
+        departmentlist = []
         for i in count:
-            l.append((i[0], i[0]))
+            departmentlist.append((i[0], i[0]))
         # print(l)
-        return l
+        return departmentlist
 
     class Meta:
         model = LunchNinjaUser

@@ -1,8 +1,6 @@
 import psycopg2
 import csv
 import math
-import ast
-from psycopg2 import sql
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
