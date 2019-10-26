@@ -4,8 +4,7 @@
 .DS_Store
 .AppleDouble
 .LSOverride
-
-staticfiles/admin/
+src/
 
 #Editor 
 .idea
