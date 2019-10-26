@@ -2,6 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import LunchNinjaUser
+import psycopg2
+import csv
+from psycopg2 import sql
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 class UserSignUpForm(UserCreationForm):
@@ -85,6 +89,11 @@ class UserSignUpForm(UserCreationForm):
         ),
     )
 
+    def __init__(self, *args, **kwargs):
+        super(UserSignUpForm, self).__init__(*args, **kwargs)
+        self.fields['school'] = forms.ChoiceField(
+            choices=self.grabdata())
+
     def clean_Phone(self):
 
         # valid phone numbers US number only
@@ -110,6 +119,20 @@ class UserSignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+    def grabdata(self):
+        conn = psycopg2.connect(database="lunchninja", host="localhost");
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT);
+        cur = conn.cursor()
+        cur.execute('SELECT name  FROM school')
+        count = cur.fetchall()
+        # print(count)
+        l = []
+        for i in count:
+            l.append((i[0],i[0]))
+        # print(l)
+        return l
+
 
     class Meta:
         model = LunchNinjaUser
