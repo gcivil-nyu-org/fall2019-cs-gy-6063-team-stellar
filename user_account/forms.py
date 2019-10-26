@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import LunchNinjaUser
 
 
+
 class UserSignUpForm(UserCreationForm):
 
     SchoolChoice = (

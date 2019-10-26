@@ -128,4 +128,3 @@ EMAIL_PORT = "2525"
 # heroku settings
 
 django_heroku.settings(locals(), test_runner=False)
-# django_heroku.settings(locals())
