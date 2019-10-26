@@ -6,82 +6,123 @@ from psycopg2 import sql
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
-
 # Thanks to https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
-def getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2):
-    R = 6371 # Radius of the earth in km
-    dLat = deg2rad(lat2-lat1)  # deg2rad below
-    dLon = deg2rad(lon2-lon1)
-    a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2) * math.sin(dLon/2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a));
-    d = R * c;  # Distance in km
+def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
+    R = 6371  # Radius of the earth in km
+    dLat = deg2rad(lat2 - lat1)  # deg2rad below
+    dLon = deg2rad(lon2 - lon1)
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) + math.cos(deg2rad(lat1)) * math.cos(
+        deg2rad(lat2)
+    ) * math.sin(dLon / 2) * math.sin(dLon / 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    d = R * c
+    # Distance in km
     return d
 
+
 def deg2rad(deg):
-    return deg * (math.pi/180)
+    return deg * (math.pi / 180)
 
 
 def main():
-    #let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost");
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT);
+    # let postgres start: pg_ctl -D /usr/local/var/postgres start
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
 
-    cur.execute('DROP TABLE IF EXISTS school')
-    cur.execute('DROP TABLE IF EXISTS department')
-    cur.execute('DROP TABLE IF EXISTS restaurant')
-    cur.execute('CREATE TABLE school (name VARCHAR, id INTEGER)')
-    cur.execute('CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)')
-    cur.execute('CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode VARCHAR, phone VARCHAR, latitude VARCHAR, longitude VARCHAR)')
+    cur.execute("DROP TABLE IF EXISTS school")
+    cur.execute("DROP TABLE IF EXISTS department")
+    cur.execute("DROP TABLE IF EXISTS restaurant")
+    cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
+    cur.execute(
+        "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
+    )
+    cur.execute(
+        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode VARCHAR, phone VARCHAR, latitude VARCHAR, longitude VARCHAR)"
+    )
 
-    filepath = 'datasource/School.csv'
-    with open(filepath,'r') as fin: # `with` statement available in 2.5+
-    # csv.DictReader uses first line in file for column headings by default
-        dr = csv.DictReader(fin) # comma is default delimiter
+    filepath = "datasource/School.csv"
+    with open(filepath, "r") as fin:  # `with` statement available in 2.5+
+        # csv.DictReader uses first line in file for column headings by default
+        dr = csv.DictReader(fin)  # comma is default delimiter
         for i in dr:
-            cur.execute("INSERT INTO school (name, id) VALUES (%s, %s)",(i['schoolname'], i['id']))
+            cur.execute(
+                "INSERT INTO school (name, id) VALUES (%s, %s)",
+                (i["schoolname"], i["id"]),
+            )
 
-
-    filepath2 = 'datasource/Department.csv'
-    with open(filepath2,'r') as fin2: # `with` statement available in 2.5+
-        dr2 = csv.DictReader(fin2) # comma is default delimiter
+    filepath2 = "datasource/Department.csv"
+    with open(filepath2, "r") as fin2:  # `with` statement available in 2.5+
+        dr2 = csv.DictReader(fin2)  # comma is default delimiter
         for i in dr2:
-            cur.execute("INSERT INTO department (name, school, id, description) VALUES (%s, %s, %s, %s)",(i['departmentname'], i['School'], i['id'], i['Description']))
+            cur.execute(
+                "INSERT INTO department (name, school, id, description) VALUES (%s, %s, %s, %s)",
+                (i["departmentname"], i["School"], i["id"], i["Description"]),
+            )
 
-    filepath3 = 'datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv'
-    with open(filepath3,'r') as fin3: # `with` statement available in 2.5+
-    # csv.DictReader uses first line in file for column headings by default
-        dr3 = csv.DictReader(fin3) # comma is default delimiter
+    filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
+    with open(filepath3, "r") as fin3:  # `with` statement available in 2.5+
+        # csv.DictReader uses first line in file for column headings by default
+        dr3 = csv.DictReader(fin3)  # comma is default delimiter
         lat = [40.694340, 40.729010, 40.737570]
-        log = [-73.986110, -73.996470, -73.978070] #tandon, college of art and science , nursing
+        log = [
+            -73.986110,
+            -73.996470,
+            -73.978070,
+        ]  # tandon, college of art and science , nursing
         for i in dr3:
-            if i['Latitude'] in ("", None) or i['Longitude'] in ("", None) or i['SCORE'] in ("", None):
+            if (
+                i["Latitude"] in ("", None)
+                or i["Longitude"] in ("", None)
+                or i["SCORE"] in ("", None)
+            ):
                 continue
-            latitude = float(i['Latitude'])
-            longitude = float(i['Longitude'])
-            score = int(i['SCORE'])
+            latitude = float(i["Latitude"])
+            longitude = float(i["Longitude"])
+            score = int(i["SCORE"])
             if score > 30:
                 continue
             for j in range(3):
-                distance = getDistanceFromLatLonInKm(lat[j], log[j], latitude, longitude)
+                distance = getDistanceFromLatLonInKm(
+                    lat[j], log[j], latitude, longitude
+                )
                 if distance <= 1.5:
-                    cur.execute("INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(i['CAMIS'], i['DBA'],i['CUISINE DESCRIPTION'],i['SCORE'], i['BORO'], i['BUILDING'], i['STREET'], i['ZIPCODE'], i['PHONE'], i['Latitude'], i['Longitude']))
-    
-    
-#    cur.execute("SELECT COUNT(*) FROM restaurant")
-#    count = cur.fetchall()
-#    print(count)
-    
-    cur.execute("DELETE FROM restaurant a USING restaurant b WHERE a.score > b.score AND a.id = b.id")
-    
-    cur.execute("DELETE FROM restaurant a WHERE a.ctid <> (SELECT min(b.ctid) FROM   restaurant b WHERE  a.id = b.id)")
-    
-#    cur.execute("SELECT COUNT(*) FROM restaurant")
-#    count = cur.fetchall()
-#    print(count)
-        
+                    cur.execute(
+                        "INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (
+                            i["CAMIS"],
+                            i["DBA"],
+                            i["CUISINE DESCRIPTION"],
+                            i["SCORE"],
+                            i["BORO"],
+                            i["BUILDING"],
+                            i["STREET"],
+                            i["ZIPCODE"],
+                            i["PHONE"],
+                            i["Latitude"],
+                            i["Longitude"],
+                        ),
+                    )
+
+    #    cur.execute("SELECT COUNT(*) FROM restaurant")
+    #    count = cur.fetchall()
+    #    print(count)
+
+    cur.execute(
+        "DELETE FROM restaurant a USING restaurant b WHERE a.score > b.score AND a.id = b.id"
+    )
+
+    cur.execute(
+        "DELETE FROM restaurant a WHERE a.ctid <> (SELECT min(b.ctid) FROM   restaurant b WHERE  a.id = b.id)"
+    )
+
+    #    cur.execute("SELECT COUNT(*) FROM restaurant")
+    #    count = cur.fetchall()
+    #    print(count)
+
     conn.commit()
     conn.close()
-    return()
-    
+    return ()
+
+
 main()

@@ -136,7 +136,7 @@ class UserSignUpForm(UserCreationForm):
         conn = psycopg2.connect(database="lunchninja", host="localhost")
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = conn.cursor()
-        cur.execute("SELECT name  FROM department WHERE")
+        cur.execute("SELECT name  FROM department")
         count = cur.fetchall()
         # print(count)
         l = []
