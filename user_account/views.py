@@ -61,7 +61,7 @@ def usersignup(request):
 
     else:
         signup_form = UserSignUpForm()
-        signup_form.grabdata()
+        signup_form.grabschool()
         return render(request, "signup.html", {"signup_form": signup_form})
 
 
