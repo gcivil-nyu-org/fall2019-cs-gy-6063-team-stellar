@@ -3,6 +3,10 @@ language: python
 python:
   - 3.7
 
+
+services:
+  - postgresql
+  
 install:
   # Get all of the dependencies you need
   - pip install -r requirements.txt
@@ -12,6 +16,7 @@ before_script:
   # before running actual tests
   - python manage.py migrate
   - python manage.py collectstatic
+  - psql -c 'create database lunchninja;' -U postgres
 
 script:
   # Execute all of the commands which

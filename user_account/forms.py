@@ -120,11 +120,24 @@ class UserSignUpForm(UserCreationForm):
             user.save()
         return user
 
-    def grabdata(self):
+    def grabschool(self):
         conn = psycopg2.connect(database="lunchninja", host="localhost");
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT);
         cur = conn.cursor()
         cur.execute('SELECT name  FROM school')
+        count = cur.fetchall()
+        # print(count)
+        l = []
+        for i in count:
+            l.append((i[0],i[0]))
+        # print(l)
+        return l
+
+    def grabdepartment(self, schoolid):
+        conn = psycopg2.connect(database="lunchninja", host="localhost");
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT);
+        cur = conn.cursor()
+        cur.execute('SELECT name  FROM departmen')
         count = cur.fetchall()
         # print(count)
         l = []
