@@ -1,4 +1,4 @@
-﻿Name,School,id,Description
+departmentname,School,id,Description
 Africana Studies,1,1,
 American Studies,1,2,
 Anthropology,1,3,
@@ -291,4 +291,5 @@ Producing,11,289,
 Game Design,11,290,
 Interactive Media Arts,11,291,
 Dramatic Writing,11,292,
-Cinema Studies,11,293,
+Music Theatre,11,293,
+Interactive Telecommunication,11,294,
