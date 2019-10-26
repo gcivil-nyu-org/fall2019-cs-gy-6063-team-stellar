@@ -91,8 +91,7 @@ class UserSignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserSignUpForm, self).__init__(*args, **kwargs)
-        self.fields['school'] = forms.ChoiceField(
-            choices=self.grabschool())
+        self.fields["school"] = forms.ChoiceField(choices=self.grabschool())
 
     def clean_Phone(self):
 
@@ -121,31 +120,30 @@ class UserSignUpForm(UserCreationForm):
         return user
 
     def grabschool(self):
-        conn = psycopg2.connect(database="lunchninja", host="localhost");
-        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT);
+        conn = psycopg2.connect(database="lunchninja", host="localhost")
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = conn.cursor()
-        cur.execute('SELECT name  FROM school')
+        cur.execute("SELECT name  FROM school")
         count = cur.fetchall()
         # print(count)
         l = []
         for i in count:
-            l.append((i[0],i[0]))
+            l.append((i[0], i[0]))
         # print(l)
         return l
 
     def grabdepartment(self, schoolid):
-        conn = psycopg2.connect(database="lunchninja", host="localhost");
-        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT);
+        conn = psycopg2.connect(database="lunchninja", host="localhost")
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = conn.cursor()
-        cur.execute('SELECT name  FROM department WHERE')
+        cur.execute("SELECT name  FROM department WHERE")
         count = cur.fetchall()
         # print(count)
         l = []
         for i in count:
-            l.append((i[0],i[0]))
+            l.append((i[0], i[0]))
         # print(l)
         return l
-
 
     class Meta:
         model = LunchNinjaUser
