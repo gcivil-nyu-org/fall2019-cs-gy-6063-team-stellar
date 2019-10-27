@@ -31,16 +31,16 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link " data-toggle="modal" data-target="#myModal1" href="#myModal1">Services</a>
+                        <a class="service-type nav-link" data-toggle="modal" data-target="#myModal1" href="#myModal1">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#portfolio">Setting</a>
+                        <a class="nav-link" >Setting</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">History</a>
+                        <a class="nav-link">History</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#team">Logout</a>
+                        <a class="nav-link">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -57,7 +57,15 @@
         </div>
     </header>
     <!-- Pop-up models -->
-    {% include "service_pop_up.html" %}
+{#    <form method="post" action="">#}
+{#    {% csrf_token %}#}
+{#    {% include "service_pop_up.html" %}#}
+    {% include "service.html" %}
+    {% include "school.html" %}
+    {% include "cuisine.html" %}
+    {% include "confirm.html" %}
+{#    </form>#}
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -124,5 +132,22 @@ $("div[id^='myModal']").each(function() {
 
 });
 </script>
+
+
+{% block extrascripts %}
+  <script type="text/javascript">
+    $(function () {
+      // Log in & Sign up buttons
+      $(".service-type").modalForm({formURL: "{% url 'service' %}"});
+      $(".school-type").modalForm({formURL: "{% url 'school' %}"});
+
+      // Hide message
+      $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+      });
+
+    });
+  </script>
+{% endblock extrascripts %}
 
 </html>

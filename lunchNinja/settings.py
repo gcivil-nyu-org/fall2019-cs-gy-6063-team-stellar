@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "captcha",
+    "bootstrap_modal_forms",
 ]
 
 MIDDLEWARE = [
