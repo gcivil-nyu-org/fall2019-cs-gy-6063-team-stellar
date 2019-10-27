@@ -24,13 +24,13 @@ def deg2rad(deg):
 
 def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS school")
     cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
     filepath = "datasource/School.csv"
-    with open(filepath, "r") as fin:  # `with` statement available in 2.5+
+    with open(filepath, "r", encoding='UTF-8') as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
         for i in dr:
@@ -46,7 +46,7 @@ def importschool():
 
 def importdepartment():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS department")
@@ -54,7 +54,7 @@ def importdepartment():
         "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
     )
     filepath2 = "datasource/Department.csv"
-    with open(filepath2, "r") as fin2:  # `with` statement available in 2.5+
+    with open(filepath2, "r", encoding='UTF-8') as fin2:  # `with` statement available in 2.5+
         dr2 = csv.DictReader(fin2)  # comma is default delimiter
         for i in dr2:
             cur.execute(
@@ -69,7 +69,7 @@ def importdepartment():
 
 def importrestaurant():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS restaurant")
@@ -77,7 +77,7 @@ def importrestaurant():
         "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode VARCHAR, phone VARCHAR, latitude VARCHAR, longitude VARCHAR)"  # noqa: E501
     )
     filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
-    with open(filepath3, "r") as fin3:  # `with` statement available in 2.5+
+    with open(filepath3, "r", encoding='UTF-8') as fin3:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr3 = csv.DictReader(fin3)  # comma is default delimiter
         lat = [40.694340, 40.729010, 40.737570]
@@ -134,7 +134,7 @@ def importrestaurant():
 
 def importcuisine():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")

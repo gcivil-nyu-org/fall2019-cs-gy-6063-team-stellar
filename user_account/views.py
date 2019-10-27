@@ -61,7 +61,6 @@ def usersignup(request):
 
     else:
         signup_form = UserSignUpForm()
-        signup_form.grabschool()
         return render(request, "signup.html", {"signup_form": signup_form})
 
 
@@ -77,7 +76,6 @@ def userlogin(request):
 
         if user is not None:
             login(request, user)
-            print(user)
             request.session["is_login"] = True
             request.session["user_id"] = user.id
             request.session["user_name"] = user.first_name

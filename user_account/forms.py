@@ -5,17 +5,43 @@ from .models import LunchNinjaUser
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+def grabschool():
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='123456')
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("SELECT name  FROM school")
+    count = cur.fetchall()
+    # print(count)
+    schoollist = []
+    for i in count:
+        schoollist.append((i[0], i[0]))
+    # print(l)
+    return tuple(schoollist)
+
+def grabdepartment():
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='123456')
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+
+    cur = conn.cursor()
+    cur.execute("SELECT name  FROM department")
+    count = cur.fetchall()
+    # print(count)
+    departmentlist = []
+    for i in count:
+        departmentlist.append((i[0], i[0]))
+    # print(l)
+    return tuple(departmentlist)
+
+
+
+
+
 
 class UserSignUpForm(UserCreationForm):
 
-    SchoolChoice = (
-        ("tandon school", "tandon school"),
-        ("other school", "other school"),
-    )
-    DepartmentChoice = (
-        ("Computer Science", "computer science"),
-        ("other department", "other"),
-    )
+    SchoolChoice = grabschool()
+    DepartmentChoice = grabdepartment()
+
     username = forms.CharField(
         label="username",
         max_length=128,
@@ -89,7 +115,8 @@ class UserSignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserSignUpForm, self).__init__(*args, **kwargs)
-        self.fields["school"] = forms.ChoiceField(choices=self.grabschool())
+        # print(self.grabschool())
+        # self.fields["school"] = forms.ChoiceField(choices=self.grabschool())
 
     def clean_Phone(self):
 
@@ -117,31 +144,6 @@ class UserSignUpForm(UserCreationForm):
             user.save()
         return user
 
-    def grabschool(self):
-        conn = psycopg2.connect(database="lunchninja", host="localhost")
-        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-        cur = conn.cursor()
-        cur.execute("SELECT name  FROM school")
-        count = cur.fetchall()
-        # print(count)
-        schoollist = []
-        for i in count:
-            schoollist.append((i[0], i[0]))
-        # print(l)
-        return schoollist
-
-    def grabdepartment(self, schoolid):
-        conn = psycopg2.connect(database="lunchninja", host="localhost")
-        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-        cur = conn.cursor()
-        cur.execute("SELECT name  FROM department")
-        count = cur.fetchall()
-        # print(count)
-        departmentlist = []
-        for i in count:
-            departmentlist.append((i[0], i[0]))
-        # print(l)
-        return departmentlist
 
     class Meta:
         model = LunchNinjaUser
