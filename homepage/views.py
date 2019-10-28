@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from .models import UserRequest
 from .forms import ServiceForm
+from django.views import generic
 from bootstrap_modal_forms.generic import (BSModalLoginView,
                                            BSModalCreateView,
                                            BSModalUpdateView,
@@ -11,9 +12,15 @@ from bootstrap_modal_forms.generic import (BSModalLoginView,
                                            BSModalDeleteView)
 from django.urls import reverse_lazy
 
-# Create your views here.
-def index(request):
-    return render(request, "homepage.html")
+
+class Index(generic.ListView):
+    model = UserRequest
+    context_object_name = 'request'
+    template_name = 'homepage.html'
+
+# # Create your views here.
+# def index(request):
+#     return render(request, "homepage.html")
 
 
 # class UserRequestView(BSModalCreateView):
@@ -21,7 +28,6 @@ def index(request):
 
 
 class ServicetypeView(BSModalCreateView):
-    model = UserRequest
     form_class = ServiceForm
     template_name ='/templates/service.html'
     success_message = 'service was chosen.'
@@ -30,9 +36,10 @@ class ServicetypeView(BSModalCreateView):
 
 
 class SchoolView(BSModalCreateView):
-
     model = UserRequest
     template_name ='/templates/school.html'
+    success_message = 'school was chosen.'
+    success_url = reverse_lazy('index')
 
 class CuisinetypeView(BSModalCreateView):
     model = UserRequest

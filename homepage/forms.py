@@ -4,27 +4,30 @@ from .models import UserRequest
 from bootstrap_modal_forms.forms import BSModalForm
 
 class ServiceForm(BSModalForm):
-    ServiceChoice = (
-        ("Daily", "Daily"),
-        ("Weekly", "Weekly"),
-        ("Monthly", "Monthly"),
-    )
+    # ServiceChoice = (
+    #     ("Daily", "Daily"),
+    #     ("Weekly", "Weekly"),
+    #     ("Monthly", "Monthly"),
+    # )
+    #
+    # user_id = forms.IntegerField()
+    #
+    # service = forms.ChoiceField(
+    #     label="service",
+    #     required= True,
+    #     help_text="True",
+    #     choices=ServiceChoice,
+    #     widget=forms.Select(
+    #         attrs={"class": "input100", "placeholder": "school", "autofocus": ""}
+    #     ),
+    # )
 
-    service_type = service = forms.ChoiceField(
-        label="service",
-        required=False,
-        help_text="True",
-        choices=ServiceChoice,
-        widget=forms.Select(
-            attrs={"class": "input100", "placeholder": "school", "autofocus": ""}
-        ),
-    )
-    def __init__(self, *args, **kwargs):
-        super(ServiceForm, self).__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super(ServiceForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = UserRequest
-        exclude = ['user_id', 'timestamp', 'exp_time', 'cuisine']
+        fields = ['user_id', 'service_type']
 
 
 
@@ -60,7 +63,7 @@ class SchoolForm(BSModalForm):
 
     class Meta:
         model = UserRequest
-        exclude = ['school', 'department']
+        fields = ['school', 'department']
 
 
 # class UserRequestForm(BSModalForm):

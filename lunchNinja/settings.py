@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "captcha",
     "bootstrap_modal_forms",
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [
