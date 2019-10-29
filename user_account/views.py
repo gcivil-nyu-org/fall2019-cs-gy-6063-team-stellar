@@ -147,8 +147,8 @@ def usersignup(request):
 
 
 def userlogin(request):
-    if request.session.get("is_login", None):  # no repeat log in
-        return redirect("/homepage")
+    # if request.session.get("is_login", None):  # no repeat log in
+    #     return redirect("/homepage")
     login_form = UserSignInForm(request.POST)
 
     if login_form.is_valid():
@@ -174,12 +174,8 @@ def userlogin(request):
 
 
 def userlogout(request):
-    if not request.session.get("is_login", None):
-        # user must log in
-        return render(request, "error.html", locals())
     request.session.flush()
-    logout(request)
-    return render(request, "error.html", locals())
+    return redirect("/login/")
 
 
 def activate_account(request, uidb64, token):

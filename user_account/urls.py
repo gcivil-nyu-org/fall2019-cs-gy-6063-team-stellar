@@ -11,7 +11,6 @@ urlpatterns = [
         name="activate",
     ),
     path("signup/", views.usersignup),
-    # path("index/", views.index),
     path("login/", views.userlogin),
     path("logout/", views.userlogout),
 
