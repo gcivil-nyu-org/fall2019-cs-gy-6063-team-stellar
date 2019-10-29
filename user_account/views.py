@@ -10,7 +10,8 @@ from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
 import csv
-
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from .models import LunchNinjaUser
 
 
@@ -18,40 +19,73 @@ def index(request):
     # if not request.session.get('is_login', None):
     #     return redirect('/login/')
     return render(request, "index.html")
+def retrieveschool():
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("SELECT name,id FROM school")
+    count = cur.fetchall()
+    # print(count)
+    conn.commit()
+    conn.close()
+    return count
 
+def retrievedepartment():
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
+    # id = cur.fetchone()
+    sqlline = "SELECT name,school FROM department"
+    cur.execute(sqlline)
+    count = cur.fetchall()
+    # print(count)
+    conn.commit()
+    conn.close()
+    return count
 
-def merge(school,department):
-    with open(school, 'r', encoding='utf-8') as in_f1, open(department, 'r', encoding='utf-8') as in_f2:
-        read_school=csv.reader(in_f1)
-        read_department=csv.reader(in_f2)
-        schoollists=[]
-        departmentlists=[]
-        for i in read_school:
-            schoollists.append(i)
-        for i in read_department:
-            departmentlists.append(i)
+def merge():
+    # with open(school, 'r', encoding='utf-8') as in_f1, open(department, 'r', encoding='utf-8') as in_f2:
+    #     read_school=csv.reader(in_f1)
+    #     read_department=csv.reader(in_f2)
+    #     schoollists=[]
+    #     departmentlists=[]
+    #     for i in read_school:
+    #         schoollists.append(i)
+    #     for i in read_department:
+    #         departmentlists.append(i)
+        schoollists=retrieveschool()
+        departmentlists=retrievedepartment()
+        # print(schoollists)
+        # print(departmentlists)
         school_department={}
         id_school={}
         department_school={}
         school=[]
         department=[]
-        for schoolitem in schoollists[1:]:
+        for schoolitem in schoollists:
             school.append(schoolitem[0])
-            id_school[schoolitem[1]] = schoolitem[0]
+            id_school[str(schoolitem[1])] = schoolitem[0]
             school_department[schoolitem[0]] = []
-        for departmentitem in departmentlists[1:]:
+        for departmentitem in departmentlists:
+
             department=departmentitem[0]
-            school_department[id_school[departmentitem[1]]].append(departmentitem[0])
-            department_school[departmentitem[0]]=[id_school[departmentitem[1]]]
+            school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
+            department_school[departmentitem[0]]=[id_school[str(departmentitem[1])]]
 
         school_department['select school']=department
+
+        # print(school_department)
+        # print(department_school)
         return school,department,school_department,department_school
+
+
 
 
 
 def usersignup(request):
     #get creat school_department dict
-    schoolist,departmentlist,school_departments, depatment_school = merge('.\\datasource\\School.csv', '.\\datasource\\Department.csv')
+    schoolist,departmentlist,school_departments, depatment_school = merge()
     if request.method == "POST":
         signup_form = UserSignUpForm(request.POST)
         error = signup_form.errors.get_json_data()

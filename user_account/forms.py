@@ -5,56 +5,51 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import csv
 
-def grabschool():
-    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='123456')
+def retrieveschool():
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
-    cur.execute("SELECT name  FROM school")
+    cur.execute("SELECT name,id FROM school")
     count = cur.fetchall()
     # print(count)
-    schoollist = []
-    for i in count:
-        schoollist.append((i[0], i[0]))
-    # print(l)
-    return tuple(schoollist)
+    conn.commit()
+    conn.close()
+    return count
 
-def grabdepartment():
-    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='123456')
+def retrievedepartment():
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-
     cur = conn.cursor()
-    cur.execute("SELECT name  FROM department")
+    # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
+    # id = cur.fetchone()
+    sqlline = "SELECT name,school FROM department"
+    cur.execute(sqlline)
     count = cur.fetchall()
     # print(count)
-    departmentlist = []
-    for i in count:
-        departmentlist.append((i[0], i[0]))
+    conn.commit()
+    conn.close()
+    return count
 
-
-    return tuple(departmentlist)
-
-def creat_school_tuple(school_csv):
-    with open(school_csv,'r',encoding='utf-8') as in_f1:
-        read_school = csv.reader(in_f1)
+def creat_school_tuple():
         schoollist=[]
+        read_school=retrieveschool()
         for s in read_school:
             schoollist.append((s[0],s[0]))
         schoollist[0]=('select school','select school')
         return tuple(schoollist)
-def creat_department_tuple(department_csv):
-    with open(department_csv,'r',encoding='utf-8') as in_f1:
-        read_department = csv.reader(in_f1)
+def creat_department_tuple():
         departmentlist=[]
+        read_department=retrievedepartment()
         for s in read_department:
             departmentlist.append((s[0],s[0]))
         departmentlist[0]=('select department','select department')
         return tuple(departmentlist)
 class UserSignUpForm(UserCreationForm):
 
-    SchoolChoice = creat_school_tuple('datasource\\School.csv')
-    print(SchoolChoice)
-    DepartmentChoice = creat_department_tuple('datasource\\Department.csv')
-    print(DepartmentChoice)
+    SchoolChoice = creat_school_tuple()
+
+    DepartmentChoice = creat_department_tuple()
+
 
     username = forms.CharField(
         label="username",

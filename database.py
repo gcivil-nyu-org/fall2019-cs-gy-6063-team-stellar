@@ -24,7 +24,7 @@ def deg2rad(deg):
 
 def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS school")
@@ -46,7 +46,7 @@ def importschool():
 
 def importdepartment():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS department")
@@ -69,7 +69,7 @@ def importdepartment():
 
 def importrestaurant():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS restaurant")
@@ -134,7 +134,7 @@ def importrestaurant():
 
 def importcuisine():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='123456')
+    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")
@@ -143,19 +143,45 @@ def importcuisine():
     count = cur.fetchall()
     id = 0
     for each in count:
-        cur.execute("INSERT INTO school (name, id) VALUES (%s, %s)", (each, id))
+        cur.execute("INSERT INTO cuisine (name, id) VALUES (%s, %s)", (each, id))
         id = id + 1
 
     conn.commit()
     conn.close()
     return ()
 
+def retrieveschool():
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("SELECT name,id FROM school")
+    count = cur.fetchall()
+    print(count)
+    conn.commit()
+    conn.close()
+    return ()
+
+def retrievedepartment(schoolname):
+    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
+    # id = cur.fetchone()
+    sqlline = "SELECT name,school FROM department"
+    cur.execute(sqlline)
+    count = cur.fetchall()
+    print(count)
+    conn.commit()
+    conn.close()
+    return ()
 
 def main():
     importschool()
     importdepartment()
     importrestaurant()
     importcuisine()
+    retrieveschool()
+    retrievedepartment('Tandon School of Engineering')
     return ()
 
 
