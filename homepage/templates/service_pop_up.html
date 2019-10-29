@@ -45,9 +45,10 @@
          </div>
          <div class="modal-body">
             <form role="form" id="schoolform" action="/school/" method="post" class="registration-form">
-               <fieldset>
-                  <div class="form-top">
-                     <div class="form-top-left">
+                {% csrf_token %}
+                <fieldset>
+                    <div class="form-top">
+                        <div class="form-top-left">
                         <h3>Step 2 / 3</h3>
                         <p>Select school and department preference</p>
                         <div>
@@ -79,7 +80,7 @@
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button type="button" class="btn btn-default btn-next">Next</button>
+            <button type="submit" form="schoolform" value="Submit" class="btn btn-default btn-next">Next</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
          </div>
       </div>
@@ -95,27 +96,28 @@
             <h4 class="modal-title" id="myModalLabel">Select preferred cuisine</h4>
          </div>
          <div class="modal-body">
-            <form>
-               <fieldset>
+            <form role="form" id="cuisineform" action="/cuisine/" method="post" class="registration-form">
+               {% csrf_token %}
+                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
                         <h3>Step 3 / 3</h3>
                         <p>Select Cuisine:</p>
                      </div>
-                     <div class="form-top-right">
-                        <i class="fa fa-twitter"></i>
+                     <div >
+                        <select type="text" id="cuisine" name="cuisine">
+                              <option selected>Burger</option>
+                              <option>Pizza</option>
+                              <option>Italian</option>
+                        </select>
                      </div>
                   </div>
-                  <!--  <div class="form-bottom">
-                     <button type="button" class="btn btn-previous">Previous</button>
-                     <button type="submit" class="btn">Sign me up!</button>
-                  </div> -->
                </fieldset>
             </form>
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button type="button" class="btn btn-default btn-next" id="submitServices">Submit</button>
+            <button type="submit" form="cuisineform" value="Submit" class="btn btn-default btn-next" id="submitServices">Submit</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
          </div>
       </div>
