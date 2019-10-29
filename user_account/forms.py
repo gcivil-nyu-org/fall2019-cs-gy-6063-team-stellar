@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-
 from .models import LunchNinjaUser
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import csv
 
 def grabschool():
     conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='123456')
@@ -29,18 +29,32 @@ def grabdepartment():
     departmentlist = []
     for i in count:
         departmentlist.append((i[0], i[0]))
-    # print(l)
+
+
     return tuple(departmentlist)
 
-
-
-
-
-
+def creat_school_tuple(school_csv):
+    with open(school_csv,'r',encoding='utf-8') as in_f1:
+        read_school = csv.reader(in_f1)
+        schoollist=[]
+        for s in read_school:
+            schoollist.append((s[0],s[0]))
+        schoollist[0]=('select school','select school')
+        return tuple(schoollist)
+def creat_department_tuple(department_csv):
+    with open(department_csv,'r',encoding='utf-8') as in_f1:
+        read_department = csv.reader(in_f1)
+        departmentlist=[]
+        for s in read_department:
+            departmentlist.append((s[0],s[0]))
+        departmentlist[0]=('select department','select department')
+        return tuple(departmentlist)
 class UserSignUpForm(UserCreationForm):
 
-    SchoolChoice = grabschool()
-    DepartmentChoice = grabdepartment()
+    SchoolChoice = creat_school_tuple('datasource\\School.csv')
+    print(SchoolChoice)
+    DepartmentChoice = creat_department_tuple('datasource\\Department.csv')
+    print(DepartmentChoice)
 
     username = forms.CharField(
         label="username",
