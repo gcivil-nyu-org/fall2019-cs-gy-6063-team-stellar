@@ -1,4 +1,3 @@
-{% load widget_tweaks %}
 
 <div class="modal fade" id="myModal1"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
@@ -8,47 +7,65 @@
             <h4 class="modal-title" id="myModalLabel">Type of service</h4>
          </div>
          <div class="modal-body">
-             <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
-                 {% for error in form.non_field_errors %}
-                     {{ error }}
-                 {% endfor %}
-             </div>
-
-             {% for field in form %}
-                 <div class="form-group">
-                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                     {% render_field field class="form-control" placeholder=field.label %}
-                     {% empty %}
-                        <p>Form is empty!</p>
-                     <div class="{% if field.errors %} invalid{% endif %}">
-                         {% for error in field.errors %}
-                             <p class="help-block">{{ error }}</p>
-                         {% endfor %}
-                     </div>
-                 </div>
-             {% endfor %}
-
-{#            <form role="form" action="" name="service" method="post" class="registration-form">#}
-{#               <fieldset style="display: block;">#}
-{#                  <div class="form-top">#}
-{#                     <div class="form-top-left">#}
-{#                        <h3>Step 1 / 3</h3>#}
-{#                        Select your preferred type of service:#}
-{#                        <div class="dropdown">#}
-{#                           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"#}
-{#                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#                           Dropdown button#}
-{#                           </button>#}
-{#                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
-{#                              <a class="dropdown-item" href="#">Daily</a>#}
-{#                              <a class="dropdown-item" href="#">Weekly</a>#}
-{#                              <a class="dropdown-item" href="#">Monthly</a>#}
-{#                           </div>#}
-{#                        </div>#}
+{#             <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">#}
+{#                 {% for error in form.non_field_errors %}#}
+{#                     {{ error }}#}
+{#                 {% endfor %}#}
+{#             </div>#}
+{##}
+{#             {% for field in form %}#}
+{#                 <div class="form-group">#}
+{#                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>#}
+{#                     {% render_field field class="form-control" placeholder=field.label %}#}
+{#                     {% empty %}#}
+{#                        <p>Form is empty!</p>#}
+{#                     <div class="{% if field.errors %} invalid{% endif %}">#}
+{#                         {% for error in field.errors %}#}
+{#                             <p class="help-block">{{ error }}</p>#}
+{#                         {% endfor %}#}
 {#                     </div>#}
-{#                  </div>#}
-{#               </fieldset>#}
-{#            </form>#}
+{#                 </div>#}
+{#             {% endfor %}#}
+
+            <form role="form" action="service" name="service" method="post" class="registration-form">
+                {% csrf_token %}
+                <input class="span2" id="service_type" name="service_type" type="hidden">
+                <fieldset style="display: block;">
+                    <div class="form-top">
+                        <div class="form-top-left">
+                            <h3>Step 1 / 3</h3>
+                            Select your preferred type of service:
+                            <div class="dropdown">#}
+                            <select name = 'service-type'>
+                                <option selected="selected" disabled>Objects on page:</option>
+                                <option value="Daily">Daily</option>
+                                <option value="Weekly">Weekly</option>
+                                <option value="Monthly">Monthly</option>
+                            </select>
+                            </div>
+{#                            <div class="dropdown">#}
+{#                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"#}
+{#                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                                    Dropdown button#}
+{#                                </button>#}
+{##}
+{#                                <ul class="dropdown-menu">#}
+{#                                    <li onclick="$('#service_type').val('Daily'); $('#service').submit()"> Daily </li>#}
+{#                                    <li> Monthly </li>#}
+{#                                    <a class="dropdown-item" href="#">Daily</a>#}
+{#                                </ul>#}
+{#                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+{#                                    <a onclick="$('#service_type').val('Daily')"> Daily </a>#}
+{#                                    <a class="dropdown-item" href="#">Daily</a>#}
+{#                                    <a class="dropdown-item" href="#">Weekly</a>#}
+{#                                    <a class="dropdown-item" href="#">Monthly</a>#}
+{#                                </div>#}
+{#                            </div>#}
+                        </div>
+                    </div>
+                    <input type="submit" value="OK">
+                </fieldset>
+            </form>
 
          </div>
          <div class="modal-footer">
@@ -59,3 +76,9 @@
       </div>
    </div>
 </div>
+{##}
+{#<script type="text/javascript">#}
+{#    $('#mymodal').on('hidden.bs.modal', function() {#}
+{#    this.modal('show');#}
+{#    });#}
+{#</script>#}

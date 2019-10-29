@@ -7,6 +7,7 @@ class LunchNinjaUser(AbstractUser):
     """
     Users within the Django authentication system are represented by this
     model.
+
     Username, password and email are required. Other fields are optional.
     """
 

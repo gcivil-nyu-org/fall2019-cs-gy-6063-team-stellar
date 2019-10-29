@@ -1,17 +1,16 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from .models import ServiceType
 
-from .models import UserRequest
-from bootstrap_modal_forms.forms import BSModalForm
-
-class ServiceForm(BSModalForm):
+class ServiceForm(forms.Form):
     # ServiceChoice = (
     #     ("Daily", "Daily"),
     #     ("Weekly", "Weekly"),
     #     ("Monthly", "Monthly"),
     # )
     #
-    # user_id = forms.IntegerField()
-    #
+    # # user_id = forms.IntegerField()
+    # #
     # service = forms.ChoiceField(
     #     label="service",
     #     required= True,
@@ -21,134 +20,19 @@ class ServiceForm(BSModalForm):
     #         attrs={"class": "input100", "placeholder": "school", "autofocus": ""}
     #     ),
     # )
-
-    # def __init__(self, *args, **kwargs):
-    #     super(ServiceForm, self).__init__(*args, **kwargs)
-
+    service_type = forms.CharField(widget= forms.Select)
+    #
+    # def clean_service(self):
+    #     data = self.cleaned_data['service']
+    #     # Remember to always return the cleaned data.
+    #     return data
+    #
     class Meta:
-        model = UserRequest
-        fields = ['user_id', 'service_type']
+        model = ServiceType
+        fields = ['service_type']
 
 
+class TypeOfServiceModalForm(forms.Form):
+    serviceSelect = forms.CharField(widget=forms.Select)
+    # service_type = forms.CharField(widget=forms.Select)
 
-class SchoolForm(BSModalForm):
-    SchoolChoice = (
-        ("tandon school", "tandon school"),
-        ("other school", "other school"),
-    )
-
-    DepartmentChoice = (
-        ("Computer Science", "computer science"),
-        ("other department", "other"),
-    )
-    school = forms.ChoiceField(
-            label="school",
-            required=False,
-            help_text="True",
-            choices=SchoolChoice,
-            widget=forms.Select(
-                attrs={"class": "input100", "placeholder": "school", "autofocus": ""}
-            ),
-        )
-
-    department = forms.ChoiceField(
-            label="department",
-            required=False,
-            help_text="True",
-            choices=DepartmentChoice,
-            widget=forms.Select(
-                attrs={"class": "input100", "placeholder": "department", "autofocus": ""}
-            ),
-    )
-
-    class Meta:
-        model = UserRequest
-        fields = ['school', 'department']
-
-
-# class UserRequestForm(BSModalForm):
-#     ServiceChoice = (
-#         ("Daily", "Daily"),
-#         ("Weekly", "Weekly"),
-#         ("Monthly", "Monthly"),
-#     )
-#
-#     SchoolChoice = (
-#         ("tandon school", "tandon school"),
-#         ("other school", "other school"),
-#     )
-#
-#     DepartmentChoice = (
-#         ("Computer Science", "computer science"),
-#         ("other department", "other"),
-#     )
-#
-#     CuisineChoice = (
-#         ("Computer Science", "computer science"),
-#         ("other department", "other"),
-#     )
-#
-#     service = forms.ChoiceField(
-#         label="school",
-#         required=False,
-#         help_text="True",
-#         choices=SchoolChoice,
-#         widget=forms.Select(
-#             attrs={"class": "input100", "placeholder": "school", "autofocus": ""}
-#         ),
-#     )
-#
-#     school = forms.ChoiceField(
-#         label="school",
-#         required=False,
-#         help_text="True",
-#         choices=SchoolChoice,
-#         widget=forms.Select(
-#             attrs={"class": "input100", "placeholder": "school", "autofocus": ""}
-#         ),
-#     )
-#
-#     department = forms.ChoiceField(
-#         label="department",
-#         required=False,
-#         help_text="True",
-#         choices=DepartmentChoice,
-#         widget=forms.Select(
-#             attrs={"class": "input100", "placeholder": "department", "autofocus": ""}
-#         ),
-#     )
-#
-#     cuisine = forms.ChoiceField(
-#         label="cuisine",
-#         required=False,
-#         help_text="True",
-#         choices=CuisineChoice,
-#         widget=forms.Select(
-#             attrs={"class": "input100", "placeholder": "department", "autofocus": ""}
-#         ),
-#     )
-#
-#
-#
-#     def clean_email(self):
-#         data = self.cleaned_data["email"]
-#         domain = data.split("@")[1]
-#         if domain != "nyu.edu":
-#             raise forms.ValidationError("Please enter a NYU Email Address")
-#         return data
-#
-#     def save(self, commit=True):
-#         user = super(UserRequestForm, self).save(commit=False)
-#         user.email = self.cleaned_data["email"]
-#         if commit:
-#             user.save()
-#         return user
-#
-#     class Meta:
-#         model = UserRequest
-#         fields = (
-#             "service",
-#             "school",
-#             "department",
-#             "cuisine"
-#         )
