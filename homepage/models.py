@@ -35,6 +35,28 @@ class Restaurant(models.Model):
         managed = False
         db_table = 'restaurant'
 
+# class ServiceType(models.Model):
+#     name = models.CharField(max_length=100, blank=True, null=True)
+#     # id = models.IntegerField(blank=True, null=True)
+#     description = models.CharField(max_length=100, blank=True, null=True)
+#     # cuisine = models.CharField(max_length=100, blank=True, null=True)
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'service_type'
+
+
+class UserRequest(models.Model):
+    user_id = models.IntegerField()
+    service_type = models.CharField(max_length=100)
+    time_stamp = models.DateTimeField(auto_now_add = True)
+    exp_time = models.DateField(auto_now=False, auto_now_add=False)
+    cuisine = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'userrequest'
+
 class ServiceType(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     # id = models.IntegerField(blank=True, null=True)

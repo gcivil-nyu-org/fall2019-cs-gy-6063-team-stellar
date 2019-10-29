@@ -1,25 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import ServiceType
+from .models import ServiceType, UserRequest
 
 class ServiceForm(forms.Form):
-    # ServiceChoice = (
-    #     ("Daily", "Daily"),
-    #     ("Weekly", "Weekly"),
-    #     ("Monthly", "Monthly"),
-    # )
-    #
-    # # user_id = forms.IntegerField()
-    # #
-    # service = forms.ChoiceField(
-    #     label="service",
-    #     required= True,
-    #     help_text="True",
-    #     choices=ServiceChoice,
-    #     widget=forms.Select(
-    #         attrs={"class": "input100", "placeholder": "school", "autofocus": ""}
-    #     ),
-    # )
     service_type = forms.CharField(widget= forms.Select)
     #
     # def clean_service(self):
@@ -34,5 +17,30 @@ class ServiceForm(forms.Form):
 
 class TypeOfServiceModalForm(forms.Form):
     serviceSelect = forms.CharField(widget=forms.Select)
-    # service_type = forms.CharField(widget=forms.Select)
+    class Meta:
+        model = UserRequest
+        fields = ['service_type']
 
+    def save(self, commit=True):
+        form = super(TypeOfServiceModalForm, self).save(commit=False)
+        form.service_type = self.serviceSelect
+        if commit:
+            form.save()
+        return form
+
+
+class SchoolModalForm(forms.Form):
+    school = forms.CharField(widget=forms.Select)
+    department = forms.CharField(widget=forms.Select)
+
+    class Meta:
+        model = UserRequest
+        fields = ['school', 'department']
+
+    def save(self, commit=True):
+        form = super(SchoolModalForm, self).save(commit=False)
+        form.school  = self.school
+        form.department = self.department
+        if commit:
+            form.save()
+        return form

@@ -30,16 +30,16 @@
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav text-uppercase ml-auto">
 					<li class="nav-item">
-						<a class="nav-link " data-toggle="modal" data-target="#myModal1" href="#myModal1">Services</a>
+						<a class="nav-link " data-toggle="modal" data-target="#myModal1"  data-backdrop="static" href="#myModal1">Services</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#portfolio">Setting</a>
+						<a class="nav-link" href="#setting">Setting</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#about">History</a>
+						<a class="nav-link" href="#history">History</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#team">Logout</a>
+						<a class="nav-link" href="#logout">Logout</a>
 					</li>
 				</ul>
 			</div>
@@ -91,17 +91,17 @@
 			school: '',
 			cuisines: []
 		};
-		//click next
-		currentModal.find('.btn-next').click(function() {
-			currentModal.modal('hide');
-			currentModal.closest("div[id^='myModal']").nextAll("div[id^='myModal']").first().modal('show');
-		});
-
-		//click prev
-		currentModal.find('.btn-prev').click(function() {
-			currentModal.modal('hide');
-			currentModal.closest("div[id^='myModal']").prevAll("div[id^='myModal']").first().modal('show');
-		});
+		{#//click next#}
+		{#currentModal.find('.btn-next').click(function() {#}
+		{#	currentModal.modal('hide');#}
+		{#	currentModal.closest("div[id^='myModal']").nextAll("div[id^='myModal']").first().modal('show');#}
+		{#});#}
+        {##}
+		{#//click prev#}
+		{#currentModal.find('.btn-prev').click(function() {#}
+		{#	currentModal.modal('hide');#}
+		{#	currentModal.closest("div[id^='myModal']").prevAll("div[id^='myModal']").first().modal('show');#}
+		{#});#}
 
 		// click submit on final modal
 		currentModal.find('#submitServices').click(function() {
@@ -120,6 +120,27 @@
 				$(".btn:first-child").val($(this).text());
 			});
 		});
+
+		$("#serviceform").submit(function(e){
+            e.preventDefault();
+            $.ajax({
+            type : 'POST',
+            data: $("#serviceform").serialize(),
+            url : '',
+            success : function(data){
+                $("#myModal1").modal("hide");
+                $("#myModal2").modal("show");
+                $.post('url', data);
+            }
+            }).done(function() {
+                console.log("success");
+            }).fail(function() {
+                console.log("error");
+            }).always(function() {
+                console.log("complete");
+            });
+		});
+
 	});
 </script>
 

@@ -7,14 +7,14 @@
             <h4 class="modal-title" id="myModalLabel">Type of service</h4>
          </div>
          <div class="modal-body">
-            <form role="form" action="/serviceSelect/" method="post" class="registration-form">
+            <form role="form" id="serviceform" action="/serviceSelect/" method="post" class="registration-form">
                {% csrf_token %}
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
                         <h3>Step 1 / 3</h3>
                         Select your preferred type of service:
-                        <div class="dropdown">
+                        <div>
                            <select type="text" id="serviceSelect" name="serviceSelect">
                               <option selected>Daily</option>
                               <option>Monthly</option>
@@ -24,12 +24,11 @@
                      </div>
                   </div>
                </fieldset>
-               <input type="submit" value="OK">
             </form>
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button type="button" class="btn btn-default btn-next">Next</button>
+            <button type="submit" form="serviceform" value="Submit" class="btn btn-default btn-next">Next</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
          </div>
       </div>
@@ -42,36 +41,29 @@
       <div class="modal-content">
          <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Preffere School and Department</h4>
+            <h4 class="modal-title" id="myModalLabel">Prefered School and Department</h4>
          </div>
          <div class="modal-body">
-            <form>
+            <form role="form" id="schoolform" action="/school/" method="post" class="registration-form">
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
                         <h3>Step 2 / 3</h3>
                         <p>Select school and department preference</p>
-                        <div class="dropdown">
+                        <div>
+                           <select type="text" id="school" name="school">
+                              <option selected>College of Art and Science</option>
+                              <option>Tandon</option>
+                              <option>Stern</option>
+                           </select>
+                        </div>
 
-                           <button class="btn btn-secondary dropdown-toggle" type="button" id="schoolSelectBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           Select School
-                           </button>
-
-                           <div class="dropdown-menu modal-2-school" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="#">Tandon</a>
-                              <a class="dropdown-item" href="#">Stern</a>
-                           </div>
-
-                           <button class="btn btn-secondary dropdown-toggle" type="button" id="schoolSelectBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           Dropdown button
-                           </button>
-
-                           <div class="dropdown-menu modal-2-school" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="#">Action</a>
-                              <a class="dropdown-item" href="#">Another action</a>
-                              <a class="dropdown-item" href="#">Something else here</a>
-                           </div>
-
+                         <div>
+                           <select type="text" id="department" name="department">
+                              <option selected>Computer Science</option>
+                              <option>Finanical Engineering</option>
+                              <option>Other</option>
+                           </select>
                         </div>
                      </div>
                      <div class="form-top-right">
