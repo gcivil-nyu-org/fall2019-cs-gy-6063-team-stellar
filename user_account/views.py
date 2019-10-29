@@ -176,10 +176,10 @@ def userlogin(request):
 def userlogout(request):
     if not request.session.get("is_login", None):
         # user must log in
-        return redirect("/login/")
+        return render(request, "error.html", locals())
     request.session.flush()
     logout(request)
-    return redirect("/login/")
+    return render(request, "error.html", locals())
 
 
 def activate_account(request, uidb64, token):
