@@ -148,7 +148,7 @@ def usersignup(request):
 
 def userlogin(request):
     if request.session.get("is_login", None):  # no repeat log in
-        return redirect("/index/")
+        return redirect("/homepage")
     login_form = UserSignInForm(request.POST)
 
     if login_form.is_valid():
@@ -161,7 +161,7 @@ def userlogin(request):
             request.session["is_login"] = True
             request.session["user_id"] = user.id
             request.session["user_name"] = user.first_name
-            return redirect("/index/")
+            return redirect("/homepage/")
             # Redirect to a success page.
         else:
             # Return an 'invalid login' error message.

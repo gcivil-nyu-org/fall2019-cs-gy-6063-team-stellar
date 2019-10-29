@@ -11,7 +11,7 @@ urlpatterns = [
         name="activate",
     ),
     path("signup/", views.usersignup),
-    path("index/", views.index),
+    # path("index/", views.index),
     path("login/", views.userlogin),
     path("logout/", views.userlogout),
     re_path(r'^ajax/load_departments/$', views.usersignup),

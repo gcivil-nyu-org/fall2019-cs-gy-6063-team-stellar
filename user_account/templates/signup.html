@@ -241,12 +241,12 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                     {#alert(data)#}
+
                             var content='';
                             $.each(data, function(i, item){
                                   content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
                                 });
-                              {#alert(content)#}
+
                             $('#id_school').html(content)
                         },
                       });
