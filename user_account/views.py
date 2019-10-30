@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate
 from .forms import UserSignUpForm, UserSignInForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
-import csv
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -34,6 +33,7 @@ def retrieveschool():
     conn.close()
     return count
 
+
 def retrievedepartment():
     # conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
     conn = psycopg2.connect(database="lunchninja", host="localhost")
@@ -49,32 +49,34 @@ def retrievedepartment():
     conn.close()
     return count
 
+
 def merge():
-        schoollists=retrieveschool()
-        departmentlists=retrievedepartment()
-        school_department={}
-        id_school={}
-        department_school={}
-        school=[]
-        department=[]
-        for schoolitem in schoollists:
-            school.append(schoolitem[0])
-            id_school[str(schoolitem[1])] = schoolitem[0]
-            school_department[schoolitem[0]] = []
-        for departmentitem in departmentlists:
+    schoollists = retrieveschool()
+    departmentlists = retrievedepartment()
+    school_department = {}
+    id_school = {}
+    department_school = {}
+    school = []
+    department = []
+    for schoolitem in schoollists:
+        school.append(schoolitem[0])
+        id_school[str(schoolitem[1])] = schoolitem[0]
+        school_department[schoolitem[0]] = []
+    for departmentitem in departmentlists:
 
-            department=departmentitem[0]
-            school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
-            department_school[departmentitem[0]]=[id_school[str(departmentitem[1])]]
+        department = departmentitem[0]
+        school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
+        department_school[departmentitem[0]] = [id_school[str(departmentitem[1])]]
 
-        school_department['select school']=department
+    school_department["select school"] = department
 
-        # print(school_department)
-        # print(department_school)
-        return school,department,school_department,department_school
+    # print(school_department)
+    # print(department_school)
+    return school, department, school_department, department_school
+
 
 def usersignup(request):
-    schoolist,departmentlist,school_departments, depatment_school = merge()
+    schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "POST":
         signup_form = UserSignUpForm(request.POST)
         error = signup_form.errors.get_json_data()
@@ -115,16 +117,16 @@ def usersignup(request):
         return render(request, "signup.html", errordict)
     elif request.method == "GET" and request.path.startswith("/ajax/load_departments"):
 
-        school_id = request.GET.get('school_id', None)
+        school_id = request.GET.get("school_id", None)
         response = school_departments[school_id]
         return JsonResponse(response, safe=False)
     elif request.method == "GET" and request.path.startswith("/ajax/load_school"):
-        department_id = request.GET.get('department_id', None)
+        department_id = request.GET.get("department_id", None)
         school = depatment_school[department_id][0]
         response = []
         response.append(school)
         for s in schoolist:
-            if not s == school or s == 'select school':
+            if not s == school or s == "select school":
                 response.append(s)
 
         return JsonResponse(response, safe=False)

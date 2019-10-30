@@ -26,7 +26,8 @@ def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
         # database="lunchninja", host="localhost", user="postgres", password="password"
-        database="lunchninja", host="localhost"
+        database="lunchninja",
+        host="localhost",
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
@@ -41,8 +42,7 @@ def importschool():
         for i in dr:
             print(i)
             cur.execute(
-                "INSERT INTO school (name, id) VALUES (%s, %s)",
-                (i["Name"], i["id"]),
+                "INSERT INTO school (name, id) VALUES (%s, %s)", (i["Name"], i["id"])
             )
 
     conn.commit()
@@ -54,7 +54,8 @@ def importdepartment():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
         # database="lunchninja", host="localhost", user="postgres", password="password"
-        database="lunchninja", host="localhost"
+        database="lunchninja",
+        host="localhost",
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
@@ -82,7 +83,8 @@ def importrestaurant():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
         # database="lunchninja", host="localhost", user="postgres", password="password"
-        database="lunchninja", host="localhost"
+        database="lunchninja",
+        host="localhost",
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
@@ -152,7 +154,8 @@ def importcuisine():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
         # database="lunchninja", host="localhost", user="postgres", password="password"
-        database="lunchninja", host="localhost"
+        database="lunchninja",
+        host="localhost",
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
@@ -173,7 +176,8 @@ def importcuisine():
 def retrieveschool():
     conn = psycopg2.connect(
         # database="lunchninja", host="localhost", user="postgres", password="password"
-        database="lunchninja", host="localhost"
+        database="lunchninja",
+        host="localhost",
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
@@ -188,7 +192,8 @@ def retrieveschool():
 def retrievedepartment(schoolname):
     conn = psycopg2.connect(
         # database="lunchninja", host="localhost", user="postgres", password="password"
-        database="lunchninja", host="localhost"
+        database="lunchninja",
+        host="localhost",
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
