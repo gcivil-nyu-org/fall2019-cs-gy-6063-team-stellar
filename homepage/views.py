@@ -24,14 +24,17 @@ def user_service(request):
         service_type = request.POST["service_type"]
         cuisine = request.POST.getlist("cuisine[]")
         school = request.POST["school"]
-        id = request.user.id
-        print("id is" + str(id))
+        if request.user.id:
+            id = request.user.id
+        else:
+            id = -1
         req = UserRequest(
-            user_id=id, service_type=service_type, cuisine=cuisine, school=school
-        )
+                user_id=id, service_type=service_type, cuisine=cuisine, school=school
+            )
         req.save()
 
-        email_subject = "Activate Your Account"
+
+        email_subject = "Service Confirmation"
         message = render_to_string(
             "service_confirmation.html",
             {"user": request.user, "type": service_type, "cuisine": cuisine},
