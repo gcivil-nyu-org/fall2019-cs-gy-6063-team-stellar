@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.urls import path,re_path
+from django.urls import path, re_path
 from . import views
 
 
@@ -13,8 +13,6 @@ urlpatterns = [
     path("signup/", views.usersignup),
     path("login/", views.userlogin),
     path("logout/", views.userlogout),
-
-
-    re_path(r'^ajax/load_departments/$', views.usersignup),
-    re_path(r'^ajax/load_school/$', views.usersignup),
+    re_path(r"^ajax/load_departments/$", views.usersignup),
+    re_path(r"^ajax/load_school/$", views.usersignup),
 ]
