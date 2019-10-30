@@ -39,7 +39,10 @@ def user_service(request):
             "service_confirmation.html",
             {"user": request.user, "type": service_type, "cuisine": cuisine},
         )
-        to_email = request.user.email
+        if request.user.email:
+            to_email = request.user.email
+        else:
+            to_email = "up@nyu.edu"
         email = EmailMessage(email_subject, message, to=[to_email])
         email.send()
         return redirect("/")
