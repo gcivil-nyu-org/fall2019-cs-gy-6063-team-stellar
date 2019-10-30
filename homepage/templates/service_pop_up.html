@@ -1,0 +1,183 @@
+<!--Service Select Modal-->
+{% load staticfiles %}
+	<link rel="icon" type="image/png" href="{% static 'Signup_Signin/Signup_Signin/images/icons/favicon.ico'%}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'Signup_Signin/Signup_Signin/css/util.css'%}">
+	<link rel="stylesheet" type="text/css" href="{% static 'Signup_Signin/Signup_Signin/css/main.css'%}">
+
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Type of service</h4>
+         </div>
+         <div class="modal-body">
+            <form role="form" id="service_select_form" class=" registration-form">
+               {% csrf_token %}
+               <fieldset style="display: block;">
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <h3>Step 1 / 3</h3>
+                        Select your preferred type of service:
+                        <div class="dropdown">
+                           <select type="text" id="serviceSelect" name="serviceSelect">
+                              <option selected>Daily</option>
+                              <option>Weekly</option>
+                              <option>Monthly</option>
+                           </select> 
+                        </div>
+                     </div>
+                  </div>
+               </fieldset>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-default btn-prev">Prev</button>
+                  <button type="submit" class="btn btn-default btn-next">Next</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               </div>
+            </form>
+         </div>
+         
+      </div>
+   </div>
+</div>
+
+
+
+<!-- School and department select Modal -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Preferred School and Department</h4>
+         </div>
+         <div class="modal-body">
+            <form id="school_select_form">
+               {% csrf_token %}
+               <fieldset>
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <h3>Step 2 / 3</h3>
+                        <p>Select school and department preference</p>
+                        <div class="wrap-input100  m-b-16" data-validate = "Enter department">
+                            <select type="text" id="schoolSelect" name="schoolSelect">
+                              {% for school in schools %}
+                                    <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
+                              {% endfor %}
+                           </select>
+                           <select type="text" id="departmentSelect" name="departmentSelect">
+                              {% for department in departments %}
+                                    <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
+                              {% endfor %}
+                           </select>
+
+
+					</div>
+
+
+                     <div class="form-top-right">
+                        <i class="fa fa-key"></i>
+                     </div>
+                  </div>
+               </fieldset>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-default btn-prev">Prev</button>
+                  <button type="submit" class="btn btn-default btn-next">Next</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Cuisine select Modal -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Select preferred cuisine</h4>
+         </div>
+         <div class="modal-body">
+            <form id="cuisine_select_form">
+               {% csrf_token %}
+               <fieldset>
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <h3>Step 3 / 3</h3>
+                        <p>Select Cuisine:</p>
+                        <div class="dropdown">
+                            <select type="text" multiple id="cuisineSelect" name="cuisineSelect">
+                              {% for cuisine in cuisines %}
+                                    <option value="{{ cuisine.name }}" name="{{ cuisine.name }}" selected>{{ cuisine.name }}</option>
+                              {% endfor %}
+                           </select> 
+                        </div>
+                     </div>
+                     <div class="form-top-right">
+                        <i class="fa fa-twitter"></i>
+                     </div>
+                  </div>
+                   <div class="modal-footer">
+                     <button type="button" class="btn btn-default btn-prev">Prev</button>
+                     <button type="submit" class="btn btn-default btn-next">Submit</button>
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+               </fieldset>
+            </form>
+             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+             <script>
+                      $("#schoolSelect").change(function() {
+
+                      var school_id = $(this).val();
+                      $.ajax({
+                        url: 'ajax/load_departments_homepage/',
+                        data: {
+                          'school_id': school_id
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var content='';
+                            $.each(data, function(i, item){
+                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
+                                });
+                            $('#departmentSelect').html(content)
+                        },
+                      });
+                    });
+                  </script>
+
+
+                  <script>
+                      $("#departmentSelect").change(function() {
+                      var department_id = $(this).val();
+                      $.ajax({
+                        url: 'ajax/load_school_homepage/',
+                        data: {
+                          'department_id': department_id
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var content='';
+                            $.each(data, function(i, item){
+                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
+                                });
+                            $('#schoolSelect').html(content)
+                        },
+                      });
+                    });
+                  </script>
+         </div>
+      </div>
+   </div>
+</div>

@@ -3,147 +3,151 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Lunch Ninja</title>
-
-    <!-- Custom fonts for this template -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet'
-        type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-
-    <!-- Custom styles for this template -->
-    <link href="{% static 'css/agency.css'%}" rel="stylesheet">
-
-    <!-- Bootstrap and Jquery CSS and JS-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Lunch Ninja</title>
+	<!-- Custom fonts for this template -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+	<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+	<!-- Custom styles for this template -->
+	<link href="{% static 'css/agency.css'%}" rel="stylesheet">
+	<!-- Bootstrap and Jquery CSS and JS-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
-
 <body id="page-top">
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top">Lunch Ninja</a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                aria-label="Toggle navigation">
-                Menu
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav text-uppercase ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link " data-toggle="modal" data-target="#exampleModal"
-                            href="#services">Services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#portfolio">Setting</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">History</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#team">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Header -->
-    <header class="masthead">
-        <div class="container">
-            <div class="intro-text">
-                <div class="intro-lead-in">Lunch Ninja</div>
-                <div class="intro-heading text-uppercase">It's Nice To Meet You</div>
-                <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Select your preferred type of service:
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown button
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Daily</a>
-                            <a class="dropdown-item" href="#">Weekly</a>
-                            <a class="dropdown-item" href="#">Monthly</a>
-                        </div>
-                    </div>
-                    Select your preferred cuisine:
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown button
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Indian</a>
-                            <a class="dropdown-item" href="#">Coffee/juice</a>
-                            <a class="dropdown-item" href="#">Burger</a>
-                            <a class="dropdown-item" href="#">Pizza</a>
-                            <a class="dropdown-item" href="#">Mediterranean</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-4">
-                    <span class="copyright">Copyright &copy; Your Website 2019</span>
-                </div>
-                <div class="col-md-4">
-                </div>
-                <div class="col-md-4">
-                    <ul class="list-inline quicklinks">
-                        <li class="list-inline-item">
-                            <a href="#">Privacy Policy</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#">Terms of Use</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
+	<!-- Navigation -->
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+		<div class="container">
+			<a class="navbar-brand js-scroll-trigger" href="#page-top">Lunch Ninja</a>
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				Menu
+				<i class="fas fa-bars"></i>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav text-uppercase ml-auto">
+					<li class="nav-item">
+						<a class="nav-link " data-toggle="modal" data-target="#myModal1" href="#myModal1">Services</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#portfolio">Setting</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#about">History</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout/">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!-- Header -->
+	<header class="masthead">
+		<div class="container">
+			<div class="intro-text">
+				<div class="intro-lead-in">Lunch Ninja</div>
+				<div class="intro-heading text-uppercase">It's Nice To Meet You</div>
+				<a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>
+			</div>
+		</div>
+	</header>
+	<!-- Pop-up models -->
+	{% include "service_pop_up.html" %}
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-4">
+					<span class="copyright">Copyright &copy; Your Website 2019</span>
+				</div>
+				<div class="col-md-4">
+				</div>
+				<div class="col-md-4">
+					<ul class="list-inline quicklinks">
+						<li class="list-inline-item">
+							<a href="#">Privacy Policy</a>
+						</li>
+						<li class="list-inline-item">
+							<a href="#">Terms of Use</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
 </body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/multiselect/2.2.9/js/multiselect.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-    crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+    	$('select[multiple]').multiselect();
+	});
+
+	$('#cuisineSelect').multiselect({
+		columns: 1,
+		placeholder: 'Select Languages'
+	});
+
+	$("div[id^='myModal']").each(function() {
+		var currentModal = $(this);
+		let formData = {
+			department: '',
+			school: '',
+			cuisines: []
+		};
+		
+		//click next
+		currentModal.find('.btn-next').click(function() {
+			currentModal.modal('hide');
+			currentModal.closest("div[id^='myModal']").nextAll("div[id^='myModal']").first().modal('show');
+		});
+
+		//click prev
+		currentModal.find('.btn-prev').click(function() {
+			currentModal.modal('hide');
+			currentModal.closest("div[id^='myModal']").prevAll("div[id^='myModal']").first().modal('show');
+		});
+	});
+
+	let service_request = {}
+	
+	//Service request model data
+	$(document).on('submit', '#service_select_form' ,function(e){
+		e.preventDefault();
+		service_request['service_type'] = $( "#serviceSelect option:selected" ).val();
+	})
+
+	//School and department request model data
+	$(document).on('submit', '#school_select_form' ,function(e){
+		e.preventDefault();
+		service_request['school'] = $( "#schoolSelect option:selected").val();
+		service_request['department'] = $( "#departmentSelect option:selected").val();
+	})
+	
+
+	//Cuisine model data
+	$(document).on('submit', '#cuisine_select_form' ,function(e){
+		e.preventDefault();
+		service_request['cuisine'] = $( "#cuisineSelect").val();
+		service_request['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+		$.ajax({
+			type:'POST',
+			url:'/serviceRequest/',
+			data:service_request,
+			success:function(){
+				alert("success");
+			}
+		})
+	})
+
+</script>
+
 </html>
