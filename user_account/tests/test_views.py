@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 
-import mock
+from unittest import mock
 
 
 class SignupViewTest(TestCase):
@@ -28,8 +28,8 @@ class SignupViewTest(TestCase):
             "first_name": "donald",
             "last_name": "trump",
             "Phone": "1234567890",
-            "school": "other school",
-            "department": "other department",
+            "school": "Tandon School of Engineering",
+            "department": "Electrical Engineering",
             "password1": "Pass12345",
             "password2": "Pass12345",
         }
