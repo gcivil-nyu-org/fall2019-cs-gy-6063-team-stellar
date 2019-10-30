@@ -2,8 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import LunchNinjaUser
 from homepage.models import UserRequest, Department, School, Cuisine
-import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+
 
 #
 # def retrieveschool():

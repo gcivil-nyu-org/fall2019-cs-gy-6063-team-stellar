@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
-from homepage.models import UserRequest, Department, School, Cuisine
+from homepage.models import  Department, School
 
 
 from .models import LunchNinjaUser
