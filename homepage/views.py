@@ -24,27 +24,21 @@ def user_service(request):
         service_type = request.POST["service_type"]
         cuisine = request.POST.getlist("cuisine[]")
         school = request.POST["school"]
-        if request.user.id:
+        if request.user.is_authenticated():
             id = request.user.id
-        else:
-            id = -1
-        req = UserRequest(
+            req = UserRequest(
                 user_id=id, service_type=service_type, cuisine=cuisine, school=school
             )
-        req.save()
+            req.save()
 
-
-        email_subject = "Service Confirmation"
-        message = render_to_string(
-            "service_confirmation.html",
-            {"user": request.user, "type": service_type, "cuisine": cuisine},
-        )
-        if request.user.email:
+            email_subject = "Service Confirmation"
+            message = render_to_string(
+                "service_confirmation.html",
+                {"user": request.user, "type": service_type, "cuisine": cuisine},
+            )
             to_email = request.user.email
-        else:
-            to_email = "up@nyu.edu"
-        email = EmailMessage(email_subject, message, to=[to_email])
-        email.send()
+            email = EmailMessage(email_subject, message, to=[to_email])
+            email.send()
         return redirect("/")
     else:
         return False
