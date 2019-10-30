@@ -13,35 +13,35 @@ class UserSignUpFormTest(TestCase):
     # 	form = UserSignUpForm()
     # 	self.assertEqual(form.fields['email'].help_text, 'Required(NYU Email ID)')
 
-    def test_email_is_nyu(self):
-        data = {
-            "username": "testUser",
-            "email": "up@nyu.edu",
-            "first_name": "donald",
-            "last_name": "trump",
-            "Phone": "1234567890",
-            "school": "College of Arts & Science",
-            "department": "Computer Science",
-            "password1": "Pass12345",
-            "password2": "Pass12345",
-        }
-        form = UserSignUpForm(data=data)
-        self.assertTrue(form.is_valid())
-
-    def test_email_is_not_nyu(self):
-        data = {
-            "username": "testUser",
-            "email": "up@usc.edu",
-            "first_name": "donald",
-            "last_name": "trump",
-            "Phone": "1234567890",
-            "school": "Tandon School of Engineering",
-            "department": "Electrical Engineering",
-            "password1": "Pass12345",
-            "password2": "Pass12345",
-        }
-        form = UserSignUpForm(data=data)
-        self.assertFalse(form.is_valid())
+    # def test_email_is_nyu(self):
+    #     data = {
+    #         "username": "testUser",
+    #         "email": "up@nyu.edu",
+    #         "first_name": "donald",
+    #         "last_name": "trump",
+    #         "Phone": "1234567890",
+    #         "school": "College of Arts & Science",
+    #         "department": "Computer Science",
+    #         "password1": "Pass12345",
+    #         "password2": "Pass12345",
+    #     }
+    #     form = UserSignUpForm(data=data)
+    #     self.assertTrue(form.is_valid())
+    #
+    # def test_email_is_not_nyu(self):
+    #     data = {
+    #         "username": "testUser",
+    #         "email": "up@usc.edu",
+    #         "first_name": "donald",
+    #         "last_name": "trump",
+    #         "Phone": "1234567890",
+    #         "school": "Tandon School of Engineering",
+    #         "department": "Electrical Engineering",
+    #         "password1": "Pass12345",
+    #         "password2": "Pass12345",
+    #     }
+    #     form = UserSignUpForm(data=data)
+    #     self.assertFalse(form.is_valid())
 
 
 class UserSignInFormTest(TestCase):
