@@ -24,7 +24,7 @@ def user_service(request):
         service_type = request.POST["service_type"]
         cuisine = request.POST.getlist("cuisine[]")
         school = request.POST["school"]
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             id = request.user.id
             req = UserRequest(
                 user_id=id, service_type=service_type, cuisine=cuisine, school=school
