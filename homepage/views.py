@@ -16,7 +16,7 @@ def index(request):
             "homepage.html",
             {"cuisines": cuisine, "schools": school, "departments": department},
         )
-    return redirect("/login")
+    return redirect("/login/")
 
 
 def user_service(request):
