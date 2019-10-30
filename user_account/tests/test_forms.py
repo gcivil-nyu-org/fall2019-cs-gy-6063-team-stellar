@@ -20,7 +20,7 @@ class UserSignUpFormTest(TestCase):
             "first_name": "donald",
             "last_name": "trump",
             "Phone": "1234567890",
-            "school": "College of Arts & Science",
+            "school": "Tandon School of Engineering",
             "department": "Computer Science",
             "password1": "Pass12345",
             "password2": "Pass12345",
