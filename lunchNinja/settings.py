@@ -89,10 +89,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "lunchninja",
+        "USER": "postgres",
         "HOST": "localhost",
         "PORT": "5432",
-        # "USERNAME": "postgres",
-        # "PASSWORD": "password",
+        "PASSWORD": "password",
     }
 }
 
