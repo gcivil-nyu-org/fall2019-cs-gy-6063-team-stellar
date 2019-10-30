@@ -50,19 +50,8 @@ def retrievedepartment():
     return count
 
 def merge():
-    # with open(school, 'r', encoding='utf-8') as in_f1, open(department, 'r', encoding='utf-8') as in_f2:
-    #     read_school=csv.reader(in_f1)
-    #     read_department=csv.reader(in_f2)
-    #     schoollists=[]
-    #     departmentlists=[]
-    #     for i in read_school:
-    #         schoollists.append(i)
-    #     for i in read_department:
-    #         departmentlists.append(i)
         schoollists=retrieveschool()
         departmentlists=retrievedepartment()
-        # print(schoollists)
-        # print(departmentlists)
         school_department={}
         id_school={}
         department_school={}
