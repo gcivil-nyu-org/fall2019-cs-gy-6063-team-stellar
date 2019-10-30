@@ -9,8 +9,8 @@ from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
-import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from homepage.models import  Department, School
+
 
 from .models import LunchNinjaUser
 
@@ -21,48 +21,58 @@ def index(request):
     return render(request, "index.html")
 
 
-def retrieveschool():
-    # conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
-    conn = psycopg2.connect(database="lunchninja", host="localhost")
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
-    cur.execute("SELECT name,id FROM school")
-    count = cur.fetchall()
-    # print(count)
-    conn.commit()
-    conn.close()
-    return count
-
-
-def retrievedepartment():
-    # conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
-    conn = psycopg2.connect(database="lunchninja", host="localhost")
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
-    # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
-    # id = cur.fetchone()
-    sqlline = "SELECT name,school FROM department"
-    cur.execute(sqlline)
-    count = cur.fetchall()
-    # print(count)
-    conn.commit()
-    conn.close()
-    return count
+# def retrieveschool():
+#     conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+#     # conn = psycopg2.connect(database="lunchninja", host="localhost")
+#     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+#     cur = conn.cursor()
+#     cur.execute("SELECT name,id FROM school")
+#     count = cur.fetchall()
+#     # print(count)
+#     conn.commit()
+#     conn.close()
+#     return count
+#
+#
+# def retrievedepartment():
+#     conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+#     # conn = psycopg2.connect(database="lunchninja", host="localhost")
+#     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+#     cur = conn.cursor()
+#     # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
+#     # id = cur.fetchone()
+#     sqlline = "SELECT name,school FROM department"
+#     cur.execute(sqlline)
+#     count = cur.fetchall()
+#     # print(count)
+#     conn.commit()
+#     conn.close()
+#     return count
 
 
 def merge():
-    schoollists = retrieveschool()
-    departmentlists = retrievedepartment()
+    department = Department.objects.all()
+    school = School.objects.all()
+    school_list=[]
+    department_list=[]
+    for s in school:
+        school_list.append((s.name,s.id))
+
+    for d in department:
+        department_list.append((d.name,d.school))
+    # schoollists = retrieveschool()
+    # departmentlists = retrievedepartment()
+
     school_department = {}
     id_school = {}
     department_school = {}
     school = []
     department = []
-    for schoolitem in schoollists:
+    for schoolitem in school_list:
         school.append(schoolitem[0])
         id_school[str(schoolitem[1])] = schoolitem[0]
         school_department[schoolitem[0]] = []
-    for departmentitem in departmentlists:
+    for departmentitem in department_list:
 
         department = departmentitem[0]
         school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])

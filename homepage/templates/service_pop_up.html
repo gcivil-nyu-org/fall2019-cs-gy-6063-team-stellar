@@ -116,6 +116,50 @@
                   </div>
                </fieldset>
             </form>
+             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+             <script>
+                      $("#schoolSelect").change(function() {
+
+                      var school_id = $(this).val();
+                      $.ajax({
+                        url: 'ajax/load_departments_homepage/',
+                        data: {
+                          'school_id': school_id
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var content='';
+                            $.each(data, function(i, item){
+                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
+                                });
+                            $('#departmentSelect').html(content)
+                        },
+                      });
+                    });
+                  </script>
+
+
+                  <script>
+                      $("#departmentSelect").change(function() {
+                      var department_id = $(this).val();
+                      $.ajax({
+                        url: 'ajax/load_school_homepage/',
+                        data: {
+                          'department_id': department_id
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var content='';
+                            $.each(data, function(i, item){
+                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
+                                });
+                            $('#schoolSelect').html(content)
+                        },
+                      });
+                    });
+                  </script>
          </div>
       </div>
    </div>
