@@ -29,7 +29,7 @@ def importschool():
         host="localhost",
         user="postgres",
         password="password",
-        port=5433
+        port="5433"
         # database="lunchninja",
         # host="localhost",
     )
