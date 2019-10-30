@@ -12,7 +12,7 @@ install:
 
 before_script:
   # Execute all of the commands which need to be executed
-  # before running actual tests
+  # before running actual test
   - psql -c 'create database lunchninja;' -U postgres
   - python database.py
   - python manage.py migrate
@@ -27,6 +27,8 @@ script:
   - coverage run --source=user_account manage.py test user_account/tests
   - coverage run --source=homepage manage.py test homepage/tests
 
-
 after_script:
   - coveralls
+
+
+

@@ -123,12 +123,18 @@ def usersignup(request):
             errordict[key] = messagetext
         errordict["signup_form"] = signup_form
         return render(request, "signup.html", errordict)
-    elif request.method == "GET" and (request.path.startswith("/ajax/load_departments") or request.path.startswith("/signup/ajax/load_departments")):
+    elif request.method == "GET" and (
+        request.path.startswith("/ajax/load_departments")
+        or request.path.startswith("/signup/ajax/load_departments")
+    ):
 
         school_id = request.GET.get("school_id", None)
         response = school_departments[school_id]
         return JsonResponse(response, safe=False)
-    elif request.method == "GET" and (request.path.startswith("/ajax/load_school") or request.path.startswith("/signup/ajax/load_school")):
+    elif request.method == "GET" and (
+        request.path.startswith("/ajax/load_school")
+        or request.path.startswith("/signup/ajax/load_school")
+    ):
         department_id = request.GET.get("department_id", None)
         school = depatment_school[department_id][0]
         response = []
@@ -174,10 +180,6 @@ def userlogin(request):
 def userlogout(request):
     request.session.flush()
     return redirect("/login/")
-
-
-
-
 
 
 def activate_account(request, uidb64, token):
