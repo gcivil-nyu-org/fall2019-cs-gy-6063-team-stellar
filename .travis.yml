@@ -26,5 +26,7 @@ script:
   - flake8 .
   - coverage run --source=user_account manage.py test user_account/tests
   - coverage run --source=homepage manage.py test homepage/tests
+
+
 after_script:
   - coveralls

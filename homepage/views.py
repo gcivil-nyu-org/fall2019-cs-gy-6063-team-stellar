@@ -50,7 +50,7 @@ def index(request):
             "homepage.html",
             {"cuisines": cuisine, "schools": school, "departments": department},
         )
-    return redirect("/login")
+    return redirect("/login/")
 
 
 def user_service(request):
@@ -60,21 +60,21 @@ def user_service(request):
         service_type = request.POST["service_type"]
         cuisine = request.POST.getlist("cuisine[]")
         school = request.POST["school"]
-        id = request.user.id
-        print("id is" + str(id))
-        req = UserRequest(
-            user_id=id, service_type=service_type, cuisine=cuisine, school=school
-        )
-        req.save()
+        if request.user.is_authenticated:
+            id = request.user.id
+            req = UserRequest(
+                user_id=id, service_type=service_type, cuisine=cuisine, school=school
+            )
+            req.save()
 
-        email_subject = "Activate Your Account"
-        message = render_to_string(
-            "service_confirmation.html",
-            {"user": request.user, "type": service_type, "cuisine": cuisine},
-        )
-        to_email = request.user.email
-        email = EmailMessage(email_subject, message, to=[to_email])
-        email.send()
+            email_subject = "Service Confirmation"
+            message = render_to_string(
+                "service_confirmation.html",
+                {"user": request.user, "type": service_type, "cuisine": cuisine},
+            )
+            to_email = request.user.email
+            email = EmailMessage(email_subject, message, to=[to_email])
+            email.send()
         return redirect("/")
     elif request.method == "GET" and request.path.startswith("/homepage/ajax/load_departments_homepage"):
 
