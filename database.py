@@ -28,9 +28,8 @@ def deg2rad(deg):
 def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
-        database="lunchninja", host="localhost", user="postgres", password="password",port=5433
-        # database="lunchninja",
-        # host="localhost",
+        database="lunchninja", host="localhost",
+        # user="postgres", password="password",port=5433
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
@@ -56,9 +55,8 @@ def importschool():
 def importdepartment():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
-        database="lunchninja", host="localhost", user="postgres", password="password"
-        # database="lunchninja",
-        # host="localhost",
+        database="lunchninja", host="localhost",
+        # user="postgres", password="password"
     )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
@@ -85,7 +83,7 @@ def importdepartment():
 def importrestaurant():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
-        database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost",
         # database="lunchninja",
         # host="localhost",
     )
@@ -156,7 +154,7 @@ def importrestaurant():
 def importcuisine():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
-        database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
         # database="lunchninja",
         # host="localhost",
     )
@@ -178,7 +176,7 @@ def importcuisine():
 
 def retrieveschool():
     conn = psycopg2.connect(
-        database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
         # database="lunchninja",
         # host="localhost",
     )
@@ -194,7 +192,7 @@ def retrieveschool():
 
 def retrievedepartment(schoolname):
     conn = psycopg2.connect(
-        database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost",
         # database="lunchninja",
         # host="localhost",
     )
