@@ -148,7 +148,7 @@
 
 					<div class="container-login100-form-btn p-t-25">
 						<button type='submit' class="login100-form-btn">
-							Login
+							Signup
 						</button>
 					</div>
 
@@ -193,5 +193,47 @@
 <!--===============================================================================================-->
 	<script src="{% static 'Signup_Signin/Signup_Signin/js/main.js'%}"></script>
 
+                      <script>
+                      $("#id_school").change(function() {
+                      var school_id = $(this).val();
+                      $.ajax({
+                        url: 'ajax/load_departments/',
+                        data: {
+                          'school_id': school_id
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var content='';
+                            $.each(data, function(i, item){
+                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
+                                });
+                            $('#id_department').html(content)
+                        },
+                      });
+                    });
+                  </script>
+
+
+                  <script>
+                      $("#id_department").change(function() {
+                      var department_id = $(this).val();
+                      $.ajax({
+                        url: 'ajax/load_school/',
+                        data: {
+                          'department_id': department_id
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var content='';
+                            $.each(data, function(i, item){
+                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
+                                });
+                            $('#id_school').html(content)
+                        },
+                      });
+                    });
+                  </script>
 </body>
 </html>

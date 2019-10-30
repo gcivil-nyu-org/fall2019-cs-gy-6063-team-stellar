@@ -1,19 +1,52 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-
 from .models import LunchNinjaUser
+import csv
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+def retrieveschool():
+    # conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("SELECT name,id  FROM school")
+    count = cur.fetchall()
+    conn.commit()
+    conn.close()
+    return count
+
+def retrievedepartment():
+    # conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    sqlline = "SELECT name,school FROM department"
+    cur.execute(sqlline)
+    count = cur.fetchall()
+    conn.commit()
+    conn.close()
+    return count
+
+def creat_school_tuple():
+        schoollist=[]
+        read_school = retrieveschool()
+        for s in read_school:
+            schoollist.append((s[0],s[0]))
+        schoollist[0]=('select school','select school')
+        return tuple(schoollist)
+
+def creat_department_tuple():
+        departmentlist=[]
+        read_department = retrievedepartment()
+        for s in read_department:
+            departmentlist.append((s[0],s[0]))
+        departmentlist[0]=('select department','select department')
+        return tuple(departmentlist)
 
 class UserSignUpForm(UserCreationForm):
-
-    SchoolChoice = (
-        ("tandon school", "tandon school"),
-        ("other school", "other school"),
-    )
-    DepartmentChoice = (
-        ("Computer Science", "computer science"),
-        ("other department", "other"),
-    )
+    SchoolChoice = creat_school_tuple()
+    DepartmentChoice = creat_department_tuple()
     username = forms.CharField(
         label="username",
         max_length=128,

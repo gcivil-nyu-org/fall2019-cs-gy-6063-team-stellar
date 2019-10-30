@@ -24,19 +24,25 @@ def deg2rad(deg):
 
 def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
+    conn = psycopg2.connect(
+        # database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
+    )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS school")
     cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
     filepath = "datasource/School.csv"
-    with open(filepath, "r", encoding='UTF-8') as fin:  # `with` statement available in 2.5+
+    with open(
+        filepath, "r", encoding="UTF-8-sig"
+    ) as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
         for i in dr:
+            print(i)
             cur.execute(
                 "INSERT INTO school (name, id) VALUES (%s, %s)",
-                (i["schoolname"], i["id"]),
+                (i["Name"], i["id"]),
             )
 
     conn.commit()
@@ -46,7 +52,10 @@ def importschool():
 
 def importdepartment():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
+    conn = psycopg2.connect(
+        # database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
+    )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS department")
@@ -54,12 +63,14 @@ def importdepartment():
         "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
     )
     filepath2 = "datasource/Department.csv"
-    with open(filepath2, "r", encoding='UTF-8') as fin2:  # `with` statement available in 2.5+
+    with open(
+        filepath2, "r", encoding="UTF-8-SIG"
+    ) as fin2:  # `with` statement available in 2.5+
         dr2 = csv.DictReader(fin2)  # comma is default delimiter
         for i in dr2:
             cur.execute(
                 "INSERT INTO department (name, school, id, description) VALUES (%s, %s, %s, %s)",
-                (i["departmentname"], i["School"], i["id"], i["Description"]),
+                (i["Name"], i["School"], i["id"], i["Description"]),
             )
 
     conn.commit()
@@ -69,7 +80,10 @@ def importdepartment():
 
 def importrestaurant():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
+    conn = psycopg2.connect(
+        # database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
+    )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS restaurant")
@@ -77,7 +91,9 @@ def importrestaurant():
         "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode VARCHAR, phone VARCHAR, latitude VARCHAR, longitude VARCHAR)"  # noqa: E501
     )
     filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
-    with open(filepath3, "r", encoding='UTF-8') as fin3:  # `with` statement available in 2.5+
+    with open(
+        filepath3, "r", encoding="UTF-8"
+    ) as fin3:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr3 = csv.DictReader(fin3)  # comma is default delimiter
         lat = [40.694340, 40.729010, 40.737570]
@@ -134,7 +150,10 @@ def importrestaurant():
 
 def importcuisine():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(database="lunchninja", host="localhost",user='postgres',password='password')
+    conn = psycopg2.connect(
+        # database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
+    )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")
@@ -150,8 +169,12 @@ def importcuisine():
     conn.close()
     return ()
 
+
 def retrieveschool():
-    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn = psycopg2.connect(
+        # database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
+    )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("SELECT name,id FROM school")
@@ -161,8 +184,12 @@ def retrieveschool():
     conn.close()
     return ()
 
+
 def retrievedepartment(schoolname):
-    conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn = psycopg2.connect(
+        # database="lunchninja", host="localhost", user="postgres", password="password"
+        database="lunchninja", host="localhost"
+    )
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
@@ -174,6 +201,7 @@ def retrievedepartment(schoolname):
     conn.commit()
     conn.close()
     return ()
+
 
 def main():
     importschool()

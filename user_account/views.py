@@ -8,7 +8,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
-
+from django.http import JsonResponse
+import csv
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from .models import LunchNinjaUser
 
@@ -19,7 +22,70 @@ def index(request):
     return render(request, "index.html")
 
 
+def retrieveschool():
+    # conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    cur.execute("SELECT name,id FROM school")
+    count = cur.fetchall()
+    # print(count)
+    conn.commit()
+    conn.close()
+    return count
+
+def retrievedepartment():
+    # conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
+    conn = psycopg2.connect(database="lunchninja", host="localhost")
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = conn.cursor()
+    # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
+    # id = cur.fetchone()
+    sqlline = "SELECT name,school FROM department"
+    cur.execute(sqlline)
+    count = cur.fetchall()
+    # print(count)
+    conn.commit()
+    conn.close()
+    return count
+
+def merge():
+    # with open(school, 'r', encoding='utf-8') as in_f1, open(department, 'r', encoding='utf-8') as in_f2:
+    #     read_school=csv.reader(in_f1)
+    #     read_department=csv.reader(in_f2)
+    #     schoollists=[]
+    #     departmentlists=[]
+    #     for i in read_school:
+    #         schoollists.append(i)
+    #     for i in read_department:
+    #         departmentlists.append(i)
+        schoollists=retrieveschool()
+        departmentlists=retrievedepartment()
+        # print(schoollists)
+        # print(departmentlists)
+        school_department={}
+        id_school={}
+        department_school={}
+        school=[]
+        department=[]
+        for schoolitem in schoollists:
+            school.append(schoolitem[0])
+            id_school[str(schoolitem[1])] = schoolitem[0]
+            school_department[schoolitem[0]] = []
+        for departmentitem in departmentlists:
+
+            department=departmentitem[0]
+            school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
+            department_school[departmentitem[0]]=[id_school[str(departmentitem[1])]]
+
+        school_department['select school']=department
+
+        # print(school_department)
+        # print(department_school)
+        return school,department,school_department,department_school
+
 def usersignup(request):
+    schoolist,departmentlist,school_departments, depatment_school = merge()
     if request.method == "POST":
         signup_form = UserSignUpForm(request.POST)
         error = signup_form.errors.get_json_data()
@@ -58,15 +124,29 @@ def usersignup(request):
             errordict[key] = messagetext
         errordict["signup_form"] = signup_form
         return render(request, "signup.html", errordict)
+    elif request.method == "GET" and request.path.startswith("/ajax/load_departments"):
 
+        school_id = request.GET.get('school_id', None)
+        response = school_departments[school_id]
+        return JsonResponse(response, safe=False)
+    elif request.method == "GET" and request.path.startswith("/ajax/load_school"):
+        department_id = request.GET.get('department_id', None)
+        school = depatment_school[department_id][0]
+        response = []
+        response.append(school)
+        for s in schoolist:
+            if not s == school or s == 'select school':
+                response.append(s)
+
+        return JsonResponse(response, safe=False)
     else:
         signup_form = UserSignUpForm()
         return render(request, "signup.html", {"signup_form": signup_form})
 
 
 def userlogin(request):
-    if request.session.get("is_login", None):  # no repeat log in
-        return redirect("/index/")
+    # if request.session.get("is_login", None):  # no repeat log in
+    #     return redirect("/homepage/")
     login_form = UserSignInForm(request.POST)
 
     if login_form.is_valid():
@@ -80,7 +160,7 @@ def userlogin(request):
             request.session["is_login"] = True
             request.session["user_id"] = user.id
             request.session["user_name"] = user.first_name
-            return redirect("/index/")
+            return redirect("/homepage/")
             # Redirect to a success page.
         else:
             # Return an 'invalid login' error message.
@@ -93,11 +173,7 @@ def userlogin(request):
 
 
 def userlogout(request):
-    if not request.session.get("is_login", None):
-        # user must log in
-        return redirect("/login/")
     request.session.flush()
-    logout(request)
     return redirect("/login/")
 
 

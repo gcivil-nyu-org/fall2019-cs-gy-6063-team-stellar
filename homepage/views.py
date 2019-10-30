@@ -1,24 +1,33 @@
 from django.shortcuts import render, redirect
 from .models import UserRequest, Department, School, Cuisine
-from django.core.mail import EmailMessage
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.template.loader import render_to_string
-
+from django.contrib.auth import login, authenticate, logout
+# from django.core.mail import EmailMessage
+# from django.contrib.sites.shortcuts import get_current_site
+# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+# from django.utils.encoding import force_bytes
+# from django.template.loader import render_to_string
 # Create your views here.
+
+
 def index(request):
-    department =Department.objects.all()
-    school = School.objects.all()
-    cuisine = Cuisine.objects.all()
-    return render(request, "homepage.html",{"cuisines": cuisine, "schools":school, "departments":department})
+    if request.session.get("is_login", None):  # no repeat log in
+        department = Department.objects.all()
+        school = School.objects.all()
+        cuisine = Cuisine.objects.all()
+        return render(
+            request,
+            "homepage.html",
+            {"cuisines": cuisine, "schools": school, "departments": department},
+        )
+    return redirect("/login")
+
 
 def user_service(request):
     if request.method == "POST":
         service_type = request.POST["service_type"]
         cuisine = request.POST.getlist("cuisine[]")
         school = request.POST["school"]
-        
+
         req = UserRequest(service_type=service_type, cuisine=cuisine, school=school)
         req.save()
 

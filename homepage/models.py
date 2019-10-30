@@ -44,12 +44,14 @@ class ServiceType(models.Model):
         managed = False
         db_table = "service_type"
 
+
 class Cuisine(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'cuisine'
+        db_table = "cuisine"
+
 
 class UserRequest(models.Model):
     user_id = models.IntegerField()

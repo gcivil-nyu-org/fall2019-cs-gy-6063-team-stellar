@@ -88,11 +88,11 @@ WSGI_APPLICATION = "lunchNinja.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "lunchninjadb",
+        "NAME": "lunchninja",
         "HOST": "localhost",
         "PORT": "5432",
-        "USERNAME": "postgres",
-        "PASSWORD": "password",
+        # "USERNAME": "postgres",
+        # "PASSWORD": "password",
     }
 }
 
