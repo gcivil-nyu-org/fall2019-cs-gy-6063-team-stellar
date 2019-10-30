@@ -1,5 +1,5 @@
 from django.test import TestCase
-from user_account.forms import UserSignUpForm, UserSignInForm
+from user_account.forms import UserSignInForm
 
 
 # class UserSignUpFormTest(TestCase):

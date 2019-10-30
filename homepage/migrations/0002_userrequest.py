@@ -6,24 +6,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('homepage', '0001_initial'),
+        ("homepage", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='UserRequest',
+            name="UserRequest",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user_id', models.IntegerField()),
-                ('service_type', models.CharField(max_length=100)),
-                ('time_stamp', models.DateTimeField(auto_now_add=True)),
-                ('cuisine', models.CharField(max_length=100)),
-                ('school', models.CharField(blank=True, max_length=200, null=True)),
-                ('department', models.CharField(blank=True, max_length=200, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("user_id", models.IntegerField()),
+                ("service_type", models.CharField(max_length=100)),
+                ("time_stamp", models.DateTimeField(auto_now_add=True)),
+                ("cuisine", models.CharField(max_length=100)),
+                ("school", models.CharField(blank=True, max_length=200, null=True)),
+                ("department", models.CharField(blank=True, max_length=200, null=True)),
             ],
-            options={
-                'db_table': 'userrequest',
-                'managed': True,
-            },
+            options={"db_table": "userrequest", "managed": True, },
         ),
     ]
