@@ -22,6 +22,9 @@ def deg2rad(deg):
     return deg * (math.pi / 180)
 
 
+
+
+
 def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     conn = psycopg2.connect(
