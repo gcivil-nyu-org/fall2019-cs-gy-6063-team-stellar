@@ -75,6 +75,12 @@ def user_service(request):
             to_email = request.user.email
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
+        else:
+            email_subject = "Service Confirmation"
+            message = "Service selected"
+            to_email = "up@nyu.edu"
+            email = EmailMessage(email_subject, message, to=[to_email])
+            email.send()
         return redirect("/")
     elif request.method == "GET" and request.path.startswith("/homepage/ajax/load_departments_homepage"):
 

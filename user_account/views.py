@@ -118,7 +118,7 @@ def usersignup(request):
                 "We have sent you an email, "
                 "please confirm your email address to complete registration"
             )
-        errordict = {}s
+        errordict = {}
         for key in error:
             error_message = error[key]
             messagetext = error_message[0]["message"]
