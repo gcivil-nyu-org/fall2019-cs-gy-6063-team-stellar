@@ -13,10 +13,11 @@ install:
 before_script:
   # Execute all of the commands which need to be executed
   # before running actual tests
-  - python manage.py migrate
-  - python manage.py collectstatic
   - psql -c 'create database lunchninja;' -U postgres
   - python database.py
+  - python manage.py migrate
+  - python manage.py collectstatic
+
 
 script:
   # Execute all of the commands which
