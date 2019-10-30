@@ -178,6 +178,10 @@ def userlogout(request):
     return redirect("/login/")
 
 
+
+
+
+
 def activate_account(request, uidb64, token):
     try:
         uid = force_bytes(urlsafe_base64_decode(uidb64))
