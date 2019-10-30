@@ -28,6 +28,7 @@ class UserSignUpFormTest(TestCase):
         form = UserSignUpForm(data=data)
         self.assertTrue(form.is_valid())
 
+
     def test_email_is_not_nyu(self):
         data = {
             "username": "testUser",
