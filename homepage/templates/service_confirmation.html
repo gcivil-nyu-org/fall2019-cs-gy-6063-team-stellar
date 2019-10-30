@@ -1,0 +1,10 @@
+{% autoescape off %}
+Hi {{ user.username }},
+Thank you for using Lunch Ninja! Here is your current servcie informaiton:
+    Type of servcie: {{ type }}
+    Preferred cuisine: {{ cuisine }}
+    We'll send you a follow-up email when your matching is ready.
+
+    Best,
+    Lunch Ninja
+{% endautoescape %}

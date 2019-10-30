@@ -1,60 +1,109 @@
 {% load staticfiles %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'login/css/login.css' %}" rel="stylesheet"/>
+<head>
+	<title>Login </title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{% static 'Signup_Signin/Signup_Signin/images/icons/favicon.ico'%}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'Signup_Signin/Signup_Signin/css/util.css'%}">
+	<link rel="stylesheet" type="text/css" href="{% static 'Signup_Signin/Signup_Signin/css/main.css'%}">
+<!--===============================================================================================-->
+</head>
+<body>
 
-    <title>log in</title>
-
-  </head>
-  <body>
-       <div class="container">
-            <div class="col">
-              <form class="form-login" action="/login/" method="post">
-                  {% if login_form.captcha.errors %}
-                    <div class="alert alert-warning">{{ login_form.captcha.errors }}</div>
-                  {% elif message %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30">
+				<form class="login100-form validate-form" action="/login/" method="post">
+                    {% csrf_token %}
+                    <img  class="back-lunchninja" src="{% static 'Signup_Signin/Signup_Signin/images/background.png'%}" alt=" ">
+					<span class="login100-form-title p-t-30 p-b-15 ">
+						Login to lunch ninja
+					</span>
+                    {% if message %}
                     <div class="alert alert-warning">{{ message }}</div>
-                  {% endif %}
-                  {% csrf_token %}
-                  <h5 class="text-center">welcome</h5>
-                    {{ login_form.name_of_field }}
-                  <div class="form-group">
-                      {{ login_form.username.label_tag }}
-                      {{ login_form.username}}
-                  </div>
-                  <div class="form-group">
-                    {{ login_form.password.label_tag }}
-                    {{ login_form.password }}
-                  </div>
-                  <div class="form-group">
-                    {{ login_form.captcha.label_tag }}
-                    {{ login_form.captcha }}
-                  </div>
-                  <div>
-                      <button type="button" class="btn btn-primary float-left" onclick= "location.href='/signup/'" >signup</button>
-                      <button type="submit" class="btn btn-primary float-right">login</button>
-                  </div>
+                    {% endif %}
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "Invalid username">
 
-              </form>
-            </div>
-            </div> <!-- /container -->
+{#                        <input class="input100" type="text" name="username" placeholder="Username">#}
+                        {{ login_form.username}}
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<span class="lnr lnr-user"></span>
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "Password is required">
+{#						<input class="input100" type="password" name="pass" placeholder="Password">#}
+                        {{ login_form.password }}
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<span class="lnr lnr-lock"></span>
+						</span>
+					</div>
 
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+					<div class="contact100-form-checkbox m-l-4">
+						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+						<label class="label-checkbox100" for="ckb1">
+							Remember me
+						</label>
+					</div>
 
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
-    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
-    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+					<div class="container-login100-form-btn p-t-25">
+						<button type='submit' class="login100-form-btn">
+							Login
+						</button>
+					</div>
 
-  </body>
+					<div class="text-center w-full p-t-42 p-b-22">
+						<span class="txt1">
+							Or login with
+						</span>
+					</div>
+
+{#					<a href="#" class="btn-face m-b-10">#}
+{#						<i class="fa fa-facebook-official"></i>#}
+{#						Facebook#}
+{#					</a>#}
+{##}
+{#					<a href="#" class="btn-google m-b-10">#}
+{#						<img src="{% static 'Signup_Signin/Signup_Signin/images/icons/icon-google.png'%}" alt="GOOGLE">#}
+{#						Google#}
+{#					</a>#}
+
+					<div class="text-center w-full p-t-115">
+						<span class="txt1">
+							Not a member?
+						</span>
+
+						<a class="txt1 bo1 hov1" href="/signup/">
+							Sign up now
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+<!--===============================================================================================-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--===============================================================================================-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/esm/popper.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--===============================================================================================-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'Signup_Signin/Signup_Signin/js/main.js'%}"></script>
+
+</body>
 </html>
