@@ -4,6 +4,9 @@ from django.db import models
 class School(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         managed = False
         db_table = "school"
@@ -13,6 +16,9 @@ class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     school = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         managed = False
@@ -31,6 +37,9 @@ class Restaurant(models.Model):
     latitude = models.CharField(max_length=100, blank=True, null=True)
     longitude = models.CharField(max_length=100, blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         managed = False
         db_table = "restaurant"
@@ -48,6 +57,9 @@ class ServiceType(models.Model):
 class Cuisine(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         managed = False
         db_table = "cuisine"
@@ -60,6 +72,9 @@ class UserRequest(models.Model):
     cuisine = models.CharField(max_length=100)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.service_type
 
     class Meta:
         managed = True

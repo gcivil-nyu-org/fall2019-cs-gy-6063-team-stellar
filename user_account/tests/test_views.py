@@ -40,6 +40,8 @@ class SignupViewTest(TestCase):
         )
 
 
+
+
 class LoginViewTest(TestCase):
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get("/login/")
