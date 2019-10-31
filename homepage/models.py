@@ -8,7 +8,7 @@ class School(models.Model):
         return self.name
 
     class Meta:
-        managed = True
+        managed = False
         db_table = "school"
 
 
@@ -21,7 +21,7 @@ class Department(models.Model):
         return self.name
 
     class Meta:
-        managed = True
+        managed = False
         db_table = "department"
 
 
@@ -41,7 +41,7 @@ class Restaurant(models.Model):
         return self.name
 
     class Meta:
-        managed = True
+        managed = False
         db_table = "restaurant"
 
 
@@ -50,7 +50,7 @@ class ServiceType(models.Model):
     description = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = "service_type"
 
 
@@ -61,7 +61,7 @@ class Cuisine(models.Model):
         return self.name
 
     class Meta:
-        managed = True
+        managed = False
         db_table = "cuisine"
 
 
