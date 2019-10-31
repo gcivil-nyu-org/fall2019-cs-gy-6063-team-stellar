@@ -1,11 +1,8 @@
-import psycopg2
+import sqlite3
 import csv
 import math
-import os
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
-DATABASE_URL = os.environ['DATABASE_URL']
 
 # Thanks to https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
@@ -24,78 +21,43 @@ def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
 def deg2rad(deg):
     return deg * (math.pi / 180)
 
-
-
-
-
 def importschool():
-    # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        # host="localhost",
-    # user = "postgres", password = "password"
-        # database="lunchninja",
-        # host="localhost",
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    conn = sqlite3.connect('db.sqlite3')
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS userrequest")
-    cur.execute("CREATE TABLE userrequest (id INTEGER, user_id INTEGER, service_type VARCHAR, time_stamp DATE, cuisine VARCHAR, school VARCHAR, department VARCHAR)")
-    cur.execute("DROP TABLE IF EXISTS school")
-    cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
-    filepath = "datasource/School.csv"
-    with open(
-        filepath, "r", encoding="UTF-8-sig"
-    ) as fin:  # `with` statement available in 2.5+
+    cur.execute('DROP TABLE IF EXISTS school')
+    cur.execute('CREATE TABLE school (name VARCHAR, id INTEGER)')
+
+    filepath = 'datasource/School.csv'
+    with open(filepath, 'r', encoding="UTF-8-sig") as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
-        for i in dr:
-            print(i)
-            cur.execute(
-                "INSERT INTO school (name, id) VALUES (%s, %s)", (i["Name"], i["id"])
-            )
-
+        to_db = [(i['schoolname'], i['id']) for i in dr]
+    cur.executemany("INSERT INTO school (name, id) VALUES (?, ?);", to_db)
     conn.commit()
     conn.close()
-    return ()
 
 
 def importdepartment():
-    # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    conn = sqlite3.connect('db.sqlite3')
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS department")
-    cur.execute(
-        "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
-    )
-    filepath2 = "datasource/Department.csv"
-    with open(
-        filepath2, "r", encoding="UTF-8-SIG"
-    ) as fin2:  # `with` statement available in 2.5+
+    cur.execute('DROP TABLE IF EXISTS department')
+    cur.execute('CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)')
+    filepath2 = 'datasource/Department.csv'
+    with open(filepath2, 'r', encoding="UTF-8-sig") as fin2:  # `with` statement available in 2.5+
         dr2 = csv.DictReader(fin2)  # comma is default delimiter
-        for i in dr2:
-            cur.execute(
-                "INSERT INTO department (name, school, id, description) VALUES (%s, %s, %s, %s)",
-                (i["Name"], i["School"], i["id"], i["Description"]),
-            )
-
+        to_db2 = [(i['departmentname'], i['School'], i['id'], i['Description']) for i in dr2]
+    cur.executemany("INSERT INTO department (name, school, id, description) VALUES (?, ?, ?, ?);", to_db2)
     conn.commit()
     conn.close()
-    return ()
 
 
 def importrestaurant():
-    # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    conn = sqlite3.connect('db.sqlite3')
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS restaurant")
-    cur.execute(
-        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode VARCHAR, phone VARCHAR, latitude VARCHAR, longitude VARCHAR)"  # noqa: E501
-    )
-    filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
-    with open(
-        filepath3, "r", encoding="UTF-8"
-    ) as fin3:  # `with` statement available in 2.5+
+    cur.execute('DROP TABLE IF EXISTS restaurant')
+    cur.execute('CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)')
+    filepath3 = 'datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv'
+    with open(filepath3, 'r', encoding="UTF-8-sig") as fin3:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr3 = csv.DictReader(fin3)  # comma is default delimiter
         lat = [40.694340, 40.729010, 40.737570]
@@ -103,7 +65,7 @@ def importrestaurant():
             -73.986110,
             -73.996470,
             -73.978070,
-        ]  # tandon, college of art and science , nursing
+        ]
         for i in dr3:
             if (
                 i["Latitude"] in ("", None)
@@ -122,7 +84,7 @@ def importrestaurant():
                 )
                 if distance <= 1.5:
                     cur.execute(
-                        "INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",  # noqa: E501
+                        "INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  # noqa: E501
                         (
                             i["CAMIS"],
                             i["DBA"],
@@ -137,23 +99,22 @@ def importrestaurant():
                             i["Longitude"],
                         ),
                     )
-    cur.execute(
-        "DELETE FROM restaurant a USING restaurant b WHERE a.score > b.score AND a.id = b.id"
-    )
 
     cur.execute(
-        "DELETE FROM restaurant a WHERE a.ctid <> (SELECT min(b.ctid) FROM   restaurant b WHERE  a.id = b.id)"
-    )
+            "DELETE FROM restaurant WHERE rowid not in ( select  min(rowid) from restaurant group by name ,id)"
+        )
 
+    # cur.execute(
+    #         "DELETE FROM restaurant ra WHERE ra.ctid <> (SELECT min(rb.ctid) FROM   restaurant rb WHERE  ra.id = rb.id)"
+    #     )
     conn.commit()
     conn.close()
-    return ()
+
 
 
 def importcuisine():
-    # let postgres start: pg_ctl -D /usr/local/var/postgres start
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    conn = sqlite3.connect('db.sqlite3')
+    cur = conn.cursor()
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")
     cur.execute("CREATE TABLE cuisine (name VARCHAR, id INTEGER)")
@@ -161,38 +122,10 @@ def importcuisine():
     count = cur.fetchall()
     id = 0
     for each in count:
-        cur.execute("INSERT INTO cuisine (name, id) VALUES (%s, %s)", (each, id))
+        cur.execute("INSERT INTO cuisine (name, id) VALUES (?, ?)", (each[0], id))
         id = id + 1
-
     conn.commit()
     conn.close()
-    return ()
-
-
-def retrieveschool():
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require').set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
-    cur.execute("SELECT name,id FROM school")
-    count = cur.fetchall()
-    print(count)
-    conn.commit()
-    conn.close()
-    return ()
-
-
-def retrievedepartment(schoolname):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
-    # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
-    # id = cur.fetchone()
-    sqlline = "SELECT name,school FROM department"
-    cur.execute(sqlline)
-    count = cur.fetchall()
-    print(count)
-    conn.commit()
-    conn.close()
-    return ()
 
 
 def main():
@@ -200,8 +133,6 @@ def main():
     importdepartment()
     importrestaurant()
     importcuisine()
-    # retrieveschool()
-    # retrievedepartment('Tandon School of Engineering')
     return ()
 
 

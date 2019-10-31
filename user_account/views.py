@@ -20,36 +20,6 @@ def index(request):
     #     return redirect('/login/')
     return render(request, "index.html")
 
-
-# def retrieveschool():
-#     conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
-#     # conn = psycopg2.connect(database="lunchninja", host="localhost")
-#     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-#     cur = conn.cursor()
-#     cur.execute("SELECT name,id FROM school")
-#     count = cur.fetchall()
-#     # print(count)
-#     conn.commit()
-#     conn.close()
-#     return count
-#
-#
-# def retrievedepartment():
-#     conn = psycopg2.connect(database="lunchninja", host="localhost", user='postgres', password='password')
-#     # conn = psycopg2.connect(database="lunchninja", host="localhost")
-#     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-#     cur = conn.cursor()
-#     # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")
-#     # id = cur.fetchone()
-#     sqlline = "SELECT name,school FROM department"
-#     cur.execute(sqlline)
-#     count = cur.fetchall()
-#     # print(count)
-#     conn.commit()
-#     conn.close()
-#     return count
-
-
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
@@ -69,11 +39,12 @@ def merge():
     school = []
     department = []
     for schoolitem in school_list:
+        print(schoolitem)
         school.append(schoolitem[0])
         id_school[str(schoolitem[1])] = schoolitem[0]
         school_department[schoolitem[0]] = []
     for departmentitem in department_list:
-
+        print(departmentitem)
         department = departmentitem[0]
         school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
         department_school[departmentitem[0]] = [id_school[str(departmentitem[1])]]
