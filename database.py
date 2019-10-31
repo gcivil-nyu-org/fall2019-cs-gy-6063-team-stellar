@@ -3,7 +3,6 @@ import csv
 import math
 
 
-
 # Thanks to https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
     R = 6371  # Radius of the earth in km
@@ -21,51 +20,63 @@ def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
 def deg2rad(deg):
     return deg * (math.pi / 180)
 
-def importschool():
-    conn = sqlite3.connect('db.sqlite3')
-    cur = conn.cursor()
-    cur.execute('DROP TABLE IF EXISTS school')
-    cur.execute('CREATE TABLE school (name VARCHAR, id INTEGER)')
 
-    filepath = 'datasource/School.csv'
-    with open(filepath, 'r', encoding="UTF-8-sig") as fin:  # `with` statement available in 2.5+
+def importschool():
+    conn = sqlite3.connect("db.sqlite3")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS school")
+    cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
+
+    filepath = "datasource/School.csv"
+    with open(
+        filepath, "r", encoding="UTF-8-sig"
+    ) as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
-        to_db = [(i['schoolname'], i['id']) for i in dr]
+        to_db = [(i["schoolname"], i["id"]) for i in dr]
     cur.executemany("INSERT INTO school (name, id) VALUES (?, ?);", to_db)
     conn.commit()
     conn.close()
 
 
 def importdepartment():
-    conn = sqlite3.connect('db.sqlite3')
+    conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
-    cur.execute('DROP TABLE IF EXISTS department')
-    cur.execute('CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)')
-    filepath2 = 'datasource/Department.csv'
-    with open(filepath2, 'r', encoding="UTF-8-sig") as fin2:  # `with` statement available in 2.5+
+    cur.execute("DROP TABLE IF EXISTS department")
+    cur.execute(
+        "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
+    )
+    filepath2 = "datasource/Department.csv"
+    with open(
+        filepath2, "r", encoding="UTF-8-sig"
+    ) as fin2:  # `with` statement available in 2.5+
         dr2 = csv.DictReader(fin2)  # comma is default delimiter
-        to_db2 = [(i['departmentname'], i['School'], i['id'], i['Description']) for i in dr2]
-    cur.executemany("INSERT INTO department (name, school, id, description) VALUES (?, ?, ?, ?);", to_db2)
+        to_db2 = [
+            (i["departmentname"], i["School"], i["id"], i["Description"]) for i in dr2
+        ]
+    cur.executemany(
+        "INSERT INTO department (name, school, id, description) VALUES (?, ?, ?, ?);",
+        to_db2,
+    )
     conn.commit()
     conn.close()
 
 
 def importrestaurant():
-    conn = sqlite3.connect('db.sqlite3')
+    conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
-    cur.execute('DROP TABLE IF EXISTS restaurant')
-    cur.execute('CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)')
-    filepath3 = 'datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv'
-    with open(filepath3, 'r', encoding="UTF-8-sig") as fin3:  # `with` statement available in 2.5+
+    cur.execute("DROP TABLE IF EXISTS restaurant")
+    cur.execute(
+        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)" # noqa: E501
+    )
+    filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
+    with open(
+        filepath3, "r", encoding="UTF-8-sig"
+    ) as fin3:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr3 = csv.DictReader(fin3)  # comma is default delimiter
         lat = [40.694340, 40.729010, 40.737570]
-        log = [
-            -73.986110,
-            -73.996470,
-            -73.978070,
-        ]
+        log = [-73.986110, -73.996470, -73.978070]
         for i in dr3:
             if (
                 i["Latitude"] in ("", None)
@@ -101,8 +112,8 @@ def importrestaurant():
                     )
 
     cur.execute(
-            "DELETE FROM restaurant WHERE rowid not in ( select  min(rowid) from restaurant group by name ,id)"
-        )
+        "DELETE FROM restaurant WHERE rowid not in ( select  min(rowid) from restaurant group by name ,id)"
+    )
 
     # cur.execute(
     #         "DELETE FROM restaurant ra WHERE ra.ctid <> (SELECT min(rb.ctid) FROM   restaurant rb WHERE  ra.id = rb.id)"
@@ -111,9 +122,8 @@ def importrestaurant():
     conn.close()
 
 
-
 def importcuisine():
-    conn = sqlite3.connect('db.sqlite3')
+    conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")

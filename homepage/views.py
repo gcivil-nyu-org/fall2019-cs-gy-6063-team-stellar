@@ -3,18 +3,20 @@ from .models import UserRequest, Department, School, Cuisine
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+
 # Create your views here.
+
 
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
-    school_list=[]
-    department_list=[]
+    school_list = []
+    department_list = []
     for s in school:
-        school_list.append((s.name,s.id))
+        school_list.append((s.name, s.id))
 
     for d in department:
-        department_list.append((d.name,d.school))
+        department_list.append((d.name, d.school))
     # schoollists = retrieveschool()
     # departmentlists = retrievedepartment()
 
@@ -38,6 +40,7 @@ def merge():
     # print(school_department)
     # print(department_school)
     return school, department, school_department, department_school
+
 
 def index(request):
     if request.session.get("is_login", None):  # no repeat log in
@@ -82,12 +85,16 @@ def user_service(request):
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
         return redirect("/")
-    elif request.method == "GET" and request.path.startswith("/homepage/ajax/load_departments_homepage"):
+    elif request.method == "GET" and request.path.startswith(
+        "/homepage/ajax/load_departments_homepage"
+    ):
 
         school_id = request.GET.get("school_id", None)
         response = school_departments[school_id]
         return JsonResponse(response, safe=False)
-    elif request.method == "GET" and request.path.startswith("/homepage/ajax/load_school_homepage"):
+    elif request.method == "GET" and request.path.startswith(
+        "/homepage/ajax/load_school_homepage"
+    ):
         department_id = request.GET.get("department_id", None)
         school = depatment_school[department_id][0]
         response = []

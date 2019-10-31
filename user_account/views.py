@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
-from homepage.models import  Department, School
+from homepage.models import Department, School
 
 
 from .models import LunchNinjaUser
@@ -20,16 +20,17 @@ def index(request):
     #     return redirect('/login/')
     return render(request, "index.html")
 
+
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
-    school_list=[]
-    department_list=[]
+    school_list = []
+    department_list = []
     for s in school:
-        school_list.append((s.name,s.id))
+        school_list.append((s.name, s.id))
 
     for d in department:
-        department_list.append((d.name,d.school))
+        department_list.append((d.name, d.school))
     # schoollists = retrieveschool()
     # departmentlists = retrievedepartment()
 
@@ -96,12 +97,18 @@ def usersignup(request):
             errordict[key] = messagetext
         errordict["signup_form"] = signup_form
         return render(request, "signup.html", errordict)
-    elif request.method == "GET" and (request.path.startswith("/ajax/load_departments") or request.path.startswith("/signup/ajax/load_departments")):
+    elif request.method == "GET" and (
+        request.path.startswith("/ajax/load_departments")
+        or request.path.startswith("/signup/ajax/load_departments")
+    ):
 
         school_id = request.GET.get("school_id", None)
         response = school_departments[school_id]
         return JsonResponse(response, safe=False)
-    elif request.method == "GET" and (request.path.startswith("/ajax/load_school") or request.path.startswith("/signup/ajax/load_school")):
+    elif request.method == "GET" and (
+        request.path.startswith("/ajax/load_school")
+        or request.path.startswith("/signup/ajax/load_school")
+    ):
         department_id = request.GET.get("department_id", None)
         school = depatment_school[department_id][0]
         response = []
