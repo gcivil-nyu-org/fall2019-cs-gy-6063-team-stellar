@@ -12,6 +12,7 @@ before_script:
   # before running actual tests
   - python manage.py migrate
   - python manage.py collectstatic
+  - python database.py
 
 script:
   # Execute all of the commands which
