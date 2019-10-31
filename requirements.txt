@@ -6,4 +6,3 @@ flake8
 black
 coverage
 coveralls
-psycopg2
