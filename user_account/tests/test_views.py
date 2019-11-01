@@ -38,19 +38,27 @@ class SignupViewTest(TestCase):
             response,
             "We have sent you an email, please confirm your email address to complete registration",
         )
+
     def test_first_signup_department_ajax(self):
-        response = self.client.get("ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development")
-        self.assertTrue(response,'<JsonResponse status_code=200, "application/json">')
+        response = self.client.get(
+            "ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
+        )
+        self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     def test_second_signup_department_ajax(self):
-        response = self.client.get("signup/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development")
-        self.assertTrue(response,'<JsonResponse status_code=200, "application/json">')
+        response = self.client.get(
+            "signup/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
+        )
+        self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
+
     def test_first_signup_school_ajax(self):
         response = self.client.get("ajax/load_school/?department_id=Biology")
-        self.assertTrue(response,'<JsonResponse status_code=200, "application/json">')
+        self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
+
     def test_second_signup_school_ajax(self):
         response = self.client.get("signup/ajax/load_school/?department_id=Biology")
-        self.assertTrue(response,'<JsonResponse status_code=200, "application/json">')
+        self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
+
 
 class LoginViewTest(TestCase):
     def test_view_url_exists_at_desired_location(self):

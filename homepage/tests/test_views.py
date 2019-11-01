@@ -20,12 +20,16 @@ class UserserviceViewTest(TestCase):
         }
         response = self.client.post("/serviceRequest/", requestObj)
         self.assertRedirects(response, "/")
+
     def test_homepage_department_ajax(self):
-        response = self.client.get("homepage/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development")
-        self.assertTrue(response,'<JsonResponse status_code=200, "application/json">')
+        response = self.client.get(
+            "homepage/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
+        )
+        self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
+
     def test_homepage_school_ajax(self):
         response = self.client.get("homepage/ajax/load_school/?department_id=Biology")
-        self.assertTrue(response,'<JsonResponse status_code=200, "application/json">')
+        self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
 
 class LogoutViewTest(TestCase):

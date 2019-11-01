@@ -67,7 +67,7 @@ def importrestaurant():
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS restaurant")
     cur.execute(
-        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)" # noqa: E501
+        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
     )
     filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
     with open(

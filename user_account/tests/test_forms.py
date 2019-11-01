@@ -42,6 +42,7 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertFalse(form.is_valid())
+
     def test_school_is_valid(self):
         data = {
             "username": "testUser",
@@ -56,6 +57,7 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertTrue(form.is_valid())
+
     def test_school_not_valid(self):
         data = {
             "username": "testUser",
@@ -70,6 +72,7 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertFalse(form.is_valid())
+
     def test_department_is_valid(self):
         data = {
             "username": "testUser",
@@ -84,6 +87,7 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertTrue(form.is_valid())
+
     def test_department_not_valid(self):
         data = {
             "username": "testUser",

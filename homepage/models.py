@@ -14,7 +14,6 @@ class Department(models.Model):
         db_table = "department"
 
 
-
 class School(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
@@ -24,6 +23,7 @@ class School(models.Model):
     class Meta:
         managed = True
         db_table = "school"
+
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
