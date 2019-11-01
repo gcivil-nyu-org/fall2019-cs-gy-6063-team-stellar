@@ -10,11 +10,11 @@ install:
 before_script:
   # Execute all of the commands which need to be executed
   # before running actual tests
-  #  - python database.py
+  - python database.py
   - python manage.py makemigrations user_account
   - python manage.py makemigrations homepage
   - python manage.py migrate
-  - python database.py
+#  - python database.py
   - python manage.py collectstatic
 
 
