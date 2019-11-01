@@ -36,7 +36,63 @@ class UserSignUpFormTest(TestCase):
             "last_name": "trump",
             "Phone": "1234567890",
             "school": "Tandon School of Engineering",
-            "department": "Electrical Engineering",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertFalse(form.is_valid())
+    def test_school_is_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertTrue(form.is_valid())
+    def test_school_not_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertFalse(form.is_valid())
+    def test_department_is_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertTrue(form.is_valid())
+    def test_department_not_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer",
             "password1": "Pass12345",
             "password2": "Pass12345",
         }

@@ -40,12 +40,10 @@ def merge():
     school = []
     department = []
     for schoolitem in school_list:
-        print(schoolitem)
         school.append(schoolitem[0])
         id_school[str(schoolitem[1])] = schoolitem[0]
         school_department[schoolitem[0]] = []
     for departmentitem in department_list:
-        print(departmentitem)
         department = departmentitem[0]
         school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
         department_school[departmentitem[0]] = [id_school[str(departmentitem[1])]]
@@ -104,6 +102,7 @@ def usersignup(request):
 
         school_id = request.GET.get("school_id", None)
         response = school_departments[school_id]
+        print(JsonResponse(response, safe=False))
         return JsonResponse(response, safe=False)
     elif request.method == "GET" and (
         request.path.startswith("/ajax/load_school")
@@ -111,6 +110,9 @@ def usersignup(request):
     ):
         department_id = request.GET.get("department_id", None)
         school = depatment_school[department_id][0]
+        print(department_id)
+        print(depatment_school)
+        print(school)
         response = []
         response.append(school)
         for s in schoolist:
