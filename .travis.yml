@@ -14,6 +14,7 @@ before_script:
   - python manage.py makemigrations user_account
   - python manage.py makemigrations homepage
   - python manage.py migrate
+  - python database.py
   - python manage.py collectstatic
 
 
