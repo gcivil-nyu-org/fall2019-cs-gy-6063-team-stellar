@@ -9,9 +9,9 @@ def creat_school_tuple():
     read_school = School.objects.all()
     schoollist = []
     # read_school = retrieveschool()
+    schoollist.append(("select school", "select school"))
     for s in read_school:
         schoollist.append((s.name, s.name))
-    schoollist[0] = ("select school", "select school")
     return tuple(schoollist)
 
 
@@ -20,9 +20,9 @@ def creat_department_tuple():
 
     departmentlist = []
     # read_department = retrievedepartment()
+    departmentlist.append(("select department", "select department"))
     for d in read_department:
         departmentlist.append((d.name, d.name))
-    departmentlist[0] = ("select department", "select department")
     return tuple(departmentlist)
 
 

@@ -1,6 +1,8 @@
 from django.db import models
 
 
+m_state = True
+
 class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     school = models.IntegerField(blank=True, null=True)
@@ -10,7 +12,7 @@ class Department(models.Model):
         return self.name
 
     class Meta:
-        managed = False
+        managed = m_state
         db_table = "department"
 
 
@@ -21,7 +23,7 @@ class School(models.Model):
         return self.name
 
     class Meta:
-        managed = False
+        managed = m_state
         db_table = "school"
 
 
@@ -41,7 +43,7 @@ class Restaurant(models.Model):
         return self.name
 
     class Meta:
-        managed = False
+        managed = m_state
         db_table = "restaurant"
 
 class Cuisine(models.Model):
@@ -51,7 +53,7 @@ class Cuisine(models.Model):
         return self.name
 
     class Meta:
-        managed = False
+        managed = m_state
         db_table = "cuisine"
 
 

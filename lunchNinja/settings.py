@@ -85,6 +85,8 @@ DATABASES = {
         "TEST_NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
+
+TEST_RUNNER = "homepage.utils.UnManagedModelTestRunner"
 #
 # DATABASES = {
 #     "default": {
