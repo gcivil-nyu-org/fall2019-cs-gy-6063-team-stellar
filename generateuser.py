@@ -3,7 +3,7 @@ import csv
 
 
 def load_school(file):
-    with open(file,"r") as in_f:
+    with open(file,"r",encoding='utf-8') as in_f:
         schoollist=[]
         f_csv = csv.reader(in_f)
         for linelist in f_csv:
@@ -11,17 +11,19 @@ def load_school(file):
         return schoollist[1:]
 
 def load_department(file):
-    with open(file, "r") as in_f:
+    with open(file, "r",encoding='utf-8') as in_f:
         departmentlist = []
         f_csv = csv.reader(in_f)
         for linelist in f_csv:
             departmentlist.append((linelist[0],linelist[1]))
         return departmentlist[1:]
 def load_cuisine(file):
-    with open(file,"r") as in_f:
+    with open(file,"r",encoding='utf-8') as in_f:
         cuisinelist=[]
         f_csv = csv.reader(in_f)
         for linelist in f_csv:
+            if linelist[7] in cuisinelist:
+                continue
             cuisinelist.append(linelist[7])
         return cuisinelist[1:]
 
@@ -56,17 +58,18 @@ def generateuser(N,schools,cuisines):
         departments=school_department[schools[school_id]]
         department_id=random.randint(0,len(departments)-1)
         user["department"]=departments[department_id]
-        p_cuisine_number=random.randint(0,len(cuisines)-1)
+        p_cuisine_number=random.randint(1,len(cuisines)-1)
         p_cuisine=random.sample(cuisines,p_cuisine_number)
         user["prefered cuisines"]=p_cuisine
-        p_department_number=random.randint(0,len(all_department)-1)
+        p_department_number=random.randint(1,len(all_department)-1)
         p_department=random.sample(all_department,p_department_number)
         user["prefered departments"]=p_department
         userlist.append(user)
+        break
     return userlist
 def save_users(path,userlist):
     print(userlist)
-    with open(path, 'w',newline='') as f:
+    with open(path, 'w',newline='',encoding='utf-8') as f:
         w = csv.writer(f)
         w.writerow(userlist[0].keys())
         for user in userlist:

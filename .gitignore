@@ -90,7 +90,8 @@ target/
 *.pyc
 __pycache__/
 local_settings.py
-
+/htmlcov
+/covhtml
 .env
 #db.sqlite3
 #db.sqlite3-journal
