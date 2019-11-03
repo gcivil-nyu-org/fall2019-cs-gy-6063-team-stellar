@@ -37,6 +37,7 @@ def importschool():
     cur.executemany("INSERT INTO school (name, id) VALUES (?, ?);", to_db)
     conn.commit()
     conn.close()
+    print("imported school data")
 
 
 def importdepartment():
@@ -60,6 +61,7 @@ def importdepartment():
     )
     conn.commit()
     conn.close()
+    print("imported department data")
 
 
 def importrestaurant():
@@ -120,11 +122,11 @@ def importrestaurant():
     #     )
     conn.commit()
     conn.close()
+    print("imported restaurant data")
 
 
 def importcuisine():
     conn = sqlite3.connect("db.sqlite3")
-    cur = conn.cursor()
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")
     cur.execute("CREATE TABLE cuisine (name VARCHAR, id INTEGER)")
@@ -136,6 +138,7 @@ def importcuisine():
         id = id + 1
     conn.commit()
     conn.close()
+    print("imported cuisine data")
 
 
 def main():

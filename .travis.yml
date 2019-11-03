@@ -10,11 +10,10 @@ install:
 before_script:
   # Execute all of the commands which need to be executed
   # before running actual tests
+  - python database.py
   - python manage.py makemigrations user_account
   - python manage.py makemigrations homepage
-#  -   - python database.py
   - python manage.py migrate
-  - python database.py
   - python manage.py collectstatic
 
 
@@ -23,7 +22,8 @@ script:
   # should make the build pass or fail
   - black --check .
   - flake8 .
-  - coverage run --source=user_account manage.py test user_account/tests
+  - coverage run --source=user_account manage.py test homepage/tests --keepdb
+  - coverage run --source=user_account manage.py test user_account/tests --keepdb
 
 after_script:
   - coveralls

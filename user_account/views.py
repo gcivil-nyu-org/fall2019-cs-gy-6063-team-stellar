@@ -44,7 +44,7 @@ def merge():
         id_school[str(schoolitem[1])] = schoolitem[0]
         school_department[schoolitem[0]] = []
     for departmentitem in department_list:
-        department = departmentitem[0]
+        department.append(departmentitem[0])
         school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
         department_school[departmentitem[0]] = [id_school[str(departmentitem[1])]]
 
@@ -53,6 +53,15 @@ def merge():
     # print(school_department)
     # print(department_school)
     return school, department, school_department, department_school
+
+
+def checkajax_department(request):
+    if request.method == "GET" and (
+        request.path.startswith("/ajax/load_departments")
+        or request.path.startswith("/signup/ajax/load_departments")
+    ):
+        return True
+    return False
 
 
 def usersignup(request):
@@ -95,14 +104,9 @@ def usersignup(request):
             errordict[key] = messagetext
         errordict["signup_form"] = signup_form
         return render(request, "signup.html", errordict)
-    elif request.method == "GET" and (
-        request.path.startswith("/ajax/load_departments")
-        or request.path.startswith("/signup/ajax/load_departments")
-    ):
-
+    elif checkajax_department(request):
         school_id = request.GET.get("school_id", None)
         response = school_departments[school_id]
-        print(JsonResponse(response, safe=False))
         return JsonResponse(response, safe=False)
     elif request.method == "GET" and (
         request.path.startswith("/ajax/load_school")
@@ -110,9 +114,6 @@ def usersignup(request):
     ):
         department_id = request.GET.get("department_id", None)
         school = depatment_school[department_id][0]
-        print(department_id)
-        print(depatment_school)
-        print(school)
         response = []
         response.append(school)
         for s in schoolist:

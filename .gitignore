@@ -20,6 +20,7 @@ staticfiles/
 .Spotlight-V100
 .Trashes
 .coverage
+covhtml
 
 # Directories potentially created on remote AFP share
 .AppleDB
@@ -92,6 +93,6 @@ __pycache__/
 local_settings.py
 
 .env
-db.sqlite3
-db.sqlite3-journal
+#db.sqlite3
+#db.sqlite3-journal
 media
