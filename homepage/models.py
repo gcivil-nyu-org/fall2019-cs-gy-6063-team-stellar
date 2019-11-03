@@ -3,6 +3,7 @@ from django.db import models
 
 m_state = False
 
+
 class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     school = models.IntegerField(blank=True, null=True)
@@ -45,6 +46,7 @@ class Restaurant(models.Model):
     class Meta:
         managed = m_state
         db_table = "restaurant"
+
 
 class Cuisine(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)

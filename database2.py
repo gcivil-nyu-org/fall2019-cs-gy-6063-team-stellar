@@ -1,13 +1,14 @@
 import psycopg2
 import csv
 import math
-import os
+# import os
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 testdb = "test_lunchninja"
 
 # DATABASE_URL = os.environ['DATABASE_URL']
+
 
 # Thanks to https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
@@ -27,9 +28,6 @@ def deg2rad(deg):
     return deg * (math.pi / 180)
 
 
-
-
-
 def importschool():
     # let postgres start: pg_ctl -D /usr/local/var/postgres start
     # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -37,7 +35,9 @@ def importschool():
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS userrequest")
-    cur.execute("CREATE TABLE userrequest (id INTEGER, user_id INTEGER, service_type VARCHAR, time_stamp DATE, cuisine VARCHAR, school VARCHAR, department VARCHAR)")
+    cur.execute(
+        "CREATE TABLE userrequest (id INTEGER, user_id INTEGER, service_type VARCHAR, time_stamp DATE, cuisine VARCHAR, school VARCHAR, department VARCHAR)" # noqa: E501
+    )
     cur.execute("DROP TABLE IF EXISTS school")
     cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
     filepath = "datasource/School.csv"
@@ -49,7 +49,8 @@ def importschool():
         for i in dr:
             print(i)
             cur.execute(
-                "INSERT INTO school (name, id) VALUES (%s, %s)", (i["schoolname"], i["id"])
+                "INSERT INTO school (name, id) VALUES (%s, %s)",
+                (i["schoolname"], i["id"]),
             )
 
     conn.commit()
@@ -172,7 +173,9 @@ def importcuisine():
 
 
 def retrieveschool():
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require').set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require").set_isolation_level(
+        ISOLATION_LEVEL_AUTOCOMMIT
+    )
     cur = conn.cursor()
     cur.execute("SELECT name,id FROM school")
     count = cur.fetchall()
@@ -183,7 +186,8 @@ def retrieveschool():
 
 
 def retrievedepartment(schoolname):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    # conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    conn = psycopg2.connect(database="test_lunchninja", host="localhost")
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     # cur.execute("SELECT id FROM school WHERE name LIKE \'" + schoolname +"\'")

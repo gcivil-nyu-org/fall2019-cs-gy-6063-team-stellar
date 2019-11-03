@@ -38,6 +38,7 @@ class SignupViewTest(TestCase):
             response,
             "We have sent you an email, please confirm your email address to complete registration",
         )
+
     def test_call_view_success_incorrect_fields(self):
         signupObj = {
             "username": "testUser",
@@ -50,32 +51,32 @@ class SignupViewTest(TestCase):
         }
         response = self.client.post("/signup/", signupObj)
         self.assertEqual(response.status_code, 200)
+
     def request_start(request):
         return True
-    @mock.patch("user_account.views.checkajax_department", side_effect = request_start)
 
-    def test_first_signup_department_ajax(self,mockhead):
-        response1 = self.client.get(
-            " "
-        )
+    @mock.patch("user_account.views.checkajax_department", side_effect=request_start)
+    def test_first_signup_department_ajax(self, mockhead):
+        # response1 = self.client.get(" ")
         response = self.client.get(
             "ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
+
     def test_second_signup_department_ajax(self):
-        response1 = self.client.get("/")
+        # response1 = self.client.get("/")
         response = self.client.get(
             "signup/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     def test_first_signup_school_ajax(self):
-        response1 = self.client.get("/signup/")
+        # response1 = self.client.get("/signup/")
         response = self.client.get("ajax/load_school/?department_id=Biology")
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     def test_second_signup_school_ajax(self):
-        response1 = self.client.get("/signup/")
+        # response1 = self.client.get("/signup/")
         response = self.client.get("signup/ajax/load_school/?department_id=Biology")
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
@@ -89,11 +90,9 @@ class LoginViewTest(TestCase):
         response = self.client.get("/login/")
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "login.html")
+
     def test_login_incorrect_fields(self):
-        loginObj = {
-            "username": "testUser",
-            "password": "password12345"
-        }
+        loginObj = {"username": "testUser", "password": "password12345"}
         response = self.client.post("/login/", loginObj)
         self.assertEqual(response.status_code, 200)
 

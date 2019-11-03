@@ -65,15 +65,11 @@ def user_service(request):
         school = request.POST["school"]
         if request.user.is_authenticated:
             id = request.user.id
-            req = UserRequest(
-                user_id=id, service_type=service_type, school=school
-            )
+            req = UserRequest(user_id=id, service_type=service_type, school=school)
             req.save()
             for each in cuisine:
-                cuisinemodel = Cuisine.objects.filter(name = each)
+                cuisinemodel = Cuisine.objects.filter(name=each)
                 req.cuisine.add(cuisinemodel)
-
-
 
             email_subject = "Service Confirmation"
             message = render_to_string(

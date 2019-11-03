@@ -53,13 +53,16 @@ def merge():
     # print(school_department)
     # print(department_school)
     return school, department, school_department, department_school
+
+
 def checkajax_department(request):
     if request.method == "GET" and (
-            request.path.startswith("/ajax/load_departments")
-            or request.path.startswith("/signup/ajax/load_departments")
+        request.path.startswith("/ajax/load_departments")
+        or request.path.startswith("/signup/ajax/load_departments")
     ):
         return True
     return False
+
 
 def usersignup(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()

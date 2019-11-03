@@ -39,6 +39,7 @@ def importschool():
     conn.close()
     print("imported school data")
 
+
 def importdepartment():
     conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
@@ -139,6 +140,7 @@ def importcuisine():
     conn.commit()
     conn.close()
     print("imported cuisine data")
+
 
 def main():
     importschool()
