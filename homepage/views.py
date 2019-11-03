@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import UserRequest, Department, School, Cuisine
+from .models import UserRequest, Department, School, Cuisine, Days_left
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 
 # Create your views here.
+Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
 
 def merge():
@@ -65,11 +66,16 @@ def user_service(request):
         school = request.POST["school"]
         if request.user.is_authenticated:
             id = request.user.id
-            req = UserRequest(user_id=id, service_type=service_type, school=school)
+            req = UserRequest(
+                user_id=id, service_type=service_type, cuisine=cuisine, school=school
+            )
             req.save()
-            for each in cuisine:
-                cuisinemodel = Cuisine.objects.filter(name=each)
-                req.cuisine.add(cuisinemodel)
+
+            daysleft = Days_left(user_id=id, days=Service_days[service_type])
+            daysleft.save()
+            # for each in cuisine:
+            #     cuisinemodel = Cuisine.objects.filter(name=each)
+            #     req.cuisine.add(cuisinemodel)
 
             email_subject = "Service Confirmation"
             message = render_to_string(

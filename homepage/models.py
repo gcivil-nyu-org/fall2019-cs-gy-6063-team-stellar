@@ -59,11 +59,24 @@ class Cuisine(models.Model):
         db_table = "cuisine"
 
 
+class Days_left(models.Model):
+    user_id = models.IntegerField()
+    days = models.IntegerField()
+
+    def __str__(self):
+        return self.days
+
+    class Meta:
+        managed = True
+        db_table = "days"
+
+
 class UserRequest(models.Model):
     user_id = models.IntegerField()
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(auto_now_add=True)
-    cuisine = models.CharField(max_length=200)
+    # cuisine = models.ManyToManyField(Cuisine, blank = True)
+    cuisine = models.CharField(max_length=100)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
 
