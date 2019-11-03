@@ -32,7 +32,7 @@ def merge():
         school_department[schoolitem[0]] = []
     for departmentitem in department_list:
 
-        department = departmentitem[0]
+        department.append(departmentitem[0])
         school_department[id_school[str(departmentitem[1])]].append(departmentitem[0])
         department_school[departmentitem[0]] = [id_school[str(departmentitem[1])]]
 
