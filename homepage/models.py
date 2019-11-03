@@ -1,7 +1,7 @@
 from django.db import models
 
 
-m_state = True
+m_state = False
 
 class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -61,7 +61,7 @@ class UserRequest(models.Model):
     user_id = models.IntegerField()
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(auto_now_add=True)
-    cuisine = models.CharField(max_length=100)
+    cuisine = models.CharField(max_length=200)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
 
