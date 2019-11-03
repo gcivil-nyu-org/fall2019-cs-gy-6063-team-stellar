@@ -24,8 +24,8 @@ def deg2rad(deg):
 def importschool():
     conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS school")
-    cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
+    cur.execute("DROP TABLE IF EXISTS homepage_school")
+    cur.execute("CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY)")
 
     filepath = "datasource/School.csv"
     with open(
@@ -34,7 +34,7 @@ def importschool():
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
         to_db = [(i["schoolname"], i["id"]) for i in dr]
-    cur.executemany("INSERT INTO school (name, id) VALUES (?, ?);", to_db)
+    cur.executemany("INSERT INTO homepage_school (name, id) VALUES (?, ?);", to_db)
     conn.commit()
     conn.close()
     print("imported school data")
@@ -43,9 +43,10 @@ def importschool():
 def importdepartment():
     conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS homepage_department")
     cur.execute("DROP TABLE IF EXISTS department")
     cur.execute(
-        "CREATE TABLE department (name VARCHAR, school INTEGER, id INTEGER, description VARCHAR)"
+        "CREATE TABLE homepage_department (name VARCHAR, school INTEGER, id INTEGER PRIMARY KEY, description VARCHAR)"
     )
     filepath2 = "datasource/Department.csv"
     with open(
@@ -56,7 +57,7 @@ def importdepartment():
             (i["departmentname"], i["School"], i["id"], i["Description"]) for i in dr2
         ]
     cur.executemany(
-        "INSERT INTO department (name, school, id, description) VALUES (?, ?, ?, ?);",
+        "INSERT INTO homepage_department (name, school, id, description) VALUES (?, ?, ?, ?);",
         to_db2,
     )
     conn.commit()
@@ -67,9 +68,10 @@ def importdepartment():
 def importrestaurant():
     conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS homepage_restaurant")
     cur.execute("DROP TABLE IF EXISTS restaurant")
     cur.execute(
-        "CREATE TABLE restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
+        "CREATE TABLE homepage_restaurant (id INTEGER, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
     )
     filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
     with open(
@@ -97,7 +99,7 @@ def importrestaurant():
                 )
                 if distance <= 1.5:
                     cur.execute(
-                        "INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  # noqa: E501
+                        "INSERT INTO homepage_restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  # noqa: E501
                         (
                             i["CAMIS"],
                             i["DBA"],
@@ -114,12 +116,9 @@ def importrestaurant():
                     )
 
     cur.execute(
-        "DELETE FROM restaurant WHERE rowid not in ( select  min(rowid) from restaurant group by name ,id)"
+        "DELETE FROM homepage_restaurant WHERE rowid not in ( select  min(rowid) from homepage_restaurant group by name ,id)"
     )
 
-    # cur.execute(
-    #         "DELETE FROM restaurant ra WHERE ra.ctid <> (SELECT min(rb.ctid) FROM   restaurant rb WHERE  ra.id = rb.id)"
-    #     )
     conn.commit()
     conn.close()
     print("imported restaurant data")
@@ -129,13 +128,15 @@ def importcuisine():
     conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")
-    cur.execute("CREATE TABLE cuisine (name VARCHAR, id INTEGER)")
-    cur.execute("SELECT DISTINCT cuisine FROM restaurant")
+    cur.execute("DROP TABLE IF EXISTS homepage_cuisine")
+    cur.execute("CREATE TABLE homepage_cuisine (name VARCHAR, id INTEGER PRIMARY KEY)")
+    cur.execute("SELECT DISTINCT cuisine FROM homepage_restaurant")
     count = cur.fetchall()
     id = 0
     for each in count:
-        cur.execute("INSERT INTO cuisine (name, id) VALUES (?, ?)", (each[0], id))
+        cur.execute("INSERT INTO homepage_cuisine (name, id) VALUES (?, ?)", (each[0], id))
         id = id + 1
+    
     conn.commit()
     conn.close()
     print("imported cuisine data")

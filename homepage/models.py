@@ -14,7 +14,6 @@ class Department(models.Model):
 
     class Meta:
         managed = m_state
-        db_table = "department"
 
 
 class School(models.Model):
@@ -25,7 +24,6 @@ class School(models.Model):
 
     class Meta:
         managed = m_state
-        db_table = "school"
 
 
 class Restaurant(models.Model):
@@ -45,7 +43,6 @@ class Restaurant(models.Model):
 
     class Meta:
         managed = m_state
-        db_table = "restaurant"
 
 
 class Cuisine(models.Model):
@@ -56,7 +53,6 @@ class Cuisine(models.Model):
 
     class Meta:
         managed = m_state
-        db_table = "cuisine"
 
 
 class Days_left(models.Model):
@@ -68,15 +64,13 @@ class Days_left(models.Model):
 
     class Meta:
         managed = True
-        db_table = "days"
 
 
 class UserRequest(models.Model):
     user_id = models.IntegerField()
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(auto_now_add=True)
-    # cuisine = models.ManyToManyField(Cuisine, blank = True)
-    cuisine = models.CharField(max_length=200)
+    cuisines = models.ManyToManyField(Cuisine, blank = True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
 
@@ -85,4 +79,3 @@ class UserRequest(models.Model):
 
     class Meta:
         managed = True
-        db_table = "userrequest"
