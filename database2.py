@@ -1,6 +1,7 @@
 import psycopg2
 import csv
 import math
+
 # import os
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -36,7 +37,7 @@ def importschool():
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS userrequest")
     cur.execute(
-        "CREATE TABLE userrequest (id INTEGER, user_id INTEGER, service_type VARCHAR, time_stamp DATE, cuisine VARCHAR, school VARCHAR, department VARCHAR)" # noqa: E501
+        "CREATE TABLE userrequest (id INTEGER, user_id INTEGER, service_type VARCHAR, time_stamp DATE, cuisine VARCHAR, school VARCHAR, department VARCHAR)"  # noqa: E501
     )
     cur.execute("DROP TABLE IF EXISTS school")
     cur.execute("CREATE TABLE school (name VARCHAR, id INTEGER)")
@@ -173,9 +174,12 @@ def importcuisine():
 
 
 def retrieveschool():
-    conn = psycopg2.connect(DATABASE_URL, sslmode="require").set_isolation_level(
-        ISOLATION_LEVEL_AUTOCOMMIT
-    )
+    conn = psycopg2.connect(
+        database="test_lunchninja", host="localhost"
+    ).set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    # conn = psycopg2.connect(DATABASE_URL, sslmode="require").set_isolation_level(
+    #     ISOLATION_LEVEL_AUTOCOMMIT
+    # )
     cur = conn.cursor()
     cur.execute("SELECT name,id FROM school")
     count = cur.fetchall()
