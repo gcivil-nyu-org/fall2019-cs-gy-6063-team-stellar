@@ -18,17 +18,12 @@ def load_department(file):
             departmentlist.append((linelist[0],linelist[1]))
         return departmentlist[1:]
 def load_cuisine(file):
-    with open(file, "r") as in_f:
-        cuisinelist = []
-        while True:
-            line = in_f.readline()
-            if not line:
-                break
-            linelist = line.strip().split(",")
-            if not linelist[7].strip('\"') in cuisinelist:
-                cuisinelist.append(linelist[7].strip('\"'))
-        cuisinelist = cuisinelist[1:]
-        return cuisinelist
+    with open(file,"r") as in_f:
+        cuisinelist=[]
+        f_csv = csv.reader(in_f)
+        for linelist in f_csv:
+            cuisinelist.append(linelist[7])
+        return cuisinelist[1:]
 
 def merge(school_list,department_list):
     school_department = {}
@@ -70,7 +65,8 @@ def generateuser(N,schools,cuisines):
         userlist.append(user)
     return userlist
 def save_users(path,userlist):
-    with open(path, 'w') as f:
+    print(userlist)
+    with open(path, 'w',newline='') as f:
         w = csv.writer(f)
         w.writerow(userlist[0].keys())
         for user in userlist:
