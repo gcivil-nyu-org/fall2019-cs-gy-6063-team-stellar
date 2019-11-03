@@ -76,9 +76,9 @@ class UserRequest(models.Model):
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(auto_now_add=True)
     # cuisine = models.ManyToManyField(Cuisine, blank = True)
-    cuisine = models.CharField(max_length=100)
+    cuisine = models.CharField(max_length=200)
     school = models.CharField(max_length=100, blank=True, null=True)
-    department = models.CharField(max_length=100, blank=True, null=True)
+    department = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.service_type
