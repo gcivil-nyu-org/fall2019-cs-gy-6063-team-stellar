@@ -128,7 +128,6 @@ def importrestaurant():
 def importcuisine():
     conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
-    cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")
     cur.execute("CREATE TABLE cuisine (name VARCHAR, id INTEGER)")
     cur.execute("SELECT DISTINCT cuisine FROM restaurant")
