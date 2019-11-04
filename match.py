@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
-from homepage.models import UserRequest, Cuisine  # noqa: E402
+from homepage.models import UserRequest  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
 
