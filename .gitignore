@@ -5,6 +5,7 @@
 .AppleDouble
 .LSOverride
 src/
+db.sqlite3
 
 #Editor 
 .idea
