@@ -68,9 +68,9 @@ def importdepartment():
 def importrestaurant():
     conn = sqlite3.connect("db.sqlite3")
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS restaurant")
+    cur.execute("DROP TABLE IF EXISTS homepage_restaurant")
     cur.execute(
-        "CREATE TABLE restaurant (id INTEGER PRIMNARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
+        "CREATE TABLE homepage_restaurant (id INTEGER PRIMNARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
     )
     filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
 
@@ -101,12 +101,12 @@ def importrestaurant():
                 )
                 if distance <= 1.5:
                     cur.execute(
-                        "SELECT COUNT(*) FROM restaurant WHERE id == " + str(rid)
+                        "SELECT COUNT(*) FROM homepage_restaurant WHERE id == " + str(rid)
                     )
                     count = cur.fetchone()
                     if int(count[0]) == 0:
                         cur.execute(
-                            "INSERT INTO restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  # noqa: E501
+                            "INSERT INTO homepage_restaurant (id, name, cuisine, score, borough, building, street, zipcode, phone, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  # noqa: E501
                             (
                                 i["CAMIS"],
                                 i["DBA"],
@@ -123,12 +123,12 @@ def importrestaurant():
                         )
                     else:
                         cur.execute(
-                            "SELECT score FROM restaurant WHERE id == " + str(rid)
+                            "SELECT score FROM homepage_restaurant WHERE id == " + str(rid)
                         )
                         score = cur.fetchone()
                         if int(i["SCORE"]) < int(score[0]):
                             cur.execute(
-                                "UPDATE restaurant SET score = "
+                                "UPDATE homepage_restaurant SET score = "
                                 + i["SCORE"]
                                 + " WHERE id = "
                                 + str(rid)
