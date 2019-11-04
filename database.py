@@ -101,7 +101,8 @@ def importrestaurant():
                 )
                 if distance <= 1.5:
                     cur.execute(
-                        "SELECT COUNT(*) FROM homepage_restaurant WHERE id == " + str(rid)
+                        "SELECT COUNT(*) FROM homepage_restaurant WHERE id == "
+                        + str(rid)
                     )
                     count = cur.fetchone()
                     if int(count[0]) == 0:
@@ -123,7 +124,8 @@ def importrestaurant():
                         )
                     else:
                         cur.execute(
-                            "SELECT score FROM homepage_restaurant WHERE id == " + str(rid)
+                            "SELECT score FROM homepage_restaurant WHERE id == "
+                            + str(rid)
                         )
                         score = cur.fetchone()
                         if int(i["SCORE"]) < int(score[0]):
