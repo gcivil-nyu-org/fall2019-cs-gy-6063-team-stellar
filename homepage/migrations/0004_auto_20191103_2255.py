@@ -5,14 +5,10 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('homepage', '0003_auto_20191103_2227'),
-    ]
+    dependencies = [("homepage", "0003_auto_20191103_2227")]
 
     operations = [
         migrations.RenameField(
-            model_name='userrequest',
-            old_name='cuisine',
-            new_name='cuisines',
-        ),
+            model_name="userrequest", old_name="cuisine", new_name="cuisines"
+        )
     ]

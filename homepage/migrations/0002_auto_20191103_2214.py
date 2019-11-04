@@ -5,18 +5,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('homepage', '0001_initial'),
-    ]
+    dependencies = [("homepage", "0001_initial")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='userrequest',
-            name='cuisine',
-        ),
+        migrations.RemoveField(model_name="userrequest", name="cuisine"),
         migrations.AddField(
-            model_name='userrequest',
-            name='cuisine',
-            field=models.ManyToManyField(blank=True, to='homepage.Cuisine'),
+            model_name="userrequest",
+            name="cuisine",
+            field=models.ManyToManyField(blank=True, to="homepage.Cuisine"),
         ),
     ]
