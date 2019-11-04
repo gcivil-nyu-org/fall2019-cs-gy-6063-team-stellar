@@ -13,19 +13,19 @@ def merge():
     school = School.objects.all()
     school_list = []
     department_list = []
+
     for s in school:
         school_list.append((s.name, s.id))
 
     for d in department:
         department_list.append((d.name, d.school))
-    # schoollists = retrieveschool()
-    # departmentlists = retrievedepartment()
 
     school_department = {}
     id_school = {}
     department_school = {}
     school = []
     department = []
+
     for schoolitem in school_list:
         school.append(schoolitem[0])
         id_school[str(schoolitem[1])] = schoolitem[0]
@@ -38,8 +38,6 @@ def merge():
 
     school_department["select school"] = department
 
-    # print(school_department)
-    # print(department_school)
     return school, department, school_department, department_school
 
 
@@ -61,26 +59,28 @@ def user_service(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
 
     if request.method == "POST":
-        service_type = request.POST["service_type"]
-        cuisine = request.POST.getlist("cuisine[]")
-        school = request.POST["school"]
         if request.user.is_authenticated:
+            service_type = request.POST["service_type"]
+            school = request.POST["school"]
+            cuisine_ids = request.POST.getlist("cuisine[]")
+            cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
+            cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
+
             id = request.user.id
-            req = UserRequest(
-                user_id=id, service_type=service_type, cuisine=cuisine, school=school
-            )
+            req = UserRequest(user_id=id, service_type=service_type, school=school)
             req.save()
-            # req.cuisines
+            req.cuisines.add(*cuisine_objects)
             daysleft = Days_left(user_id=id, days=Service_days[service_type])
             daysleft.save()
-            # for each in cuisine:
-            #     cuisinemodel = Cuisine.objects.filter(name=each)
-            #     req.cuisine.add(cuisinemodel)
 
             email_subject = "Service Confirmation"
             message = render_to_string(
                 "service_confirmation.html",
-                {"user": request.user, "type": service_type, "cuisine": cuisine},
+                {
+                    "user": request.user,
+                    "service type": service_type,
+                    "cuisines selected": cuisine_names,
+                },
             )
             to_email = request.user.email
             email = EmailMessage(email_subject, message, to=[to_email])

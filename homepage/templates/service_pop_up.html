@@ -100,7 +100,7 @@
                         <div class="dropdown">
                             <select type="text" multiple id="cuisineSelect" name="cuisineSelect">
                               {% for cuisine in cuisines %}
-                                    <option value="{{ cuisine.name }}" name="{{ cuisine.name }}" selected>{{ cuisine.name }}</option>
+                                    <option value="{{ cuisine.id }}" name="{{ cuisine.name }}" selected>{{ cuisine.name }}</option>
                               {% endfor %}
                            </select> 
                         </div>
