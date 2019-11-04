@@ -58,9 +58,7 @@ class Cuisine(models.Model):
 
 class Days_left(models.Model):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        primary_key=True,
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
     )
     days = models.IntegerField()
 
@@ -73,9 +71,7 @@ class Days_left(models.Model):
 
 class UserRequest(models.Model):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        primary_key=True,
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
     )
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(auto_now_add=True)

@@ -7,18 +7,18 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('homepage', '0001_initial'),
-    ]
+    dependencies = [("homepage", "0001_initial")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='days_left',
-            name='id',
-        ),
+        migrations.RemoveField(model_name="days_left", name="id"),
         migrations.AlterField(
-            model_name='days_left',
-            name='user_id',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL),
+            model_name="days_left",
+            name="user_id",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                serialize=False,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
