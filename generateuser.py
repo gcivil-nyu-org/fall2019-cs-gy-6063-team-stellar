@@ -82,7 +82,7 @@ def save_users(path,userlist):
         for user in userlist:
             w.writerow(user.values())
             cur.execute(
-                "INSERT INTO userrequest (user_id, service_type,time_stamp, cuisine, school, department) VALUES (?, ?, ?, ? , ? ,?)",
+                "INSERT INTO homepage_userrequest (user_id, service_type,time_stamp, cuisine, school, department) VALUES (?, ?, ?, ? , ? ,?)",
                 (
                     user["user_id"],
                     user["service_type"],

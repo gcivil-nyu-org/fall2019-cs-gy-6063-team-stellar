@@ -70,7 +70,7 @@ def user_service(request):
                 user_id=id, service_type=service_type, cuisine=cuisine, school=school
             )
             req.save()
-
+            # req.cuisines
             daysleft = Days_left(user_id=id, days=Service_days[service_type])
             daysleft.save()
             # for each in cuisine:

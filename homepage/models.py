@@ -70,7 +70,7 @@ class UserRequest(models.Model):
     user_id = models.IntegerField()
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(auto_now_add=True)
-    cuisines = models.ManyToManyField(Cuisine, blank = True)
+    cuisines = models.ManyToManyField(Cuisine, blank=True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
 

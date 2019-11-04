@@ -43,8 +43,7 @@ class UserRequestModelTest(TestCase):
             user_id=23,
             service_type="Monthly",
             time_stamp="2019-11-1",
-            cuisine="[Indian, Mexican]",
             school="Tandon School of Engineering",
-            department="Computer Science",
+            department="Computer Engineering",
         )
         self.assertEqual(str(entry), entry.service_type)
