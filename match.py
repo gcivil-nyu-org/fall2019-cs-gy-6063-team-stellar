@@ -1,13 +1,14 @@
 import os
+import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
+django.setup()
+
 from homepage.models import UserRequest, Cuisine
 from user_account.models import LunchNinjaUser
 import random
 import time
 from django.core.mail import EmailMessage
-import django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
-django.setup()
 
 
 # send_email() will trigger mailtrap to send out email to matched users
@@ -36,19 +37,6 @@ def initiate_email(match):
         send_email(user1, user2)
         time.sleep(5)
         send_email(user2, user1)
-
-
-# change string to list
-def str_to_list(string):
-    string_content = string.strip("[").strip("]")
-    string_list = string_content.split("'")
-    out_list = []
-    for item in string_list:
-        if item == ", " or item == "":
-            continue
-        else:
-            out_list.append(item)
-    return out_list
 
 
 def create_cuisine_table(cuisine_list, reqlist):

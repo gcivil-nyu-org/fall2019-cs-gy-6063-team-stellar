@@ -1,21 +1,25 @@
 import os
 import random
 import django
-from homepage.models import UserRequest, School, Department, Cuisine
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
+
+from user_account.models import LunchNinjaUser
+
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
+from homepage.models import UserRequest, School, Department, Cuisine
 
 
 # This function generates random user requests
 def generateuser(N):
     userlist = []
 
-    for user_id in range(1, N + 1):
+    all_users = LunchNinjaUser.objects.all()
+    for user_obj in all_users:
         user = {}
-        user["user_id"] = user_id
+        user["user"] = user_obj
         # school
         school_id = random.randint(0, School.objects.all().count() - 1)
         user["school"] = School.objects.filter(id=school_id)
@@ -49,7 +53,7 @@ def generateuser(N):
 def save_users(userlist):
     for user in userlist:
         r = UserRequest(
-            user_id=user["user_id"],
+            user=user["user"],
             service_type=user["service_type"],
             school=user["school"][0].name,
             department=user["department"][0].name,
@@ -61,4 +65,5 @@ def save_users(userlist):
 
 if __name__ == "__main__":
     userlist = generateuser(20)
+    import pdb; pdb.set_trace()
     save_users(userlist)
