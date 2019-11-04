@@ -1,12 +1,11 @@
 import os
 import random
 import django
-from homepage.models import UserRequest, School, Department, Cuisine
-
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
+from homepage.models import UserRequest, School, Department, Cuisine   # noqa: E402
 
 
 # This function generates random user requests

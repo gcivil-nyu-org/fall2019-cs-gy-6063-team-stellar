@@ -2,10 +2,10 @@ import os
 import random
 import django
 import string
-from user_account.models import LunchNinjaUser
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
+from user_account.models import LunchNinjaUser  # noqa: E402
 
 
 # This function generates random password
