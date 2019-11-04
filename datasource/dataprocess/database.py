@@ -23,7 +23,7 @@ def deg2rad(deg):
 
 
 def importschool():
-    conn = sqlite3.connect("db.sqlite3")
+    conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_school")
     cur.execute("CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY)")
@@ -42,7 +42,7 @@ def importschool():
 
 
 def importdepartment():
-    conn = sqlite3.connect("db.sqlite3")
+    conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_department")
     cur.execute("DROP TABLE IF EXISTS department")
@@ -67,7 +67,7 @@ def importdepartment():
 
 
 def importrestaurant():
-    conn = sqlite3.connect("db.sqlite3")
+    conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_restaurant")
     cur.execute(
@@ -142,7 +142,7 @@ def importrestaurant():
 
 
 def importcuisine():
-    conn = sqlite3.connect("db.sqlite3")
+    conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS cuisine")
     cur.execute("DROP TABLE IF EXISTS homepage_cuisine")
