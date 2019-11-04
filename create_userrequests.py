@@ -27,7 +27,7 @@ def generateuser(N):
         user["service_type"] = service[service_id]
 
         # department
-        departments = Department.objects.filter(school=school_id)
+        departments = Department.objects.get(school=school_id)
         departments_count = departments.count()
         if departments_count == 0:
             continue
@@ -64,5 +64,4 @@ def save_users(userlist):
 
 if __name__ == "__main__":
     userlist = generateuser(20)
-    import pdb; pdb.set_trace()
     save_users(userlist)

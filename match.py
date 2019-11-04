@@ -1,6 +1,7 @@
 import os
 import random
 import time
+import django
 from django.core.mail import EmailMessage
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
@@ -37,28 +38,41 @@ def initiate_email(match):
         send_email(user2, user1)
 
 
-def create_cuisine_table(cuisine_list, reqlist):
-    cuisine_table = {}
-    for cuisine in cuisine_list:
-        cuisine_table[cuisine] = []
-    for req in reqlist:
-        real_p_cuisine_list = req.cuisines.all()
-        for c in real_p_cuisine_list:
-            cuisine_table[c].append(req.user_id)
+# change string to list
+def str_to_list(string):
+    string_content = string.strip("[").strip("]")
+    string_list = string_content.split("'")
+    out_list = []
+    for item in string_list:
+        if item == ", " or item == "":
+            continue
+        else:
+            out_list.append(item)
+    return out_list
 
-    return cuisine_table
 
+# def create_cuisine_table(cuisine_list, reqlist):
+#     cuisine_table = {}
+#     for cuisine in cuisine_list:
+#         cuisine_table[cuisine] = []
+#     for req in reqlist:
+#         real_p_cuisine_list = req.cuisines.all()
+#         for c in real_p_cuisine_list:
+#             cuisine_table[c].append(req.user_id)
+#
+#     return cuisine_table
+#
+#
+# cuisine_list = Cuisine.objects.all()
 
-cuisine_list = Cuisine.objects.all()
-reqlist = UserRequest.objects.all()
-cuisine_table = create_cuisine_table(cuisine_list, reqlist)
+# cuisine_table = create_cuisine_table(cuisine_list, reqlist)
 
 
 def cuisine_filter(matchpool, available_set, req):
     # get the preferred cuisine
     cuisine_list = req.cuisines.all()
     for c in cuisine_list:
-        available_set = available_set.union(set(cuisine_table[c]))
+        available_set = available_set.union(c.userrequest_set.all())
     available_set = available_set.intersection(matchpool)
     return available_set
 
@@ -72,23 +86,21 @@ def cuisine_filter(matchpool, available_set, req):
 #     return available_set
 
 
-def match(reqlist, cuisine_table):
+def match():
     match_result = []
     unmached_user_list = []
     matched_user_list = []
     matchpool = set()
+    reqlist = UserRequest.objects.all()
 
     for req in reqlist:
-        matchpool.add(req.user_id)
+        matchpool.add(req)
 
     # match each user
     for req in reqlist:
-        user_id = req.user_id
-
-        if user_id in matchpool:
-            # remove selected user
-            matchpool.remove(user_id)
-
+        if req in matchpool:
+            user_id = req.user_id
+            matchpool.remove(req)
             # find available users for this user(filter)
             available_set = set()
             available_set = cuisine_filter(matchpool, available_set, req)
@@ -96,22 +108,56 @@ def match(reqlist, cuisine_table):
 
             # pick a user from the available users
             try:
-                match_user_id = random.choice(list(available_set))
-                match_user = UserRequest.objects.filter(user_id=match_user_id)
-                matchpool.remove(match_user_id)
+                match_request = random.choice(list(available_set))
+                match_user_id = match_request.user_id
+                # match_user_id = random.choice(list(available_set))
+                matchpool.remove(UserRequest.objects.get(user_id=match_user_id))
                 # result = str(user_id) + "----" + str(match_user_id)
                 result = []
                 result.append(user_id)
                 result.append(match_user_id)
                 match_result.append(result)
                 matched_user_list.append(req)
-                matched_user_list.append(match_user)
+                matched_user_list.append(match_request)
             except Exception:
                 unmached_user_list.append(req)
     print(match_result)
-    initiate_email(match_result)
+    # initiate_email(match_result)
     print(matched_user_list)
     print(unmached_user_list)
 
+    # for req in reqlist:
+    #     user_id = req.user_id
+    #
+    #     if user_id in matchpool:
+    #         # remove selected user
+    #         matchpool.remove(user_id)
+    #
+    #         # find available users for this user(filter)
+    #         available_set = set()
+    #         available_set = cuisine_filter(matchpool, available_set, req)
+    #         # available_set = matched_user_filter(matchpool, available_set, user)
+    #
+    #         # pick a user from the available users
+    #         try:
+    #             # match_request = random.choice(list(available_set))
+    #             # match_user_id = match_request.user_id
+    #             match_user_id = random.choice(list(available_set))
+    #             match_user = UserRequest.objects.filter(user_id=match_user_id)
+    #             matchpool.remove(match_user_id)
+    #             # result = str(user_id) + "----" + str(match_user_id)
+    #             result = []
+    #             result.append(user_id)
+    #             result.append(match_user_id)
+    #             match_result.append(result)
+    #             matched_user_list.append(req)
+    #             matched_user_list.append(match_user)
+    #         except Exception:
+    #             unmached_user_list.append(req)
+    # print(match_result)
+    # initiate_email(match_result)
+    # print(matched_user_list)
+    # print(unmached_user_list)
 
-match(reqlist, cuisine_table)
+
+match()
