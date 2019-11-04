@@ -68,7 +68,6 @@ def generateuser(N,schools,cuisines):
         userlist.append(user)
     return userlist
 def save_users(path,userlist):
-    print(userlist)
     with open(path, 'w',newline='',encoding='utf-8') as f:
         w = csv.writer(f)
         w.writerow(userlist[0].keys())
@@ -80,7 +79,7 @@ def save_users(path,userlist):
 # Selected_school: Generate users from selected school
 
 
-N=5
+N=10
 selected_school=['Tandon School of Engineering']
 
 # execute code
@@ -88,7 +87,7 @@ department_list=load_department("datasource\\Department.csv")
 school_list=load_school("datasource\\School.csv")
 cuisine_list=load_cuisine("datasource\DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
 school, department, school_department, department_school=merge(school_list,department_list)
-userlist=generateuser(N,selected_school,cuisine_list)
+userlist=generateuser(N,selected_school,cuisine_list[:3])
 save_users("users.csv",userlist)
 
 
