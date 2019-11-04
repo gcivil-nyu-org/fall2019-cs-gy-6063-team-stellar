@@ -1,14 +1,12 @@
 import os
-import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
-django.setup()
-
-from homepage.models import UserRequest, Cuisine
-from user_account.models import LunchNinjaUser
 import random
 import time
 from django.core.mail import EmailMessage
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
+django.setup()
+from homepage.models import UserRequest, Cuisine  # noqa: E402
+from user_account.models import LunchNinjaUser  # noqa: E402
 
 
 # send_email() will trigger mailtrap to send out email to matched users
