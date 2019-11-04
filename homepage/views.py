@@ -66,20 +66,21 @@ def user_service(request):
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
 
-            id = request.user.id
-            req = UserRequest(user_id=id, service_type=service_type, school=school)
+            logged_user= request.user
+            req = UserRequest(user=logged_user, service_type=service_type, school=school)
             req.save()
+            
             req.cuisines.add(*cuisine_objects)
-            daysleft = Days_left(user_id=id, days=Service_days[service_type])
+            daysleft = Days_left(user=logged_user, days=Service_days[service_type])
             daysleft.save()
-
             email_subject = "Service Confirmation"
+           
             message = render_to_string(
                 "service_confirmation.html",
                 {
-                    "user": request.user,
-                    "service type": service_type,
-                    "cuisines selected": cuisine_names,
+                    "user": request.user.first_name,
+                    "service_type": service_type,
+                    "cuisines_selected": cuisine_names,
                 },
             )
             to_email = request.user.email
