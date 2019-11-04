@@ -105,8 +105,8 @@ N=10
 selected_school=['Tandon School of Engineering']
 
 # execute code
-department_list=load_department("datasource\\Department.csv")
-school_list=load_school("datasource\\School.csv")
+department_list=load_department("datasource\Department.csv")
+school_list=load_school("datasource\School.csv")
 cuisine_list=load_cuisine("datasource\DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
 school, department, school_department, department_school=merge(school_list,department_list)
 userlist=generateuser(N,selected_school,cuisine_list[:3])
