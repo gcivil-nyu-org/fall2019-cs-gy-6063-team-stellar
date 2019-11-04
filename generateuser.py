@@ -64,8 +64,8 @@ def generateuser(N,schools,cuisines):
         p_department_number=random.randint(1,len(all_department)-1)
         p_department=random.sample(all_department,p_department_number)
         user["prefered departments"]=p_department
+        user["meet history"]=[]
         userlist.append(user)
-        break
     return userlist
 def save_users(path,userlist):
     print(userlist)
@@ -80,7 +80,7 @@ def save_users(path,userlist):
 # Selected_school: Generate users from selected school
 
 
-N=100
+N=5
 selected_school=['Tandon School of Engineering']
 
 # execute code
