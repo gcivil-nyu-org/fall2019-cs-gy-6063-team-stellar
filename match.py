@@ -45,8 +45,8 @@ def load_user(file):
             user_dict["meet_history"]=str_to_list(linelist[5])
             userlist.append(user_dict)
         return userlist[1:]
-cuisine_list=load_cuisine("datasource\DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
-userlist=load_user("cuisinefail_sampleusers.csv")
+cuisine_list=load_cuisine("./datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
+userlist=load_user("./datasource/cuisinefail_sampleusers.csv")
 cuisine_table=create_cuisine_table(cuisine_list,userlist)
 def cuisine_filter(matchpool,available_set,user):
     # get the preferred cuisine

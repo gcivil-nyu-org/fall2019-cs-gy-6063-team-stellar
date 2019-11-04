@@ -1,8 +1,9 @@
 import sqlite3
 import csv
 import math
+import os.path
 
-
+directory_path = os.path.dirname(__file__) 
 # Thanks to https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
     R = 6371  # Radius of the earth in km
@@ -27,7 +28,7 @@ def importschool():
     cur.execute("DROP TABLE IF EXISTS homepage_school")
     cur.execute("CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY)")
 
-    filepath = "datasource/School.csv"
+    filepath = directory_path + "/../School.csv"
     with open(
         filepath, "r", encoding="UTF-8-sig"
     ) as fin:  # `with` statement available in 2.5+
@@ -48,7 +49,7 @@ def importdepartment():
     cur.execute(
         "CREATE TABLE homepage_department (name VARCHAR, school INTEGER, id INTEGER PRIMARY KEY, description VARCHAR)"
     )
-    filepath2 = "datasource/Department.csv"
+    filepath2 = directory_path + "/../Department.csv"
     with open(
         filepath2, "r", encoding="UTF-8-sig"
     ) as fin2:  # `with` statement available in 2.5+
@@ -72,7 +73,7 @@ def importrestaurant():
     cur.execute(
         "CREATE TABLE homepage_restaurant (id INTEGER PRIMNARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
     )
-    filepath3 = "datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
+    filepath3 = directory_path + "/../DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
 
     with open(
         filepath3, "r", encoding="UTF-8-sig"
