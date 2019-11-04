@@ -5,8 +5,8 @@ import datetime
 
 
 def load_school(file):
-    with open(file, "r") as in_f:
-        schoollist = []
+    with open(file,"r",encoding='utf-8') as in_f:
+        schoollist=[]
         f_csv = csv.reader(in_f)
         for linelist in f_csv:
             schoollist.append((linelist[0], linelist[1]))
@@ -14,7 +14,7 @@ def load_school(file):
 
 
 def load_department(file):
-    with open(file, "r") as in_f:
+    with open(file, "r",encoding='utf-8') as in_f:
         departmentlist = []
         f_csv = csv.reader(in_f)
         for linelist in f_csv:
@@ -23,10 +23,12 @@ def load_department(file):
 
 
 def load_cuisine(file):
-    with open(file, "r") as in_f:
-        cuisinelist = []
+    with open(file,"r",encoding='utf-8') as in_f:
+        cuisinelist=[]
         f_csv = csv.reader(in_f)
         for linelist in f_csv:
+            if linelist[7] in cuisinelist:
+                continue
             cuisinelist.append(linelist[7])
         return cuisinelist[1:]
 
@@ -54,31 +56,27 @@ def generateuser(N, schools, cuisines):
     userlist = []
     all_department = []
     for s in schools:
-        all_department = all_department + school_department[s]
+        all_department = all_department+school_department[s]
 
-    for user_id in range(0, N):
-        user = {}
-        user["user_id"] = user_id
-        school_id = random.randint(0, len(schools) - 1)
-        user["school"] = schools[school_id]
-        departments = school_department[schools[school_id]]
-        department_id = random.randint(0, len(departments) - 1)
-        user["department"] = departments[department_id]
-        p_cuisine_number = random.randint(0, len(cuisines) - 1)
-        p_cuisine = random.sample(cuisines, p_cuisine_number)
-        user["prefered cuisines"] = p_cuisine
-        p_department_number = random.randint(0, len(all_department) - 1)
-        p_department = random.sample(all_department, p_department_number)
-        user["prefered departments"] = p_department
+    for user_id in range(0,N):
+        user={}
+        user["user_id"]=user_id
+        school_id=random.randint(0,len(schools)-1)
+        user["school"]=schools[school_id]
+        departments=school_department[schools[school_id]]
+        department_id=random.randint(0,len(departments)-1)
+        user["department"]=departments[department_id]
+        p_cuisine_number=random.randint(1,len(cuisines)-1)
+        p_cuisine=random.sample(cuisines,p_cuisine_number)
+        user["prefered cuisines"]=p_cuisine
+        p_department_number=random.randint(1,len(all_department)-1)
+        p_department=random.sample(all_department,p_department_number)
+        user["prefered departments"]=p_department
+        user["meet history"]=[]
         userlist.append(user)
     return userlist
-
-
-def save_users(path, userlist):
-    print(userlist)
-    conn = sqlite3.connect("db.sqlite3")
-    cur = conn.cursor()
-    with open(path, "w", newline="") as f:
+def save_users(path,userlist):
+    with open(path, 'w',newline='',encoding='utf-8') as f:
         w = csv.writer(f)
         w.writerow(userlist[0].keys())
         for user in userlist:
@@ -103,17 +101,18 @@ def save_users(path, userlist):
 # Selected_school: Generate users from selected school
 
 
-N = 100
-selected_school = ["Tandon School of Engineering"]
+N=10
+selected_school=['Tandon School of Engineering']
 
 # execute code
-department_list = load_department("datasource\\Department.csv")
-school_list = load_school("datasource\\School.csv")
-cuisine_list = load_cuisine(
-    "datasource\DOHMH_New_York_City_Restaurant_Inspection_Results.csv"  # noqa: W605
-)
-school, department, school_department, department_school = merge(
-    school_list, department_list
-)
-userlist = generateuser(N, selected_school, cuisine_list)
-save_users("users.csv", userlist)
+department_list=load_department("datasource\\Department.csv")
+school_list=load_school("datasource\\School.csv")
+cuisine_list=load_cuisine("datasource\DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
+school, department, school_department, department_school=merge(school_list,department_list)
+userlist=generateuser(N,selected_school,cuisine_list[:3])
+save_users("users.csv",userlist)
+
+
+
+
+
