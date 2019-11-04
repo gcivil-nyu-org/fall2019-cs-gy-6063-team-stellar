@@ -76,6 +76,8 @@ def generateuser(N, schools, cuisines):
         userlist.append(user)
     return userlist
 def save_users(path,userlist):
+    conn = sqlite3.connect("db.sqlite3")
+    cur = conn.cursor()
     with open(path, 'w',newline='',encoding='utf-8') as f:
         w = csv.writer(f)
         w.writerow(userlist[0].keys())
@@ -87,9 +89,9 @@ def save_users(path,userlist):
                     user["user_id"],
                     user["service_type"],
                     datetime.datetime.now(),
-                    str(user["prefered cuisines"]),
+                    # str(user["prefered cuisines"]),
                     user["school"],
-                    user["prefered departments"],
+                    # user["prefered departments"],
                 ),
             )
     conn.commit()

@@ -1,7 +1,6 @@
 import csv
 import random
 import datetime
-
 def load_cuisine(file):
     with open(file,"r",encoding='utf-8') as in_f:
         cuisinelist=[]
@@ -77,10 +76,8 @@ def match(userlist,cuisine_table):
         user_id=user['user_id']
 
         if user_id in matchpool:
-
             #remove selected user
             matchpool.remove(user_id)
-
             # find available users for this user(filter)
             available_set = set()
             available_set = cuisine_filter(matchpool,available_set,user)
