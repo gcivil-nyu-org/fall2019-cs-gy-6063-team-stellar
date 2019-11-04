@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 m_state = False
@@ -56,7 +57,9 @@ class Cuisine(models.Model):
 
 
 class Days_left(models.Model):
-    user_id = models.IntegerField()
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
+    )
     days = models.IntegerField()
 
     def __str__(self):
@@ -67,7 +70,9 @@ class Days_left(models.Model):
 
 
 class UserRequest(models.Model):
-    user_id = models.IntegerField()
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
+    )
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(auto_now_add=True)
     cuisines = models.ManyToManyField(Cuisine, blank=True)
