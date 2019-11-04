@@ -3,6 +3,7 @@ import csv
 import sqlite3
 import datetime
 
+directory_path = os.path.dirname(__file__)
 
 def load_school(file):
     with open(file,"r",encoding='utf-8') as in_f:
@@ -107,12 +108,12 @@ N=10
 selected_school=['Tandon School of Engineering']
 
 # execute code
-department_list=load_department("datasource\Department.csv")
-school_list=load_school("datasource\School.csv")
-cuisine_list=load_cuisine("datasource\DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
+department_list=load_department(directory_path + "/../Department.csv")
+school_list=load_school(directory_path + "../School.csv")
+cuisine_list=load_cuisine(directory_path + "../DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
 school, department, school_department, department_school=merge(school_list,department_list)
 userlist=generateuser(N,selected_school,cuisine_list[:3])
-save_users("users.csv",userlist)
+save_users(directory_path + "../users.csv",userlist)
 
 
 
