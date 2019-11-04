@@ -15,9 +15,9 @@ def send_email(user1, user2, cuisinelist):
     cuisineline = ""
     for i in range(len(cuisinelist)):
         if i == len(cuisinelist) - 1:
-            cuisineline = cuisineline + cuisinelist[i].name;
+            cuisineline = cuisineline + cuisinelist[i].name
         else:
-            cuisineline = cuisineline + cuisinelist[i].name + ",";
+            cuisineline = cuisineline + cuisinelist[i].name + ","
     email_subject = "Lunch Confirmation"
     message = (
         "You got it! You will have a lunch with the user "
@@ -48,18 +48,6 @@ def initiate_email(match):
         send_email(user1, user2, cuisinelist)
         time.sleep(5)
         send_email(user2, user1, cuisinelist)
-
-# change string to list
-def str_to_list(string):
-    string_content = string.strip("[").strip("]")
-    string_list = string_content.split("'")
-    out_list = []
-    for item in string_list:
-        if item == ", " or item == "":
-            continue
-        else:
-            out_list.append(item)
-    return out_list
 
 
 def cuisine_filter(matchpool, available_set, req):
@@ -121,5 +109,6 @@ def match():
     print(matched_user_request)
     initiate_email(matched_user_request)
     print(unmached_user_request)
+
 
 match()
