@@ -50,8 +50,8 @@ def merge():
     return school, department, school_department, department_school
 
 
-def match(request):
-    return render(request, "match.html")
+def test(request):
+    return render(request, "test.html")
 
 
 def index(request):
@@ -75,7 +75,7 @@ def user_service(request):
         if request.user.is_authenticated:
             service_type = request.POST["service_type"]
             school = request.POST["school"]
-            department =  request.POST["department"]
+            department = request.POST["department"]
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
@@ -93,7 +93,10 @@ def user_service(request):
                 req.cuisines.add(*cuisine_objects)
             except ObjectDoesNotExist:
                 req = UserRequest(
-                    user=logged_user, service_type=service_type, school=school,department=department
+                    user=logged_user,
+                    service_type=service_type,
+                    school=school,
+                    department=department,
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)
