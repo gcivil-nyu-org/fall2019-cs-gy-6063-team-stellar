@@ -26,31 +26,36 @@
 	<!-- Body -->
 	<div class="container">
 		<br>
-		<h3>Matched Users</h3>
-		<table class="table">
-			<thead>
-				<tr>
-				<th scope="col">#</th>
-				<th scope="col">Name</th>
-				<th scope="col">Email Id</th>
-				<th scope="col">NYU School</th>
-				<th scope="col">NYU Department</th>
-				<th scope="col">Meeting Time</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for match in matches %}
+		{% if matches%}
+			<h3>Matched Users</h3>
+			<table class="table">
+				<thead>
 					<tr>
-						<th scope="row">1</th>
-						<td>{{match.matched_user_name}}</td>
-						<td>{{match.matched_email}}</td>
-						<td>{{match.matched_user_school}}</td>
-						<td>{{match.matched_user_department}}</td>
-						<td>{{match.match_time}}</td>
+					<th scope="col">#</th>
+					<th scope="col">Name</th>
+					<th scope="col">Email Id</th>
+					<th scope="col">NYU School</th>
+					<th scope="col">NYU Department</th>
+					<th scope="col">Meeting Time</th>
 					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{% for match in matches %}
+						<tr>
+							<th scope="row">1</th>
+							<td>{{match.matched_user_name}}</td>
+							<td>{{match.matched_email}}</td>
+							<td>{{match.matched_user_school}}</td>
+							<td>{{match.matched_user_department}}</td>
+							<td>{{match.match_time}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<h1>No Match Found</h1>
+		{% endif %}
+
 	</div>
 	
 	<!-- Footer -->
