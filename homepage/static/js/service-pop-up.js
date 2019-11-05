@@ -41,6 +41,7 @@ $(document).on('submit', '#service_select_form', function (e) {
 $(document).on('submit', '#school_select_form', function (e) {
     e.preventDefault();
     service_request['school'] = $("#schoolSelect option:selected").val();
+    service_request['department'] = $("#departmentSelect option:selected").val();
 })
 
 //Cuisine model data
