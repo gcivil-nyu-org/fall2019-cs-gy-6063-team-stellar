@@ -40,6 +40,8 @@ def merge():
 
     return school, department, school_department, department_school
 
+def match(request):
+    return render(request, "match.html")
 
 def index(request):
     if request.session.get("is_login", None):  # no repeat log in
