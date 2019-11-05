@@ -90,9 +90,9 @@ class UserRequest(models.Model):
 def in_one_day():
     return timezone.now() + timedelta(days=1)
 
-class UserMatch(models.Model):
-    user1 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='%(class)s_user1')
-    user2 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='%(class)s_user2')
+class UserRequestMatch(models.Model):
+    user_request1 = models.ForeignKey(UserRequest, on_delete=models.CASCADE, related_name='%(class)s_user1')
+    user_request2 = models.ForeignKey(UserRequest, on_delete=models.CASCADE, related_name='%(class)s_user2')
     match_time = models.DateTimeField(default=in_one_day)
 
     def __str__(self):

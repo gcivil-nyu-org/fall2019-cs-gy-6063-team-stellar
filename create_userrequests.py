@@ -4,11 +4,9 @@ import django
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
-
-from user_account.models import LunchNinjaUser
-
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
-from homepage.models import UserRequest, School, Department, Cuisine   # noqa: E402
+from user_account.models import LunchNinjaUser  # noqa: E402
+from homepage.models import UserRequest, School, Department, Cuisine  # noqa: E402
 
 
 # This function generates random user requests
@@ -23,6 +21,7 @@ def generateuser(N):
         school_id = random.randint(0, School.objects.all().count() - 1)
         user["school"] = School.objects.filter(id=school_id)
 
+        # service type
         service_id = random.randint(1, 3)
         user["service_type"] = service[service_id]
 
@@ -31,11 +30,10 @@ def generateuser(N):
         departments_count = departments.count()
         if departments_count == 0:
             continue
-        start_id = departments[0].id
-        department_id = random.randint(0, departments_count)
-        user["department"] = Department.objects.filter(
-            id=(start_id + department_id - 1)
-        )
+        start_id = departments.first().id
+        department_index = random.randint(1, departments_count)
+        department_id = start_id + department_index - 1
+        user["department"] = Department.objects.filter(id=department_id)
 
         # cuisine
         cuisines = Cuisine.objects.all()
@@ -64,5 +62,4 @@ def save_users(userlist):
 
 if __name__ == "__main__":
     userlist = generateuser(20)
-    import pdb; pdb.set_trace()
     save_users(userlist)

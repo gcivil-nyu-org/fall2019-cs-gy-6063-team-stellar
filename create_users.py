@@ -7,7 +7,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 from user_account.models import LunchNinjaUser  # noqa: E402
 
-from user_account.models import LunchNinjaUser
 
 # This function generates random password
 def random_password_generator():
