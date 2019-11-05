@@ -9,84 +9,121 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('user_account', '__first__'),
-    ]
+    dependencies = [("user_account", "__first__")]
 
     operations = [
         migrations.CreateModel(
-            name='Cuisine',
+            name="Cuisine",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
             ],
-            options={
-                'managed': False,
-            },
+            options={"managed": False},
         ),
         migrations.CreateModel(
-            name='Department',
+            name="Department",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
-                ('school', models.IntegerField(blank=True, null=True)),
-                ('description', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
+                ("school", models.IntegerField(blank=True, null=True)),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
             ],
-            options={
-                'managed': False,
-            },
+            options={"managed": False},
         ),
         migrations.CreateModel(
-            name='Restaurant',
+            name="Restaurant",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
-                ('cuisine', models.CharField(blank=True, max_length=100, null=True)),
-                ('score', models.IntegerField(blank=True, null=True)),
-                ('borough', models.CharField(blank=True, max_length=100, null=True)),
-                ('building', models.CharField(blank=True, max_length=100, null=True)),
-                ('street', models.CharField(blank=True, max_length=100, null=True)),
-                ('zipcode', models.CharField(blank=True, max_length=100, null=True)),
-                ('phone', models.CharField(blank=True, max_length=100, null=True)),
-                ('latitude', models.CharField(blank=True, max_length=100, null=True)),
-                ('longitude', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
+                ("cuisine", models.CharField(blank=True, max_length=100, null=True)),
+                ("score", models.IntegerField(blank=True, null=True)),
+                ("borough", models.CharField(blank=True, max_length=100, null=True)),
+                ("building", models.CharField(blank=True, max_length=100, null=True)),
+                ("street", models.CharField(blank=True, max_length=100, null=True)),
+                ("zipcode", models.CharField(blank=True, max_length=100, null=True)),
+                ("phone", models.CharField(blank=True, max_length=100, null=True)),
+                ("latitude", models.CharField(blank=True, max_length=100, null=True)),
+                ("longitude", models.CharField(blank=True, max_length=100, null=True)),
             ],
-            options={
-                'managed': False,
-            },
+            options={"managed": False},
         ),
         migrations.CreateModel(
-            name='School',
+            name="School",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
             ],
-            options={
-                'managed': False,
-            },
+            options={"managed": False},
         ),
         migrations.CreateModel(
-            name='Days_left',
+            name="Days_left",
             fields=[
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('days', models.IntegerField()),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        serialize=False,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("days", models.IntegerField()),
             ],
-            options={
-                'managed': True,
-            },
+            options={"managed": True},
         ),
         migrations.CreateModel(
-            name='UserRequest',
+            name="UserRequest",
             fields=[
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('service_type', models.CharField(max_length=100)),
-                ('time_stamp', models.DateTimeField(auto_now_add=True)),
-                ('school', models.CharField(blank=True, max_length=100, null=True)),
-                ('department', models.CharField(blank=True, max_length=200, null=True)),
-                ('cuisines', models.ManyToManyField(blank=True, to='homepage.Cuisine')),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        serialize=False,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("service_type", models.CharField(max_length=100)),
+                ("time_stamp", models.DateTimeField(auto_now_add=True)),
+                ("school", models.CharField(blank=True, max_length=100, null=True)),
+                ("department", models.CharField(blank=True, max_length=200, null=True)),
+                ("cuisines", models.ManyToManyField(blank=True, to="homepage.Cuisine")),
             ],
-            options={
-                'managed': True,
-            },
+            options={"managed": True},
         ),
     ]
