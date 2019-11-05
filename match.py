@@ -61,7 +61,7 @@ def cuisine_filter(matchpool, available_set, req):
 def save_matches(matchs):
     # save matches to user_request_match table
     for match in matchs:
-        request_match = UserRequestMatch(user_request1=match[0], user_request2=match[1])
+        request_match = UserRequestMatch(user1=match[0].user, user2=match[1].user)
         request_match.save()
 
 def match():
