@@ -71,6 +71,10 @@ def User_service_send_email_authenticated(request,service_type,cuisine_names):
     email.send()
 
 
+def test(request):
+    return render(request, "test.html")
+
+
 def index(request):
     if check_index_login(request):  # no repeat log in
         department = Department.objects.all()
@@ -92,6 +96,7 @@ def user_service(request):
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
+            department = request.POST["department"]
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
@@ -103,12 +108,16 @@ def user_service(request):
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
                 req.school = school
+                req.department = department
                 req.cuisines.clear()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
             except ObjectDoesNotExist:
                 req = UserRequest(
-                    user=logged_user, service_type=service_type, school=school
+                    user=logged_user,
+                    service_type=service_type,
+                    school=school,
+                    department=department,
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)
