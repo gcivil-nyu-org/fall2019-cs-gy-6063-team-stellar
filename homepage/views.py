@@ -144,10 +144,14 @@ def match_history(request):
             }
             all_matches.append(match_dict)
 
+        department = Department.objects.all()
+        school = School.objects.all()
+        cuisine = Cuisine.objects.all()
+        
         return render(
                 request,
                 "match_history.html",
-                {"matches":all_matches }
+                {"matches":all_matches,"cuisines": cuisine, "schools": school, "departments": department}
         )
 
     return redirect("/login/")
