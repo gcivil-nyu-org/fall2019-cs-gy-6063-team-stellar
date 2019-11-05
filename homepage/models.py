@@ -74,7 +74,7 @@ class UserRequest(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
     )
     service_type = models.CharField(max_length=100)
-    time_stamp = models.DateTimeField(auto_now_add=True)
+    time_stamp = models.DateTimeField(null=False, blank=False,auto_now_add=True)
     cuisines = models.ManyToManyField(Cuisine, blank=True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
@@ -91,9 +91,10 @@ def in_one_day():
     return timezone.now() + timedelta(days=1)
 
 class UserRequestMatch(models.Model):
-    user_request1 = models.ForeignKey(UserRequest, on_delete=models.CASCADE, related_name='%(class)s_user1')
-    user_request2 = models.ForeignKey(UserRequest, on_delete=models.CASCADE, related_name='%(class)s_user2')
+    user1 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='%(class)s_user1')
+    user2 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='%(class)s_user2')
     match_time = models.DateTimeField(default=in_one_day)
 
     def __str__(self):
-        return "Match for " + self.user1.username + " and " + self.user2.username 
+        import pdb; pdb.set_trace()
+        return "Match for " + self.user1.username + " and " + self.user2.username
