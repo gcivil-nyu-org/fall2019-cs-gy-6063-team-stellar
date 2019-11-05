@@ -1,5 +1,12 @@
 from django.shortcuts import render, redirect
-from .models import UserRequest, Department, School, Cuisine, Days_left, UserRequestMatch
+from .models import (
+    UserRequest,
+    Department,
+    School,
+    Cuisine,
+    # Days_left,
+    UserRequestMatch,
+)
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
@@ -42,6 +49,7 @@ def merge():
 
     return school, department, school_department, department_school
 
+
 def index(request):
     if request.session.get("is_login", None):  # no repeat log in
         department = Department.objects.all()
@@ -55,9 +63,10 @@ def index(request):
         )
     return redirect("/login/")
 
+
 def user_service(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
-    
+
     if request.method == "POST":
         if request.user.is_authenticated:
             service_type = request.POST["service_type"]
@@ -67,8 +76,8 @@ def user_service(request):
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
 
             logged_user = request.user
-            
-            #if request already exist then update the request otherwise update it
+
+            # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
@@ -127,31 +136,41 @@ def user_service(request):
     else:
         return False
 
+
 def match_history(request):
-    if request.session.get("is_login", None): 
+    if request.session.get("is_login", None):
         # request.user
-        user_matches = UserRequestMatch.objects.filter(Q(user1=request.user) | Q(user2=request.user))
+        user_matches = UserRequestMatch.objects.filter(
+            Q(user1=request.user) | Q(user2=request.user)
+        )
         all_matches = []
 
         for match in user_matches:
-            matched_user = match.user2 if match.user1==request.user else match.user1
+            matched_user = match.user2 if match.user1 == request.user else match.user1
             match_dict = {
-                "match_time":match.match_time,
-                "matched_user_name":matched_user.first_name + " " + matched_user.last_name,
+                "match_time": match.match_time,
+                "matched_user_name": matched_user.first_name
+                + " "
+                + matched_user.last_name,
                 "matched_email": matched_user.email,
                 "matched_user_school": matched_user.school,
-                "matched_user_department": matched_user.department
+                "matched_user_department": matched_user.department,
             }
             all_matches.append(match_dict)
 
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
-        
+
         return render(
-                request,
-                "match_history.html",
-                {"matches":all_matches,"cuisines": cuisine, "schools": school, "departments": department}
+            request,
+            "match_history.html",
+            {
+                "matches": all_matches,
+                "cuisines": cuisine,
+                "schools": school,
+                "departments": department,
+            },
         )
 
     return redirect("/login/")

@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
-from homepage.models import UserRequest,UserRequestMatch  # noqa: E402
+from homepage.models import UserRequest, UserRequestMatch  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
 
@@ -58,11 +58,13 @@ def cuisine_filter(matchpool, available_set, req):
     available_set = available_set.intersection(matchpool)
     return available_set
 
+
 def save_matches(matchs):
     # save matches to user_request_match table
     for match in matchs:
         request_match = UserRequestMatch(user1=match[0].user, user2=match[1].user)
         request_match.save()
+
 
 def match():
     match_result = []
