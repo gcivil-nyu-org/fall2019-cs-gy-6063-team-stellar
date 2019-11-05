@@ -106,7 +106,7 @@ def match():
     print(match_result)
     print(matched_user_request)
     save_matches(matched_user_request)
-    initiate_email(matched_user_request)
+    # initiate_email(matched_user_request)
     print(unmached_user_request)
 
 

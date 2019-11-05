@@ -1,7 +1,50 @@
 from django.test import TestCase
+from unittest import mock
 
 
 class UserserviceViewTest(TestCase):
+    def is_authenticated(self):
+        return True
+
+    def User_request_Obj(**kargs):
+        class cuisine_for_mock:
+            def __init__(self):
+                pass
+
+            def clear(**kargs):
+                return "Cleared"
+
+            def add(**kargs):
+                return "Added"
+
+        class userObj:
+            def __init__(self):
+                self.service_type = 'Monthly'
+                self.school = 'Tandon School of Engineering'
+                self.cuisines = cuisine_for_mock
+
+            def save(self):
+                return "Saved"
+
+        return userObj()
+    def send_email_mock(self,p2,p3):
+        pass
+    @mock.patch("homepage.views.User_service_send_email_authenticated",side_effect=send_email_mock)
+    @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
+    @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
+    def test_authenticate_user(self, mock_authenticated, mock_request,mock_email):
+        service_type_Obj = {
+            'service_type': 'Monthly',
+            'school': 'Tandon School of Engineering',
+            'user':{
+                "first_name": "donald",
+                "last_name": "trump",
+            }
+
+        }
+        response = self.client.post("/serviceRequest/", service_type_Obj)
+        self.assertEqual(response.status_code, 302)
+
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get("/homepage/")
         self.assertEqual(response.status_code, 302)
@@ -30,6 +73,21 @@ class UserserviceViewTest(TestCase):
     def test_homepage_school_ajax(self):
         response = self.client.get("homepage/ajax/load_school/?department_id=Biology")
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
+
+
+def all():
+    return "all"
+
+
+class IndexViewTest(TestCase):
+
+    def no_repeat_login(request):
+        return True
+
+    @mock.patch("homepage.views.check_index_login", side_effect=no_repeat_login)
+    def test_repeat_login(self, mock_index_login):
+        response = self.client.get("/homepage/")
+        self.assertEqual(response.status_code, 200)
 
 
 class LogoutViewTest(TestCase):

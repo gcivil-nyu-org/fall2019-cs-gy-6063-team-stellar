@@ -23,7 +23,7 @@ script:
   - black --check .
   - flake8 .
   - coverage run --source=user_account manage.py test homepage/tests --keepdb
-  - coverage run --source=user_account manage.py test user_account/tests --keepdb
+  - coverage run --source=homepage manage.py test user_account/tests --keepdb
 
 after_script:
   - coveralls

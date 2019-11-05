@@ -1,18 +1,15 @@
 from django.shortcuts import render, redirect
-from .models import (
-    UserRequest,
-    Department,
-    School,
-    Cuisine,
+
     # Days_left,
-    UserRequestMatch,
-)
+
+
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-
+from .models import UserRequest,School,Cuisine,UserRequestMatch
+from .models import Department
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
@@ -49,9 +46,33 @@ def merge():
 
     return school, department, school_department, department_school
 
+def check_index_login(request):
+    if request.session.get("is_login", None):
+        return True
+    else:
+        return False
+def check_user_authenticated(request):
+    if request.user.is_authenticated:
+        return True
+    else:
+        return False
+def User_service_send_email_authenticated(request,service_type,cuisine_names):
+    email_subject = "Service Confirmation"
+    message = render_to_string(
+        "service_confirmation.html",
+        {
+            "user": request.user.first_name,
+            "service_type": service_type,
+            "cuisines_selected": cuisine_names,
+        },
+    )
+    to_email = request.user.email
+    email = EmailMessage(email_subject, message, to=[to_email])
+    email.send()
+
 
 def index(request):
-    if request.session.get("is_login", None):  # no repeat log in
+    if check_index_login(request):  # no repeat log in
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
@@ -68,7 +89,7 @@ def user_service(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
 
     if request.method == "POST":
-        if request.user.is_authenticated:
+        if check_user_authenticated(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
             cuisine_ids = request.POST.getlist("cuisine[]")
@@ -94,19 +115,7 @@ def user_service(request):
 
             # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
             # daysleft.save()
-            email_subject = "Service Confirmation"
-
-            message = render_to_string(
-                "service_confirmation.html",
-                {
-                    "user": request.user.first_name,
-                    "service_type": service_type,
-                    "cuisines_selected": cuisine_names,
-                },
-            )
-            to_email = request.user.email
-            email = EmailMessage(email_subject, message, to=[to_email])
-            email.send()
+            User_service_send_email_authenticated(request, service_type, cuisine_names)
         else:
             email_subject = "Service Confirmation"
             message = "Service selected"
