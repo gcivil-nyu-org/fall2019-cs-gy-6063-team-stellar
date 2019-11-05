@@ -6,3 +6,4 @@ flake8
 black
 coverage
 coveralls
+Faker
