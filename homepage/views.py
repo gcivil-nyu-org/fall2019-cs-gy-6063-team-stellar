@@ -92,10 +92,6 @@ def User_service_send_email_authenticated(request, service_type, cuisine_names):
     email.send()
 
 
-def test(request):
-    return render(request, "test.html")
-
-
 def index(request):
     if check_login(request):  # no repeat log in
         department = Department.objects.all()
@@ -177,11 +173,18 @@ def match_history(request):
         # request.user
         user_matches = UserRequestMatch.objects.filter(
             Q(user1=request.user) | Q(user2=request.user)
-        )
+        ).order_by("-match_time")
+
         all_matches = []
 
         for match in user_matches:
             matched_user = match.user2 if match.user1 == request.user else match.user1
+            matched_user_cuisines_instance = UserRequest.objects.get(
+                user=matched_user
+            ).cuisines.all()
+            matched_user_cuisines = ", ".join(
+                [cuisine.name for cuisine in matched_user_cuisines_instance]
+            )
             match_dict = {
                 "match_time": match.match_time,
                 "matched_user_name": matched_user.first_name
@@ -190,6 +193,7 @@ def match_history(request):
                 "matched_email": matched_user.email,
                 "matched_user_school": matched_user.school,
                 "matched_user_department": matched_user.department,
+                "matched_user_cuisines": matched_user_cuisines,
             }
             all_matches.append(match_dict)
 

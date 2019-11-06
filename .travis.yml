@@ -19,7 +19,7 @@ script:
   # should make the build pass or fail
   - black --check .
   - flake8 .
-  - coverage run manage.py test --keepdb
+  - coverage run --source=. manage.py test --keepdb
 
 
 after_script:

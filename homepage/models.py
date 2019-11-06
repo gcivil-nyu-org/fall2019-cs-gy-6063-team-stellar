@@ -90,7 +90,9 @@ class UserRequest(models.Model):
 
 
 def in_one_day():
-    return timezone.now() + timedelta(days=1)
+    next_day = timezone.now() + timedelta(days=1)
+    new_period = next_day.replace(hour=23, minute=30)
+    return new_period
 
 
 class UserRequestMatch(models.Model):
@@ -107,7 +109,4 @@ class UserRequestMatch(models.Model):
     match_time = models.DateTimeField(default=in_one_day)
 
     def __str__(self):
-        import pdb
-
-        pdb.set_trace()
         return "Match for " + self.user1.username + " and " + self.user2.username
