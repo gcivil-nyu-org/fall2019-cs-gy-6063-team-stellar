@@ -22,7 +22,7 @@ script:
   # Execute all of the commands which
   # should make the build pass or fail
   - black --check .
-  - flake8 . --exclude "homepage/migrations/" --exclude "user_account/migrations/"
+  - flake8 . --ignore E231 
   - coverage run --source=. manage.py test --keepdb
 
 
