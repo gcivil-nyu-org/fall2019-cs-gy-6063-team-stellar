@@ -29,7 +29,7 @@ def merge():
 
     for d in department:
         department_list.append((d.name, d.school))
-    
+
     school_department = {}
     id_school = {}
     department_school = {}

@@ -94,6 +94,7 @@ def index(request):
         )
     return redirect("/login/")
 
+
 def user_service(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
 
@@ -159,6 +160,7 @@ def user_service(request):
     else:
         return False
 
+
 def match_history(request):
     if request.session.get("is_login", None):
         # request.user
@@ -196,6 +198,7 @@ def match_history(request):
         )
 
     return redirect("/login/")
+
 
 def test(request):
     return render(request, "test.html")
