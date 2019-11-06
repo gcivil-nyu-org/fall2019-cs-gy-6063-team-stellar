@@ -167,7 +167,7 @@ def user_service(request):
         return JsonResponse(response, safe=False)
 
     else:
-        return False
+        return redirect("/login/")
 
 
 def match_history(request):
