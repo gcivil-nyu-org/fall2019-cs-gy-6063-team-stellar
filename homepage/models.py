@@ -90,7 +90,9 @@ class UserRequest(models.Model):
 
 
 def in_one_day():
-    return timezone.now() + timedelta(days=1)
+    next_day = timezone.now() + timedelta(days=1)
+    new_period = next_day.replace(hour=23, minute=30)
+    return new_period
 
 
 class UserRequestMatch(models.Model):
