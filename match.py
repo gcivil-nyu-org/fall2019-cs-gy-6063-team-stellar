@@ -85,6 +85,12 @@ def save_matches(matchs):
         request_match.save()
 
 
+        # if user_id in matchpool:
+        #     #remove selected user
+        #     matchpool.remove(user_id)
+
+
+
 def match():
     match_result = []
     unmached_user_request = []

@@ -13,7 +13,9 @@ from homepage.models import Department, School  # noqa: E402
 # This function generates random users and save them to database
 def generateuser(N):
     fake = Faker()
-    for user_id in range(1, N + 1):
+    count_start = LunchNinjaUser.objects.all().count() + 1
+    count_end = count_start + N
+    for user_id in range(count_start, count_end):
 
         un = "ut" + str(user_id)
         useremail = un + "@nyu.edu"

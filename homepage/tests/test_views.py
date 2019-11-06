@@ -110,7 +110,6 @@ class MatchHistoryTest(TestCase):
 
     def User_match_Obj(a):
 
-
         class username:
             def __init__(self):
                 self.first_name = "donald"
@@ -131,13 +130,10 @@ class MatchHistoryTest(TestCase):
         #     def order_by(self,p):
         #         pass
 
-
-
         return [match_userObj(),match_userObj()]
 
     @mock.patch(
-        "homepage.views.UserRequestMatch.objects.filter.order_by", side_effect=User_match_Obj
-    )
+        "homepage.views.UserRequestMatch.objects.filter.order_by", side_effect=User_match_Obj)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
     def test_match_history(self, mock_login, mock_filter):
         response = self.client.get("/matchHistory/")
