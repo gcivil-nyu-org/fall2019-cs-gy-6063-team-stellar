@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-    # Days_left,
+# Days_left,
 
 
 from django.core.mail import EmailMessage
@@ -8,8 +8,9 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserRequest,School,Cuisine,UserRequestMatch
+from .models import UserRequest, School, Cuisine, UserRequestMatch
 from .models import Department
+
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
@@ -46,17 +47,22 @@ def merge():
 
     return school, department, school_department, department_school
 
+
 def check_index_login(request):
     if request.session.get("is_login", None):
         return True
     else:
         return False
+
+
 def check_user_authenticated(request):
     if request.user.is_authenticated:
         return True
     else:
         return False
-def User_service_send_email_authenticated(request,service_type,cuisine_names):
+
+
+def User_service_send_email_authenticated(request, service_type, cuisine_names):
     email_subject = "Service Confirmation"
     message = render_to_string(
         "service_confirmation.html",
