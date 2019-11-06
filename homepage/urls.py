@@ -6,7 +6,8 @@ urlpatterns = [
     path("serviceRequest/", views.user_service),
     path("matchHistory/", views.match_history),
     path("homepage/test/", views.test),
-    path("homepage/test/runscript", views.run_script),
+    path("homepage/test/match", views.match),
+    path("homepage/test/modify_ur", views.modify_ur),
     re_path(r"^homepage/ajax/load_departments_homepage/$", views.user_service),
     re_path(r"^homepage/ajax/load_school_homepage/$", views.user_service),
 ]

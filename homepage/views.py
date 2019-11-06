@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-import sys
 from subprocess import run, PIPE
+
 # Days_left,
 
 
@@ -47,6 +47,7 @@ def merge():
     school_department["select school"] = department
 
     return school, department, school_department, department_school
+
 
 def check_ajax_department(request):
     if request.method == "GET" and request.path.startswith(
@@ -219,6 +220,12 @@ def match_history(request):
 def test(request):
     return render(request, "test.html")
 
-def run_script(request):
-    out = run(["python", "match.py"], shell = False, stdout = PIPE)
+
+def match(request):
+    run(["python", "match.py"], shell=False, stdout=PIPE)
     return redirect("/matchHistory/")
+
+
+def modify_ur(request):
+    run(["python", "modify_userrequests.py"], shell=False, stdout=PIPE)
+    return redirect("/homepage/test")
