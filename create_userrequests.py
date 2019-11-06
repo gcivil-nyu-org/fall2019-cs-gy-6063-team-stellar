@@ -5,7 +5,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
-# from user_account.models import LunchNinjaUser  # noqa: E402
+from user_account.models import LunchNinjaUser  # noqa: E402
 from homepage.models import UserRequest, School, Department, Cuisine  # noqa: E402
 
 
@@ -13,7 +13,7 @@ from homepage.models import UserRequest, School, Department, Cuisine  # noqa: E4
 def generateuser(N):
     userlist = []
 
-    all_users = all()
+    all_users = LunchNinjaUser.objects.all()
     for user_obj in all_users:
         user = {}
         user["user"] = user_obj
