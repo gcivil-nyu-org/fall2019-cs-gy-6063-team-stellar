@@ -66,7 +66,6 @@ def check_ajax_school(request):
         return True
     return False
 
-
 def usersignup(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "POST":
