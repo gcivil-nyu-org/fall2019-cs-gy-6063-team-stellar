@@ -47,6 +47,7 @@ def merge():
 
     return school, department, school_department, department_school
 
+
 def check_ajax_department(request):
     if request.method == "GET" and request.path.startswith(
         "/homepage/ajax/load_departments_homepage"

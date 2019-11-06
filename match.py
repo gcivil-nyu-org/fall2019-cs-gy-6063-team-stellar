@@ -34,7 +34,7 @@ def send_email(user1, user2, cuisinelist):
     for i in range(len(cuisinelist)):
         if i == len(cuisinelist) - 1:
             cuisineline = cuisineline + cuisinelist[i].name
-
+        # >>>>>>> e9c9f8b9ea94cc614df13d1faa2baf6b2a6c7be7
         else:
             cuisineline = cuisineline + cuisinelist[i].name + ","
     email_subject = "Lunch Confirmation"
@@ -85,11 +85,6 @@ def save_matches(matchs):
         request_match.save()
 
 
-
-        # if user_id in matchpool:
-        #     #remove selected user
-        #     matchpool.remove(user_id)
-
 def match():
     match_result = []
     unmached_user_request = []
@@ -105,7 +100,7 @@ def match():
         if req in matchpool:
             user_id = req.user_id
             matchpool.remove(req)
-
+            # >>>>>>> e9c9f8b9ea94cc614df13d1faa2baf6b2a6c7be7
             # find available users for this user(filter)
             available_set = set()
             available_set = cuisine_filter(matchpool, available_set, req)

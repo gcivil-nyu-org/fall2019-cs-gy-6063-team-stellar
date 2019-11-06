@@ -66,19 +66,21 @@ class UserserviceViewTest(TestCase):
         response = self.client.post("/serviceRequest/", requestObj)
         self.assertRedirects(response, "/")
 
-
     def request_start(request):
         return True
+
     @mock.patch("homepage.views.check_ajax_department", side_effect=request_start)
-    def test_homepage_department_ajax(self,mock_head_chek):
+    def test_homepage_department_ajax(self, mock_head_chek):
         response = self.client.get(
             "/homepage/ajax/load_departments_homepage/?school_id=College%20of%20Dentistry"
-)
+        )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     @mock.patch("homepage.views.check_ajax_school", side_effect=request_start)
-    def test_homepage_school_ajax(self,mock_head_chek):
-        response = self.client.get("/homepage/ajax/load_school_homepage/?department_id=Musical%20Theatre")
+    def test_homepage_school_ajax(self, mock_head_chek):
+        response = self.client.get(
+            "/homepage/ajax/load_school_homepage/?department_id=Musical%20Theatre"
+        )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
 
@@ -101,12 +103,14 @@ class LogoutViewTest(TestCase):
         response = self.client.get("/logout/")
         self.assertEqual(response.status_code, 302)
 
-class MatchHistoryTest(TestCase):
 
+class MatchHistoryTest(TestCase):
     def login_mock(request):
         return True
+
     def User_match_Obj(a):
-        user_matches=[]
+
+
         class username:
             def __init__(self):
                 self.first_name = "donald"
@@ -115,21 +119,26 @@ class MatchHistoryTest(TestCase):
                 self.school = "Tandon School of Engineering"
                 self.department = "Electrical Engineering"
 
-
         class match_userObj:
             def __init__(self):
 
                 self.user2 = username()
                 self.user1 = username()
                 self.match_time = "2019-11-5"
+        # class result:
+        #     def __init__(self):
+        #         self. = [match_userObj(),match_userObj()]
+        #     def order_by(self,p):
+        #         pass
 
 
-        user_matches.append(match_userObj())
-        user_matches.append(match_userObj())
-        return user_matches
 
-    @mock.patch("homepage.views.UserRequestMatch.objects.filter", side_effect=User_match_Obj)
+        return [match_userObj(),match_userObj()]
+
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.filter.order_by", side_effect=User_match_Obj
+    )
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_match_history(self,mock_login,mock_filter):
+    def test_match_history(self, mock_login, mock_filter):
         response = self.client.get("/matchHistory/")
         self.assertEqual(response.status_code, 200)

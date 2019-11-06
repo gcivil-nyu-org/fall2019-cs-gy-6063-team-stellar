@@ -116,7 +116,6 @@ class LoginViewTest(TestCase):
     #     self.assertEqual(response.status_code, 200)
 
 
-
 class LogoutViewTest(TestCase):
     def test_logout_without_user_session(self):
         response = self.client.get("/logout/")
