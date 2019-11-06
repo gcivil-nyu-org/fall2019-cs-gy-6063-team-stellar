@@ -16,8 +16,9 @@ def generateuser(N):
     count_start = LunchNinjaUser.objects.all().count() + 1
     count_end = count_start + N
     for user_id in range(count_start, count_end):
-
-        un = "ut" + str(user_id)
+        currentcount = School.objects.all().count()
+        id = user_id + currentcount
+        un = "ut" + str(id)
         useremail = un + "@nyu.edu"
         password = "Stellar123!"
         print(useremail)
