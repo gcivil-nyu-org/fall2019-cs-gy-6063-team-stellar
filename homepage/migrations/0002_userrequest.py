@@ -5,9 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ("homepage", "0001_initial"),
-    ]
+    dependencies = [("homepage", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
@@ -29,6 +27,6 @@ class Migration(migrations.Migration):
                 ("school", models.CharField(blank=True, max_length=200, null=True)),
                 ("department", models.CharField(blank=True, max_length=200, null=True)),
             ],
-            options={"db_table": "userrequest", "managed": True, },
-        ),
+            options={"db_table": "userrequest", "managed": True},
+        )
     ]

@@ -1,0 +1,7 @@
+[run]
+omit =
+    create_userrequests.py
+    create_users.py
+    modify_userrequests.py
+    lunchNinja/wsgi.py
+    match.py

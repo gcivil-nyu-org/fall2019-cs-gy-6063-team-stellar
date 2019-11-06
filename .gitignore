@@ -5,6 +5,7 @@
 .AppleDouble
 .LSOverride
 src/
+db.sqlite3
 
 #Editor 
 .idea
@@ -20,6 +21,7 @@ staticfiles/
 .Spotlight-V100
 .Trashes
 .coverage
+covhtml
 
 # Directories potentially created on remote AFP share
 .AppleDB
@@ -90,8 +92,9 @@ target/
 *.pyc
 __pycache__/
 local_settings.py
-
+/htmlcov
+/covhtml
 .env
-db.sqlite3
-db.sqlite3-journal
+#db.sqlite3
+#db.sqlite3-journal
 media
