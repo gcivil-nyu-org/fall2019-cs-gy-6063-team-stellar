@@ -44,7 +44,7 @@ def send_email(user1, user2, cuisinelist):
         + "("
         + user2.email
         + ").\n"
-        + "We will provide some restaurant recommandations based on both of your preferred cuisine type:\n"
+        + "You have been matched based on cuisine type:"
         + cuisineline
     )
     to_email = user1.email
@@ -130,7 +130,7 @@ def match():
     print(match_result)
     print(matched_user_request)
     save_matches(matched_user_request)
-    # initiate_email(matched_user_request)
+    initiate_email(matched_user_request)
     print(unmached_user_request)
 
 

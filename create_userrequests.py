@@ -61,5 +61,6 @@ def save_users(userlist):
 
 
 if __name__ == "__main__":
-    userlist = generateuser(20)
+    usercount = LunchNinjaUser.objects.all().count()
+    userlist = generateuser(usercount)
     save_users(userlist)
