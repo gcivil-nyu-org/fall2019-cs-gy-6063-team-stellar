@@ -198,4 +198,3 @@ def match_history(request):
         )
 
     return redirect("/login/")
-
