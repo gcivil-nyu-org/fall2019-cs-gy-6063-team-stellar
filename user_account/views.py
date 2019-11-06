@@ -62,6 +62,8 @@ def check_ajax_department(request):
     ):
         return True
     return False
+
+
 def check_ajax_school(request):
     if request.method == "GET" and (
         request.path.startswith("/ajax/load_school")

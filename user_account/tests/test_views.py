@@ -64,7 +64,7 @@ class SignupViewTest(TestCase):
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     @mock.patch("user_account.views.check_ajax_department", side_effect=request_start)
-    def test_second_signup_department_ajax(self,mock_head_check):
+    def test_second_signup_department_ajax(self, mock_head_check):
         # response1 = self.client.get("/")
         response = self.client.get(
             "/signup/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
@@ -72,20 +72,19 @@ class SignupViewTest(TestCase):
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     @mock.patch("user_account.views.check_ajax_school", side_effect=request_start)
-    def test_first_signup_school_ajax(self,mock_head_check):
+    def test_first_signup_school_ajax(self, mock_head_check):
         # response1 = self.client.get("/signup/")
         response = self.client.get("/ajax/load_school/?department_id=Biology")
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     @mock.patch("user_account.views.check_ajax_school", side_effect=request_start)
-    def test_second_signup_school_ajax(self,mock_head_check):
+    def test_second_signup_school_ajax(self, mock_head_check):
         # response1 = self.client.get("/signup/")
         response = self.client.get("/signup/ajax/load_school/?department_id=Biology")
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
 
 class LoginViewTest(TestCase):
-
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get("/login/")
         self.assertEqual(response.status_code, 200)
@@ -99,9 +98,6 @@ class LoginViewTest(TestCase):
         loginObj = {"username": "testUser", "password": "password12345"}
         response = self.client.post("/login/", loginObj)
         self.assertEqual(response.status_code, 200)
-
-
-
 
     def get_user_obj(**kargs):
         class userObj:
@@ -150,7 +146,9 @@ class ValidateViewTest(TestCase):
         return userObj()
 
     @mock.patch("user_account.views.login")
-    @mock.patch("user_account.views.LunchNinjaUser.objects.get", side_effect=get_user_obj)
+    @mock.patch(
+        "user_account.views.LunchNinjaUser.objects.get", side_effect=get_user_obj
+    )
     @mock.patch(
         "user_account.token_generator.account_activation_token.check_token",
         side_effect=check_token,

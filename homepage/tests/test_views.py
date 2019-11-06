@@ -19,28 +19,30 @@ class UserserviceViewTest(TestCase):
 
         class userObj:
             def __init__(self):
-                self.service_type = 'Monthly'
-                self.school = 'Tandon School of Engineering'
+                self.service_type = "Monthly"
+                self.school = "Tandon School of Engineering"
                 self.cuisines = cuisine_for_mock
 
             def save(self):
                 return "Saved"
 
         return userObj()
-    def send_email_mock(self,p2,p3):
+
+    def send_email_mock(self, p2, p3):
         pass
-    @mock.patch("homepage.views.User_service_send_email_authenticated",side_effect=send_email_mock)
+
+    @mock.patch(
+        "homepage.views.User_service_send_email_authenticated",
+        side_effect=send_email_mock,
+    )
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
-    def test_authenticate_user(self, mock_authenticated, mock_request,mock_email):
+    def test_authenticate_user(self, mock_authenticated, mock_request, mock_email):
         service_type_Obj = {
-            'service_type': 'Monthly',
-            'school': 'Tandon School of Engineering',
-            'user':{
-                "first_name": "donald",
-                "last_name": "trump",
-            }
-
+            "service_type": "Monthly",
+            "school": "Tandon School of Engineering",
+            "department": "Computer Science",
+            "user": {"first_name": "donald", "last_name": "trump"},
         }
         response = self.client.post("/serviceRequest/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
@@ -80,7 +82,6 @@ def all():
 
 
 class IndexViewTest(TestCase):
-
     def no_repeat_login(request):
         return True
 

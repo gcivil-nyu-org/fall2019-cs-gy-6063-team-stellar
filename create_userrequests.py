@@ -5,7 +5,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
-from user_account.models import LunchNinjaUser  # noqa: E402
+# from user_account.models import LunchNinjaUser  # noqa: E402
 from homepage.models import UserRequest, School, Department, Cuisine  # noqa: E402
 
 
