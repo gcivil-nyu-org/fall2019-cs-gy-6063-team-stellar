@@ -1,0 +1,4 @@
+[run]
+omit =
+    create_userrequests.py
+    create_users.py
