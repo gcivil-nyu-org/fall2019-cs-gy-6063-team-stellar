@@ -14,12 +14,14 @@ before_script:
   - python manage.py makemigrations homepage
   - python manage.py migrate
   - python manage.py collectstatic
+  - black .
+  - flake8 .
 
 
 script:
   # Execute all of the commands which
   # should make the build pass or fail
-  - black --check .
+  - black --check . --exclude "homepage/migrations/" --exclude "user_account/migrations/"
   - flake8 .
   - coverage run --source=. manage.py test --keepdb
 
