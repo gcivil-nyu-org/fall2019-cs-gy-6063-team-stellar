@@ -2,3 +2,5 @@
 omit =
     create_userrequests.py
     create_users.py
+    lunchNinja/wsgi.py
+    match.py
