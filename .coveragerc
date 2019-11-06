@@ -1,6 +1,5 @@
 [run]
 omit =
-    /datasource/dataprocess/database.py
     create_userrequests.py
     create_users.py
     lunchNinja/wsgi.py
