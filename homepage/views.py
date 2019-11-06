@@ -269,4 +269,3 @@ def create_users(request):
 def create_ur(request):
     run(["python", "create_userrequests.py"], shell=False, stdout=PIPE)
     return redirect("/homepage/test")
-

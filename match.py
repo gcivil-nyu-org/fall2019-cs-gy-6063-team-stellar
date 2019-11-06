@@ -44,7 +44,7 @@ def send_email(user1, user2, cuisinelist):
         + "("
         + user2.email
         + ").\n"
-        + "You have been matched based on cuisine type:"
+        + "You have been matched based on cuisine type(s): "
         + cuisineline
     )
     to_email = user1.email
