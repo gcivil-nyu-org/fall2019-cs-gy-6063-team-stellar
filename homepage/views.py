@@ -258,9 +258,14 @@ def test(request):
 
 def match(request):
     run(["python", "match.py"], shell=False, stdout=PIPE)
-    return redirect("/matchHistory/")
+    return redirect("/homepage/test")
 
 
-def modify_ur(request):
-    run(["python", "modify_userrequests.py"], shell=False, stdout=PIPE)
+def create_users(request):
+    run(["python", "create_users.py"], shell=False, stdout=PIPE)
+    return redirect("/homepage/test")
+
+
+def create_ur(request):
+    run(["python", "create_userrequests.py"], shell=False, stdout=PIPE)
     return redirect("/homepage/test")
