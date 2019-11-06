@@ -27,32 +27,36 @@
 	<div class="container">
 		<br>
         <h3>Active Service</h3>
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">Service type</th>
-						<th scope="col">Service started on</th>
-						<th scope="col">Preffered School</th>
-						<th scope="col">Preffered Department</th>
-						<th scope="col">Preffered Cuisines</th>
-						<th scope="col">Service Status</th>
-					</tr>
-				</thead>
-				<tbody>
+			{% if user_request%}
+				<table class="table">
+					<thead>
 						<tr>
-							<td>{{user_request.service_type}}</td>
-							<td>{{user_request.service_start_date  | date:"jS F Y"}}</td>
-							<td>{{user_request.preffered_school}}</td>
-							<td>{{user_request.preffered_department}}</td>
-							<td>{{user_request.preferred_cuisines}}</td>
-							{% if user_request.service_status%}
-							 	<td>Active</td>
-							{% else %}
-								<td>Inactive</td>
-							{% endif %}
+							<th scope="col">Service type</th>
+							<th scope="col">Service started on</th>
+							<th scope="col">Preffered School</th>
+							<th scope="col">Preffered Department</th>
+							<th scope="col">Preffered Cuisines</th>
+							<th scope="col">Service Status</th>
 						</tr>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+							<tr>
+								<td>{{user_request.service_type}}</td>
+								<td>{{user_request.service_start_date  | date:"jS F Y"}}</td>
+								<td>{{user_request.preffered_school}}</td>
+								<td>{{user_request.preffered_department}}</td>
+								<td>{{user_request.preferred_cuisines}}</td>
+								{% if user_request.service_status%}
+									<td>Active</td>
+								{% else %}
+									<td>Inactive</td>
+								{% endif %}
+							</tr>
+					</tbody>
+				</table>
+			{% else %}
+				<p>No service found, please subscribe to Lunch Ninja from service tab :)</p>
+			{% endif %}
 	</div>
 	
 	<!-- Footer -->

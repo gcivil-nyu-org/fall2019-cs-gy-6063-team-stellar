@@ -218,33 +218,38 @@ def match_history(request):
 
 
 def settings(request):
-    department = Department.objects.all()
-    school = School.objects.all()
-    cuisine = Cuisine.objects.all()
+    if check_login(request):
+        department = Department.objects.all()
+        school = School.objects.all()
+        cuisine = Cuisine.objects.all()
 
-    user_request_instance = UserRequest.objects.get(user=request.user)
-    preffered_cuisines_instances = user_request_instance.cuisines.all()
-    user_request = {
-        "service_type": user_request_instance.service_type,
-        "service_start_date": user_request_instance.time_stamp,
-        "preffered_school": user_request_instance.school,
-        "preffered_department": user_request_instance.department,
-        "service_status": user_request_instance.service_status,
-        "preferred_cuisines": ", ".join(
-            [cuisine.name for cuisine in preffered_cuisines_instances]
-        ),
-    }
+        try:
+            user_request_instance = UserRequest.objects.get(user=request.user)
+            preffered_cuisines_instances = user_request_instance.cuisines.all()
+            user_request = {
+                "service_type": user_request_instance.service_type,
+                "service_start_date": user_request_instance.time_stamp,
+                "preffered_school": user_request_instance.school,
+                "preffered_department": user_request_instance.department,
+                "service_status": user_request_instance.service_status,
+                "preferred_cuisines": ", ".join(
+                    [cuisine.name for cuisine in preffered_cuisines_instances]
+                ),
+            }
+        except UserRequest.DoesNotExist:
+            user_request = None
 
-    return render(
-        request,
-        "settings.html",
-        {
-            "cuisines": cuisine,
-            "schools": school,
-            "departments": department,
-            "user_request": user_request,
-        },
-    )
+        return render(
+            request,
+            "settings.html",
+            {
+                "cuisines": cuisine,
+                "schools": school,
+                "departments": department,
+                "user_request": user_request,
+            },
+        )
+    return redirect("/login/")
 
 
 def test(request):
