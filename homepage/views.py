@@ -199,6 +199,5 @@ def match_history(request):
 
     return redirect("/login/")
 
-
 def test(request):
-    return redirect("/test/")
+    return render(request, "test.html")
