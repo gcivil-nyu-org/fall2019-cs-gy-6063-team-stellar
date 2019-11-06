@@ -46,8 +46,9 @@
 				<a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Match button</a> {% endcomment %}
 				<form method="post">
 					{% csrf_token %}
+                    <div><button type="submit" name="run_script"><a href = "create_users">Create users</a></button></div>
+                    <div><button type="submit" name="run_script"><a href = "create_ur">Create user requests</a></button></div>
                     <div><button type="submit" name="run_script"><a href = "match">Run Match script</a></button></div>
-                    <div><button type="submit" name="run_script"><a href = "modify_ur">Change users' requests</a></button></div>
 				</form>
 			</div>
 		</div>
