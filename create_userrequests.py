@@ -13,7 +13,7 @@ from homepage.models import UserRequest, School, Department, Cuisine  # noqa: E4
 def generateuser(N):
     userlist = []
 
-    all_users = LunchNinjaUser.objects.all()
+    all_users = all()
     for user_obj in all_users:
         user = {}
         user["user"] = user_obj

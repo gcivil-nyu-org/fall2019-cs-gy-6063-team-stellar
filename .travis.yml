@@ -22,8 +22,8 @@ script:
   # should make the build pass or fail
   - black --check .
   - flake8 .
-  - coverage run --source=user_account manage.py test homepage/tests --keepdb
-  - coverage run --source=user_account manage.py test user_account/tests --keepdb
+  - coverage run manage.py test --keepdb
+
 
 after_script:
   - coveralls
