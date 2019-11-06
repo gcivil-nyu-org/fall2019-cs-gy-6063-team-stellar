@@ -10,7 +10,7 @@ urlpatterns = [
     path("homepage/test/match", views.match),
     path("homepage/test/create_users", views.create_users),
     path("homepage/test/create_ur", views.create_ur),
-    path("homepage/test/clear_user", views.crear_user),
+    path("homepage/test/clear_user", views.clear_user),
     re_path(r"^homepage/ajax/load_departments_homepage/$", views.user_service),
     re_path(r"^homepage/ajax/load_school_homepage/$", views.user_service),
 ]

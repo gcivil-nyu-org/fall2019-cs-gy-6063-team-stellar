@@ -1,6 +1,4 @@
 from django.test import TestCase
-
-from django.core.exceptions import ObjectDoesNotExist
 from unittest import mock
 from ..models import UserRequest
 
@@ -124,7 +122,7 @@ class UserserviceViewTest(TestCase):
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     def test_not_post(self):
-        response=self.client.get("/serviceRequest/")
+        response = self.client.get("/serviceRequest/")
         self.assertEqual(response.status_code, 302)
 
 
@@ -142,49 +140,57 @@ class LogoutViewTest(TestCase):
     def test_logout_without_user_session(self):
         response = self.client.get("/logout/")
         self.assertEqual(response.status_code, 302)
-class SettingViewTest(TestCase):
 
+
+class SettingViewTest(TestCase):
     def User_request_Obj(**kargs):
         class cuisine_for_mock:
-            def __init__(self,name):
+            def __init__(self, name):
                 self.name = name
                 pass
 
         class cuisines_for_mock:
-            def __init__(self,name):
+            def __init__(self, name):
                 pass
-            def all(**kargs):
-                return [cuisine_for_mock("American"),cuisine_for_mock("Indian"),cuisine_for_mock("Chinese")]
 
+            def all(**kargs):
+                return [
+                    cuisine_for_mock("American"),
+                    cuisine_for_mock("Indian"),
+                    cuisine_for_mock("Chinese"),
+                ]
 
         class userObj:
             def __init__(self):
                 self.service_type = "Monthly"
                 self.school = "Tandon School of Engineering"
-                self.time_stamp = '2019-11-6'
-                self.department = 'Computer Science'
+                self.time_stamp = "2019-11-6"
+                self.department = "Computer Science"
                 self.service_status = True
                 self.cuisines = cuisines_for_mock
+
         return userObj()
 
     def raise_error(**kargs):
 
         raise UserRequest.DoesNotExist
+
     def login_mock(request):
 
         return True
 
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_correct_setting(self,mock_login,mock_userrequest):
+    def test_correct_setting(self, mock_login, mock_userrequest):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 200)
 
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=raise_error)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_incorrect_setting(self,mock_login,mock_userrequest):
+    def test_incorrect_setting(self, mock_login, mock_userrequest):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 200)
+
     def test_not_login(self):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 302)
@@ -195,7 +201,6 @@ class MatchHistoryTest(TestCase):
         return True
 
     def User_match_Obj(a):
-
         class username:
             def __init__(self):
                 self.first_name = "donald"
@@ -210,45 +215,53 @@ class MatchHistoryTest(TestCase):
                 self.user2 = username()
                 self.user1 = username()
                 self.match_time = "2019-11-5"
+
         class result:
             def __init__(self):
                 pass
-            def order_by(self,p):
-                return [match_userObj(), match_userObj()]
 
+            def order_by(self, p):
+                return [match_userObj(), match_userObj()]
 
         return result()
 
     def User_request_Obj(**kargs):
         class cuisine_for_mock:
-            def __init__(self,name):
+            def __init__(self, name):
                 self.name = name
                 pass
 
         class cuisines_for_mock:
-            def __init__(self,name):
+            def __init__(self, name):
                 pass
-            def all(**kargs):
-                return [cuisine_for_mock("American"),cuisine_for_mock("Indian"),cuisine_for_mock("Chinese")]
 
+            def all(**kargs):
+                return [
+                    cuisine_for_mock("American"),
+                    cuisine_for_mock("Indian"),
+                    cuisine_for_mock("Chinese"),
+                ]
 
         class userObj:
             def __init__(self):
                 self.service_type = "Monthly"
                 self.school = "Tandon School of Engineering"
-                self.time_stamp = '2019-11-6'
-                self.department = 'Computer Science'
+                self.time_stamp = "2019-11-6"
+                self.department = "Computer Science"
                 self.service_status = True
                 self.cuisines = cuisines_for_mock
+
         return userObj()
 
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch(
-        "homepage.views.UserRequestMatch.objects.filter", side_effect=User_match_Obj)
+        "homepage.views.UserRequestMatch.objects.filter", side_effect=User_match_Obj
+    )
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_match_history(self, mock_login, mock_filter,mock_request):
+    def test_match_history(self, mock_login, mock_filter, mock_request):
         response = self.client.get("/matchHistory/")
         self.assertEqual(response.status_code, 200)
+
     def test_not_login(self):
         response = self.client.get("/matchHistory/")
         self.assertEqual(response.status_code, 302)
