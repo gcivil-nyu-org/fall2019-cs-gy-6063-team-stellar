@@ -6,7 +6,6 @@ install:
 
 before_script:
   # Execute all of the commands which need to be executed
-
   # before running actual tests
   - rm -rf homepage/migrations
   - rm -rf user_account/migrations

@@ -104,7 +104,6 @@ class UserSignUpFormTest(TestCase):
         self.assertFalse(form.is_valid())
 
 
-
 class UserSignInFormTest(TestCase):
     def test_username(self):
         form = UserSignInForm()

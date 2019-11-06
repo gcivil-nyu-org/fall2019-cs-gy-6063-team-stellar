@@ -21,7 +21,7 @@ def merge():
     school = School.objects.all()
     school_list = []
     department_list = []
-    
+
     for s in school:
         school_list.append((s.name, s.id))
 

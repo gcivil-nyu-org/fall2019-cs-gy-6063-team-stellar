@@ -6,7 +6,6 @@ import django.db.models.deletion
 import homepage.models
 
 
-
 class Migration(migrations.Migration):
 
     initial = True
@@ -15,7 +14,6 @@ class Migration(migrations.Migration):
         ("user_account", "__first__"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
-
 
     operations = [
         migrations.CreateModel(
