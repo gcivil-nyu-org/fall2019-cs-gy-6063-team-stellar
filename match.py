@@ -1,23 +1,23 @@
 import os
 import random
-<<<<<<< HEAD
-import datetime
-def load_cuisine(file):
-    with open(file,"r",encoding='utf-8') as in_f:
-        cuisinelist=[]
-        f_csv = csv.reader(in_f)
-        for linelist in f_csv:
-            cuisinelist.append(linelist[7])
-        return cuisinelist[1:]
-#change string to list
-def str_to_list(string):
-    string_content = string.strip('[').strip(']')
-    string_list = string_content.split('\'')
-    out_list = []
-    for item in string_list:
-        if item == ', ' or item == '':
-            continue
-=======
+
+# import datetime
+# def load_cuisine(file):
+#     with open(file,"r",encoding='utf-8') as in_f:
+#         cuisinelist=[]
+#         f_csv = csv.reader(in_f)
+#         for linelist in f_csv:
+#             cuisinelist.append(linelist[7])
+#         return cuisinelist[1:]
+# #change string to list
+# def str_to_list(string):
+#     string_content = string.strip('[').strip(']')
+#     string_list = string_content.split('\'')
+#     out_list = []
+#     for item in string_list:
+#         if item == ', ' or item == '':
+#             continue
+
 import time
 import django
 from django.core.mail import EmailMessage
@@ -34,7 +34,7 @@ def send_email(user1, user2, cuisinelist):
     for i in range(len(cuisinelist)):
         if i == len(cuisinelist) - 1:
             cuisineline = cuisineline + cuisinelist[i].name
->>>>>>> e9c9f8b9ea94cc614df13d1faa2baf6b2a6c7be7
+
         else:
             cuisineline = cuisineline + cuisinelist[i].name + ","
     email_subject = "Lunch Confirmation"
@@ -85,11 +85,11 @@ def save_matches(matchs):
         request_match.save()
 
 
-<<<<<<< HEAD
-        if user_id in matchpool:
-            #remove selected user
-            matchpool.remove(user_id)
-=======
+
+        # if user_id in matchpool:
+        #     #remove selected user
+        #     matchpool.remove(user_id)
+
 def match():
     match_result = []
     unmached_user_request = []
@@ -105,7 +105,7 @@ def match():
         if req in matchpool:
             user_id = req.user_id
             matchpool.remove(req)
->>>>>>> e9c9f8b9ea94cc614df13d1faa2baf6b2a6c7be7
+
             # find available users for this user(filter)
             available_set = set()
             available_set = cuisine_filter(matchpool, available_set, req)
