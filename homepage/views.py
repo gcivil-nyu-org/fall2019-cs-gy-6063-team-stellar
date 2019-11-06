@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-
+import sys
+from subprocess import run, PIPE
 # Days_left,
 
 
@@ -217,3 +218,7 @@ def match_history(request):
 
 def test(request):
     return render(request, "test.html")
+
+def run_script(request):
+    out = run(["python", "match.py"], shell = False, stdout = PIPE)
+    return redirect("/matchHistory/")
