@@ -269,3 +269,7 @@ def create_users(request):
 def create_ur(request):
     run(["python", "create_userrequests.py"], shell=False, stdout=PIPE)
     return redirect("/homepage/test")
+
+def clear_user(request):
+    run(["python", "clear_users.py"], shell=False, stdout=PIPE)
+    return redirect("/homepage/test")
