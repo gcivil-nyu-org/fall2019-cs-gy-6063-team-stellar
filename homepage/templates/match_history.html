@@ -36,18 +36,20 @@
 					<th scope="col">Email Id</th>
 					<th scope="col">NYU School</th>
 					<th scope="col">NYU Department</th>
-					<th scope="col">Meeting Time</th>
+					<th scope="col">Preffered cuisines</th>
+					<th scope="col">Meeting Day</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for match in matches %}
 						<tr>
-							<th scope="row">1</th>
+							<th scope="row">{{forloop.counter}}</th>
 							<td>{{match.matched_user_name}}</td>
 							<td>{{match.matched_email}}</td>
 							<td>{{match.matched_user_school}}</td>
 							<td>{{match.matched_user_department}}</td>
-							<td>{{match.match_time}}</td>
+							<td>{{match.matched_user_cuisines}}</td>
+							<td>{{match.match_time | date:"jS F Y"}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

@@ -107,7 +107,4 @@ class UserRequestMatch(models.Model):
     match_time = models.DateTimeField(default=in_one_day)
 
     def __str__(self):
-        import pdb
-
-        pdb.set_trace()
         return "Match for " + self.user1.username + " and " + self.user2.username
