@@ -1,48 +1,108 @@
 from django.test import TestCase
-from user_account.forms import UserSignInForm
+from user_account.forms import UserSignUpForm, UserSignInForm
 
 
-# class UserSignUpFormTest(TestCase):
-#     def test_email_label(self):
-#         form = UserSignUpForm()
-#         self.assertTrue(
-#             form.fields["email"].label is None or form.fields["email"].label == "email"
-#         )
-#
-#     # def test_email_text(self):
-#     # 	form = UserSignUpForm()
-#     # 	self.assertEqual(form.fields['email'].help_text, 'Required(NYU Email ID)')
-#
-#     def test_email_is_nyu(self):
-#         data = {
-#             "username": "testUser",
-#             "email": "up@nyu.edu",
-#             "first_name": "donald",
-#             "last_name": "trump",
-#             "Phone": "1234567890",
-#             "school": "Tandon School of Engineering",
-#             "department": "Computer Science",
-#             "password1": "Pass12345",
-#             "password2": "Pass12345",
-#         }
-#         form = UserSignUpForm(data=data)
-#         self.assertTrue(form.is_valid())
-#
-#
-#     def test_email_is_not_nyu(self):
-#         data = {
-#             "username": "testUser",
-#             "email": "up@usc.edu",
-#             "first_name": "donald",
-#             "last_name": "trump",
-#             "Phone": "1234567890",
-#             "school": "Tandon School of Engineering",
-#             "department": "Electrical Engineering",
-#             "password1": "Pass12345",
-#             "password2": "Pass12345",
-#         }
-#         form = UserSignUpForm(data=data)
-#         self.assertFalse(form.is_valid())
+class UserSignUpFormTest(TestCase):
+    def test_email_label(self):
+        form = UserSignUpForm()
+        self.assertTrue(
+            form.fields["email"].label is None or form.fields["email"].label == "email"
+        )
+
+    # def test_email_text(self):
+    # 	form = UserSignUpForm()
+    # 	self.assertEqual(form.fields['email'].help_text, 'Required(NYU Email ID)')
+
+    def test_email_is_nyu(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_email_is_not_nyu(self):
+        data = {
+            "username": "testUser",
+            "email": "up@usc.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertFalse(form.is_valid())
+
+    def test_school_is_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_school_not_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertFalse(form.is_valid())
+
+    def test_department_is_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer Science",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_department_not_valid(self):
+        data = {
+            "username": "testUser",
+            "email": "up@nyu.edu",
+            "first_name": "donald",
+            "last_name": "trump",
+            "Phone": "1234567890",
+            "school": "Tandon School of Engineering",
+            "department": "Computer",
+            "password1": "Pass12345",
+            "password2": "Pass12345",
+        }
+        form = UserSignUpForm(data=data)
+        self.assertFalse(form.is_valid())
+
 
 
 class UserSignInFormTest(TestCase):

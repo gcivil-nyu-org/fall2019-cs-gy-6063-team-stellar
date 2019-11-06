@@ -19,26 +19,68 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body id="page-top">
-	
 	<!-- Navigation -->
-	{% include "nav_bar.html" %}
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+		<div class="container">
+			<a class="navbar-brand js-scroll-trigger" href="/homepage/">Lunch Ninja</a>
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				Menu
+				<i class="fas fa-bars"></i>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav text-uppercase ml-auto">
+					<li class="nav-item">
+					<li class="nav-item">
+						<a class="nav-link" href="/logout/">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 	<!-- Header -->
 	<header class="masthead">
 		<div class="container">
 			<div class="intro-text">
 				<!--<div class="intro-lead-in">Lunch Ninja</div>-->
-				<div class="intro-heading text-uppercase">It's Nice To Meet You</div>
-				<a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" >Click for more info</a>
+				{% comment %} <div class="intro-heading text-uppercase">Click for match</div>
+				<a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Match button</a> {% endcomment %}
+				<form method="post">
+					{% csrf_token %}
+                    <div><button type="submit" name="run_script"><a href = "create_users">Create users</a></button></div>
+                    <div><button type="submit" name="run_script"><a href = "create_ur">Create user requests</a></button></div>
+                    <div><button type="submit" name="run_script"><a href = "match">Run Match script</a></button></div>
+				</form>
 			</div>
 		</div>
 	</header>
-	
+	<!-- Pop-up models -->
+	{% include "service_pop_up.html" %}
 	<!-- Footer -->
-	{% include "footer.html" %}
+	<footer class="footer">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-4">
+					<span class="copyright">Copyright &copy; Your Website 2019</span>
+				</div>
+				<div class="col-md-4">
+				</div>
+				<div class="col-md-4">
+					<ul class="list-inline quicklinks">
+						<li class="list-inline-item">
+							<a href="#">Privacy Policy</a>
+						</li>
+						<li class="list-inline-item">
+							<a href="#">Terms of Use</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/multiselect/2.2.9/js/multiselect.min.js"></script>
-<script type="text/javascript" src="{% static 'js/service-pop-up.js' %}"></script>
+
 </html>
