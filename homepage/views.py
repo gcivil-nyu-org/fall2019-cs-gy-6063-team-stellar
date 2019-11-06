@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from subprocess import run, PIPE
 
 # Days_left,
 
@@ -48,7 +49,23 @@ def merge():
     return school, department, school_department, department_school
 
 
-def check_index_login(request):
+def check_ajax_department(request):
+    if request.method == "GET" and request.path.startswith(
+        "/homepage/ajax/load_departments_homepage"
+    ):
+        return True
+    return False
+
+
+def check_ajax_school(request):
+    if request.method == "GET" and request.path.startswith(
+        "/homepage/ajax/load_school_homepage"
+    ):
+        return True
+    return False
+
+
+def check_login(request):
     if request.session.get("is_login", None):
         return True
     else:
@@ -78,7 +95,7 @@ def User_service_send_email_authenticated(request, service_type, cuisine_names):
 
 
 def index(request):
-    if check_index_login(request):  # no repeat log in
+    if check_login(request):  # no repeat log in
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
@@ -134,16 +151,12 @@ def user_service(request):
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
         return redirect("/")
-    elif request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_departments_homepage"
-    ):
+    elif check_ajax_department(request):
 
         school_id = request.GET.get("school_id", None)
         response = school_departments[school_id]
         return JsonResponse(response, safe=False)
-    elif request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_school_homepage"
-    ):
+    elif check_ajax_school(request):
         department_id = request.GET.get("department_id", None)
         school = depatment_school[department_id][0]
         response = []
@@ -158,7 +171,7 @@ def user_service(request):
 
 
 def match_history(request):
-    if request.session.get("is_login", None):
+    if check_login(request):
         # request.user
         user_matches = UserRequestMatch.objects.filter(
             Q(user1=request.user) | Q(user2=request.user)
@@ -228,3 +241,13 @@ def settings(request):
 
 def test(request):
     return render(request, "test.html")
+
+
+def match(request):
+    run(["python", "match.py"], shell=False, stdout=PIPE)
+    return redirect("/matchHistory/")
+
+
+def modify_ur(request):
+    run(["python", "modify_userrequests.py"], shell=False, stdout=PIPE)
+    return redirect("/homepage/test")

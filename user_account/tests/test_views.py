@@ -99,16 +99,15 @@ class LoginViewTest(TestCase):
         response = self.client.post("/login/", loginObj)
         self.assertEqual(response.status_code, 200)
 
-    def get_user_obj(**kargs):
-        class userObj:
-            def __init__(self):
-                self.is_active = True
-
-            def save(self):
-                return "Saved"
-
-        return userObj()
-
+    # def get_user_obj(**kargs):
+    #     class userObj:
+    #         def __init__(self):
+    #             self.is_active = True
+    #
+    #         def save(self):
+    #             return "Saved"
+    #
+    #     return userObj()
     # @mock.patch("user_account.views.login")
     # @mock.patch("user_account.views.Authenticate", side_effect=get_user_obj)
     # def test_authenticated_user_login(self):
