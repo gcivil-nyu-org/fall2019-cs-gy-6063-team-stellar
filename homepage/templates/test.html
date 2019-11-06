@@ -42,8 +42,12 @@
 		<div class="container">
 			<div class="intro-text">
 				<!--<div class="intro-lead-in">Lunch Ninja</div>-->
-				<div class="intro-heading text-uppercase">Click for match</div>
-				<a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Match button</a>
+				{% comment %} <div class="intro-heading text-uppercase">Click for match</div>
+				<a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Match button</a> {% endcomment %}
+				<form method="post">
+					{% csrf_token %}
+					<button type="submit" name="run_script">Run script</button>
+				</form>
 			</div>
 		</div>
 	</header>

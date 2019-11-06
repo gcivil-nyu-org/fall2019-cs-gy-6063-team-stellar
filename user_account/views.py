@@ -16,8 +16,6 @@ from .models import LunchNinjaUser
 
 
 def index(request):
-    # if not request.session.get('is_login', None):
-    #     return redirect('/login/')
     return render(request, "index.html")
 
 
@@ -31,9 +29,7 @@ def merge():
 
     for d in department:
         department_list.append((d.name, d.school))
-    # schoollists = retrieveschool()
-    # departmentlists = retrievedepartment()
-
+    
     school_department = {}
     id_school = {}
     department_school = {}
@@ -50,8 +46,6 @@ def merge():
 
     school_department["select school"] = department
 
-    # print(school_department)
-    # print(department_school)
     return school, department, school_department, department_school
 
 
