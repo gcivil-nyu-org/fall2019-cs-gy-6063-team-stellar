@@ -1,0 +1,29 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="/homepage/">Lunch Ninja</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav text-uppercase ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="modal" data-target="#myModal1" href="#myModal1">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/matchHistory/">Lunch Matches</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#portfolio">Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout/">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+    
+<!-- Pop-up models -->
+{% include "service_pop_up.html" %}

@@ -3,7 +3,9 @@ import csv
 import math
 import os.path
 
-directory_path = os.path.dirname(__file__) 
+directory_path = os.path.dirname(__file__)
+
+
 # Thanks to https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
     R = 6371  # Radius of the earth in km
@@ -73,7 +75,9 @@ def importrestaurant():
     cur.execute(
         "CREATE TABLE homepage_restaurant (id INTEGER PRIMNARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
     )
-    filepath3 = directory_path + "/../DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
+    filepath3 = (
+        directory_path + "/../DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
+    )
 
     with open(
         filepath3, "r", encoding="UTF-8-sig"

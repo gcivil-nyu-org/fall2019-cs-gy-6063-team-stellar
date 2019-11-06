@@ -1,5 +1,7 @@
 from django.db import models
-
+from django.conf import settings
+from datetime import timedelta
+from django.utils import timezone
 
 m_state = False
 
@@ -56,7 +58,9 @@ class Cuisine(models.Model):
 
 
 class Days_left(models.Model):
-    user_id = models.IntegerField()
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
+    )
     days = models.IntegerField()
 
     def __str__(self):
@@ -67,15 +71,43 @@ class Days_left(models.Model):
 
 
 class UserRequest(models.Model):
-    user_id = models.IntegerField()
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
+    )
     service_type = models.CharField(max_length=100)
-    time_stamp = models.DateTimeField(auto_now_add=True)
+    time_stamp = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     cuisines = models.ManyToManyField(Cuisine, blank=True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
+    service_status = models.BooleanField(default=True)
+    match_status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.service_type
 
     class Meta:
         managed = True
+
+
+def in_one_day():
+    return timezone.now() + timedelta(days=1)
+
+
+class UserRequestMatch(models.Model):
+    user1 = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="%(class)s_user1",
+    )
+    user2 = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="%(class)s_user2",
+    )
+    match_time = models.DateTimeField(default=in_one_day)
+
+    def __str__(self):
+        import pdb
+
+        pdb.set_trace()
+        return "Match for " + self.user1.username + " and " + self.user2.username

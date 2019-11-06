@@ -1,5 +1,6 @@
-import csv
+import os
 import random
+<<<<<<< HEAD
 import datetime
 def load_cuisine(file):
     with open(file,"r",encoding='utf-8') as in_f:
@@ -16,94 +17,122 @@ def str_to_list(string):
     for item in string_list:
         if item == ', ' or item == '':
             continue
+=======
+import time
+import django
+from django.core.mail import EmailMessage
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
+django.setup()
+from homepage.models import UserRequest, UserRequestMatch  # noqa: E402
+from user_account.models import LunchNinjaUser  # noqa: E402
+
+
+# send_email() will trigger mailtrap to send out email to matched users
+def send_email(user1, user2, cuisinelist):
+    cuisineline = ""
+    for i in range(len(cuisinelist)):
+        if i == len(cuisinelist) - 1:
+            cuisineline = cuisineline + cuisinelist[i].name
+>>>>>>> e9c9f8b9ea94cc614df13d1faa2baf6b2a6c7be7
         else:
-            out_list.append(item)
-    return out_list
-def create_cuisine_table(cuisine_list,userlist):
-    cuisine_table = {}
-    for cuisine in cuisine_list:
-        cuisine_table[cuisine] = []
-    for user in userlist:
-        real_p_cuisine_list = user['cuisine']
-        for c in real_p_cuisine_list:
-            cuisine_table[c].append(user['user_id'])
+            cuisineline = cuisineline + cuisinelist[i].name + ","
+    email_subject = "Lunch Confirmation"
+    message = (
+        "You got it! You will have a lunch with the user "
+        + user2.username
+        + "("
+        + user2.email
+        + ").\n"
+        + "We will provide some restaurant recommandations based on both of your preferred cuisine type:\n"
+        + cuisineline
+    )
+    to_email = user1.email
+    email = EmailMessage(email_subject, message, to=[to_email])
+    email.send()
 
-    return cuisine_table
 
-def load_user(file):
-    with open(file, "r") as in_f:
-        userlist = []
+# initiate_email() takes in matching result and call send_email() by 1 email/5 second rate
+def initiate_email(match):
+    for each in match:
+        req1 = each[0]
+        req2 = each[1]
 
-        f_csv = csv.reader(in_f)
-        for linelist in f_csv:
-            user_dict = {}
-            user_dict["user_id"]=linelist[0]
-            user_dict["school"]=linelist[1]
-            user_dict["department"]=linelist[2]
-            user_dict["cuisine"]=str_to_list(linelist[3])
-            user_dict["prefer_department"]=str_to_list(linelist[4])
-            user_dict["meet_history"]=str_to_list(linelist[5])
-            userlist.append(user_dict)
-        return userlist[1:]
-cuisine_list=load_cuisine("./datasource/DOHMH_New_York_City_Restaurant_Inspection_Results.csv")
-userlist=load_user("./datasource/cuisinefail_sampleusers.csv")
-cuisine_table=create_cuisine_table(cuisine_list,userlist)
-def cuisine_filter(matchpool,available_set,user):
+        user1 = LunchNinjaUser.objects.get(id=req1.user_id)
+        user2 = LunchNinjaUser.objects.get(id=req2.user_id)
+        cuisine_set1 = set(req1.cuisines.all())
+        cuisine_set2 = set(req2.cuisines.all())
+        cuisinelist = list(cuisine_set1 & cuisine_set2)
+        time.sleep(5)
+        send_email(user1, user2, cuisinelist)
+        time.sleep(5)
+        send_email(user2, user1, cuisinelist)
+
+
+def cuisine_filter(matchpool, available_set, req):
     # get the preferred cuisine
-    cuisine_list = user['cuisine']
+    cuisine_list = req.cuisines.all()
     for c in cuisine_list:
-        available_set = available_set.union(set(cuisine_table[c]))
+        available_set = available_set.union(c.userrequest_set.all())
     available_set = available_set.intersection(matchpool)
     return available_set
-def matched_user_filter(matchpool,available_set,user):
-    user_meet_history = user['meet_history']
-    # remove met users
-    if not len(user_meet_history) == 0:
-        for u in user_meet_history:
-            available_set.remove(u[0])
-    return available_set
 
-def match(userlist,cuisine_table):
-    match_result=[]
-    unmached_user_list=[]
-    matched_user_list=[]
-    matchpool=set()
-    for user in userlist:
-        matchpool.add(user['user_id'])
 
-    # match each user
-    for user in userlist :
-        user_id=user['user_id']
+def save_matches(matchs):
+    # save matches to user_request_match table
+    for match in matchs:
+        request_match = UserRequestMatch(user1=match[0].user, user2=match[1].user)
+        request_match.save()
 
+
+<<<<<<< HEAD
         if user_id in matchpool:
             #remove selected user
             matchpool.remove(user_id)
+=======
+def match():
+    match_result = []
+    unmached_user_request = []
+    matched_user_request = []
+    matchpool = set()
+    reqlist = UserRequest.objects.all()
+
+    for req in reqlist:
+        matchpool.add(req)
+
+    # match each user
+    for req in reqlist:
+        if req in matchpool:
+            user_id = req.user_id
+            matchpool.remove(req)
+>>>>>>> e9c9f8b9ea94cc614df13d1faa2baf6b2a6c7be7
             # find available users for this user(filter)
             available_set = set()
-            available_set = cuisine_filter(matchpool,available_set,user)
-            available_set = matched_user_filter(matchpool, available_set, user)
+            available_set = cuisine_filter(matchpool, available_set, req)
+            # available_set = matched_user_filter(matchpool, available_set, user)
 
             # pick a user from the available users
             try:
-                match_user_id = random.choice(list(available_set))
-                match_user = userlist[int(match_user_id)]
-                user_meet_history = user['meet_history']
-                match_user_meet_history = match_user['meet_history']
-                matchpool.remove(match_user_id)
-                result = str(user_id) + "----" + str(match_user_id)
-                user_meet_history.append((match_user_id, today))
-                match_user_meet_history.append((user_id, today))
+                match_request = random.choice(list(available_set))
+                match_user_id = match_request.user_id
+                # match_user_id = random.choice(list(available_set))
+                matchpool.remove(UserRequest.objects.get(user_id=match_user_id))
+                # result = str(user_id) + "----" + str(match_user_id)
+                result = []
+                result.append(user_id)
+                result.append(match_user_id)
                 match_result.append(result)
-                matched_user_list.append(user)
-                matched_user_list.append(match_user)
+                request_result = []
+                request_result.append(req)
+                request_result.append(match_request)
+                matched_user_request.append(request_result)
             except Exception:
-                unmached_user_list.append(user)
+                unmached_user_request.append(req)
     print(match_result)
-    print(matched_user_list)
-    print(unmached_user_list)
+    print(matched_user_request)
+    save_matches(matched_user_request)
+    # initiate_email(matched_user_request)
+    print(unmached_user_request)
 
 
-today=datetime.date.today()
-print(today)
-print(type(today))
-match(userlist,cuisine_table)
+match()
