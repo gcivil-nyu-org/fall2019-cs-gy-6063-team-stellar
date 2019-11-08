@@ -6,7 +6,6 @@ from django.utils import timezone
 m_state = False
 
 
-
 class School(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
@@ -15,6 +14,7 @@ class School(models.Model):
 
     class Meta:
         managed = m_state
+
 
 class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
