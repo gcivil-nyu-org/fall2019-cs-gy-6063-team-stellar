@@ -49,7 +49,7 @@ def importdepartment():
     cur.execute("DROP TABLE IF EXISTS homepage_department")
     cur.execute("DROP TABLE IF EXISTS department")
     cur.execute(
-        "CREATE TABLE homepage_department (name VARCHAR, school INTEGER, id INTEGER PRIMARY KEY, description VARCHAR)"
+        "CREATE TABLE homepage_department (name VARCHAR, school_id INTEGER, id INTEGER PRIMARY KEY, description VARCHAR, FOREIGN KEY(school_id) REFERENCES homepage_school(id))"
     )
     filepath2 = directory_path + "/../Department.csv"
     with open(
@@ -60,7 +60,7 @@ def importdepartment():
             (i["departmentname"], i["School"], i["id"], i["Description"]) for i in dr2
         ]
     cur.executemany(
-        "INSERT INTO homepage_department (name, school, id, description) VALUES (?, ?, ?, ?);",
+        "INSERT INTO homepage_department (name, school_id, id, description) VALUES (?, ?, ?, ?);",
         to_db2,
     )
     conn.commit()
