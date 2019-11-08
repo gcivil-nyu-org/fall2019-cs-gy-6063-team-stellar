@@ -18,6 +18,7 @@ def generateuser(N):
     for user_id in range(count_start, count_end):
         un = "ut" + str(user_id)
         useremail = un + "@nyu.edu"
+        print(useremail)
         password = "Stellar123!"
 
         # school

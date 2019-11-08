@@ -3,7 +3,6 @@ from subprocess import run, PIPE
 
 # Days_left,
 
-
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
@@ -26,7 +25,7 @@ def merge():
         school_list.append((s.name, s.id))
 
     for d in department:
-        department_list.append((d.name, d.school))
+        department_list.append((d.name, d.school.id))
 
     school_department = {}
     id_school = {}
@@ -109,7 +108,6 @@ def index(request):
 
 def user_service(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
-
     if request.method == "POST":
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]

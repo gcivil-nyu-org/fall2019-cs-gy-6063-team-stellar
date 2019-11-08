@@ -6,10 +6,8 @@ from django.utils import timezone
 m_state = False
 
 
-class Department(models.Model):
+class School(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
-    school = models.IntegerField(blank=True, null=True)
-    description = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -18,8 +16,10 @@ class Department(models.Model):
         managed = m_state
 
 
-class School(models.Model):
+class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    description = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name

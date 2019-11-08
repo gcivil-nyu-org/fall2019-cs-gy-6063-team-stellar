@@ -10,7 +10,7 @@ class SchoolModelTest(TestCase):
 
 class DepartmentModelTest(TestCase):
     def test_string_representation(self):
-        entry = Department(name="Computer Science", school=1)
+        entry = Department(name="Computer Science", school_id=2)
         self.assertEqual(str(entry), entry.name)
 
 

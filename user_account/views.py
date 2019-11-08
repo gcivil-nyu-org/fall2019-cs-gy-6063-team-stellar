@@ -10,13 +10,7 @@ from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from homepage.models import Department, School
-
-
 from .models import LunchNinjaUser
-
-
-def index(request):
-    return render(request, "index.html")
 
 
 def merge():
@@ -28,8 +22,7 @@ def merge():
         school_list.append((s.name, s.id))
 
     for d in department:
-        department_list.append((d.name, d.school))
-
+        department_list.append((d.name, d.school.id))
     school_department = {}
     id_school = {}
     department_school = {}
@@ -47,6 +40,10 @@ def merge():
     school_department["select school"] = department
 
     return school, department, school_department, department_school
+
+
+def index(request):
+    return render(request, "index.html")
 
 
 def check_ajax_department(request):
