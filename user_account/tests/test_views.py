@@ -59,7 +59,7 @@ class SignupViewTest(TestCase):
     def test_first_signup_department_ajax(self, mock_head_check):
         # response1 = self.client.get(" ")
         response = self.client.get(
-            "/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
+            "/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%20Education%20and%20Human%20Development"
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
@@ -67,7 +67,7 @@ class SignupViewTest(TestCase):
     def test_second_signup_department_ajax(self, mock_head_check):
         # response1 = self.client.get("/")
         response = self.client.get(
-            "/signup/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%2C%20Education%2C%20and%20Human%20Development"
+            "/signup/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%20Education%20and%20Human%20Development"
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 

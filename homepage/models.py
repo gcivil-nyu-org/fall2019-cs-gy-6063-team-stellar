@@ -10,6 +10,7 @@ class School(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     latitude = models.FloatField()
     longitude = models.FloatField()
+
     def __str__(self):
         return self.name
 
@@ -21,6 +22,7 @@ class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     description = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         return self.name
 
@@ -36,6 +38,7 @@ class Cuisine(models.Model):
 
     class Meta:
         managed = m_state
+
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)

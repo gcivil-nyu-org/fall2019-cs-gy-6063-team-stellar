@@ -1,6 +1,4 @@
 import os
-import random
-
 # import datetime
 # def load_cuisine(file):
 #     with open(file,"r",encoding='utf-8') as in_f:
@@ -18,7 +16,6 @@ import random
 #         if item == ', ' or item == '':
 #             continue
 
-import time
 import math
 import random
 import django
@@ -26,7 +23,12 @@ from django.core.mail import EmailMessage
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
-from homepage.models import UserRequest, UserRequestMatch, Restaurant, School,  Cuisine  # noqa: E402
+from homepage.models import (
+    UserRequest,
+    UserRequestMatch,
+    Restaurant,
+    School,
+)  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
 
@@ -50,18 +52,28 @@ def deg2rad(deg):
 
 
 def recommend_restaurants(user1, user2, cuisinelist):
-    school1 = School.objects.get(name = user1.school)
-    school2 = School.objects.get(name = user2.school)
+    school1 = School.objects.get(name=user1.school)
+    school2 = School.objects.get(name=user2.school)
     restaurantset = set()
     for cui in cuisinelist:
-        rest = Restaurant.objects.filter(cuisine = cui)
+        rest = Restaurant.objects.filter(cuisine=cui)
         restaurantset = restaurantset.union(set(rest))
 
     restaurantdistanceset = set()
     for each in restaurantset:
-        if getDistanceFromLatLonInKm(school1.latitude, school1.longitude, each.latitude, each.longitude) < 1:
+        if (
+            getDistanceFromLatLonInKm(
+                school1.latitude, school1.longitude, each.latitude, each.longitude
+            )
+            < 1
+        ):
             restaurantdistanceset.add(each)
-        if getDistanceFromLatLonInKm(school2.latitude, school2.longitude, each.latitude, each.longitude) < 1:
+        if (
+            getDistanceFromLatLonInKm(
+                school2.latitude, school2.longitude, each.latitude, each.longitude
+            )
+            < 1
+        ):
             restaurantdistanceset.add(each)
 
     p_restautants = random.sample(list(restaurantdistanceset), 3)
@@ -83,16 +95,26 @@ def send_email(user1, user2, cuisinelist):
             cuisineline = cuisineline + cuisinelist[i].name + ","
     email_subject = "Lunch Confirmation"
 
-    message =  "You got it! You will have a lunch with the user " + user2.first_name + "(" + user2.email + ").\n" + "You have been matched based on cuisine type(s): " + cuisineline + "\n" + "Here are recommanded restaurants based on both of your locations and cuisines types:\n"  # noqa: E501
+    message = (
+        "You got it! You will have a lunch with the user "
+        + user2.first_name
+        + "("
+        + user2.email
+        + ").\n"
+        + "You have been matched based on cuisine type(s): "
+        + cuisineline
+        + "\n"
+        + "Here are recommanded restaurants based on both of your locations and cuisines types:\n"
+    )  # noqa: E501
     for each in restaurantlist:
-        address = "address: " + each.building + " " + each.street + ", " + each.borough + "\n"
-        message = message + each.name + "; " +  address
-    email_message = (message)
+        address = (
+            "address: " + each.building + " " + each.street + ", " + each.borough + "\n"
+        )
+        message = message + each.name + "; " + address
+    email_message = message
     to_email = user1.email
     email = EmailMessage(email_subject, email_message, to=[to_email])
     email.send()
-
-
 
 
 # initiate_email() takes in matching result and call send_email() by 1 email/5 second rate
