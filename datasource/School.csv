@@ -1,16 +1,16 @@
-schoolname,id
-Center for Urban Science and Progress,1
-College of Arts & Science,2
-College of Dentistry,3
-College of Global Public Health,4
-Courant Institute of Mathematical Science,5
-Gallatin School of Individualized Study,6
-Leonard N. Stern School of Business,7
-Liberal Studies,8
-Rory Meyers College of Nursing,9
-School of Professional Studies,10
-Silver School of Social Work,11
-"Steinhardt School of Culture, Education, and Human Development",12
-Tandon School of Engineering,13
-Tisch School of the Arts,14
+schoolname,id,latitude,longitude,
+Center for Urban Science and Progress,1,40.6942,-73.9866
+College of Arts & Science,2,40.7247,-73.9903
+College of Dentistry,3,40.7380,-73.9781
+College of Global Public Health,4,40.7293,-73.9937
+Courant Institute of Mathematical Science,5,40.7287,-73.9957
+Gallatin School of Individualized Study,6,40.7247,-73.9903
+Leonard N. Stern School of Business,7,40.7290,-73.9966
+Liberal Studies,8,40.7293,-73.9937
+Rory Meyers College of Nursing,9,40.7380,-73.9781
+School of Professional Studies,10,40.7346,-73.9936
+Silver School of Social Work,11,40.7247,-73.9903
+Steinhardt School of Culture Education and Human Development,12,40.7247,-73.9903
+Tandon School of Engineering,13,40.6942,-73.9866
+Tisch School of the Arts,14,40.7293,-73.9937
 

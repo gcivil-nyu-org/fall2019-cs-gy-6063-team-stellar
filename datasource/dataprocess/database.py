@@ -28,7 +28,7 @@ def importschool():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_school")
-    cur.execute("CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY)")
+    cur.execute("CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY, latitude DECIMAL , longitude DECIMAL )")
 
     filepath = directory_path + "/../School.csv"
     with open(
@@ -36,8 +36,8 @@ def importschool():
     ) as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
-        to_db = [(i["schoolname"], i["id"]) for i in dr]
-    cur.executemany("INSERT INTO homepage_school (name, id) VALUES (?, ?);", to_db)
+        to_db = [(i["schoolname"], i["id"], float(i["latitude"]), float(i["longitude"])) for i in dr]
+    cur.executemany("INSERT INTO homepage_school (name, id, latitude, longitude) VALUES (?, ?, ?, ?);", to_db)
     conn.commit()
     conn.close()
     print("imported school data")
@@ -73,7 +73,7 @@ def importrestaurant():
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_restaurant")
     cur.execute(
-        "CREATE TABLE homepage_restaurant (id INTEGER PRIMNARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
+        "CREATE TABLE homepage_restaurant (id INTEGER PRIMNARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude DECIMAL , longitude DECIMAL)"  # noqa: E501
     )
     filepath3 = (
         directory_path + "/../DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
@@ -84,8 +84,11 @@ def importrestaurant():
     ) as fin3:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr3 = csv.DictReader(fin3)  # comma is default delimiter
-        lat = [40.694340, 40.729010, 40.737570]
-        log = [-73.986110, -73.996470, -73.978070]
+        # Latitude and longitude for tandon: 40.6942, -73.9866
+        # college of art and science: 40.7247, -73.9903
+        # college of dentistry: 40.7380, -73.9781
+        lat = [40.6942, 40.7247, 40.7380]
+        log = [-73.9866, -73.9903, -73.9781]
         for i in dr3:
             if (
                 i["Latitude"] in ("", None)
@@ -123,8 +126,8 @@ def importrestaurant():
                                 i["STREET"],
                                 i["ZIPCODE"],
                                 i["PHONE"],
-                                i["Latitude"],
-                                i["Longitude"],
+                                float(i["Latitude"]),
+                                float(i["Longitude"]),
                             ),
                         )
                     else:
