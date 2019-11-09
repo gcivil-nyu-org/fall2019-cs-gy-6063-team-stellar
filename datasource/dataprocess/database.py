@@ -28,7 +28,9 @@ def importschool():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_school")
-    cur.execute("CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY, latitude DECIMAL , longitude DECIMAL )")
+    cur.execute(
+        "CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY, latitude DECIMAL , longitude DECIMAL )"
+    )
 
     filepath = directory_path + "/../School.csv"
     with open(
@@ -36,8 +38,14 @@ def importschool():
     ) as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
-        to_db = [(i["schoolname"], i["id"], float(i["latitude"]), float(i["longitude"])) for i in dr]
-    cur.executemany("INSERT INTO homepage_school (name, id, latitude, longitude) VALUES (?, ?, ?, ?);", to_db)
+        to_db = [
+            (i["schoolname"], i["id"], float(i["latitude"]), float(i["longitude"]))
+            for i in dr
+        ]
+    cur.executemany(
+        "INSERT INTO homepage_school (name, id, latitude, longitude) VALUES (?, ?, ?, ?);",
+        to_db,
+    )
     conn.commit()
     conn.close()
     print("imported school data")
