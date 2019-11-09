@@ -55,7 +55,12 @@ def recommend_restaurants(user1, user2, cuisinelist):
         ):
             close_to_1.add(each)
         else:
-            if getDistanceFromLatLonInKm(school2.latitude, school2.longitude, each.latitude, each.longitude) < 1:
+            if (
+                getDistanceFromLatLonInKm(
+                    school2.latitude, school2.longitude, each.latitude, each.longitude
+                )
+                < 1
+            ):
                 close_to_2.add(each)
 
     restautants_1 = {}
