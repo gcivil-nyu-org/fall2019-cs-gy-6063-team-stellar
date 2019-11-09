@@ -22,7 +22,8 @@ def generateuser(N):
         password = "Stellar123!"
 
         # school
-        school_id = random.randint(1, School.objects.all().count() - 1)
+        # school_id = random.randint(1, School.objects.all().count() - 1)
+        school_id = random.randint(2, 2)
         school = School.objects.filter(id=school_id)[0].name
 
         # department
@@ -31,7 +32,8 @@ def generateuser(N):
         if departments_count == 0:
             continue
         start_id = departments.first().id
-        department_index = random.randint(1, departments_count)
+        # department_index = random.randint(1, departments_count)
+        department_index = random.randint(1, 2)
         department_id = start_id + department_index - 1
         department = Department.objects.filter(id=department_id)[0].name
 

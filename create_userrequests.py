@@ -18,7 +18,8 @@ def generateuser(N):
         user = {}
         user["user"] = user_obj
         # school
-        school_id = random.randint(0, School.objects.all().count() - 1)
+        # school_id = random.randint(0, School.objects.all().count() - 1)
+        school_id = random.randint(2, 2)
         user["school"] = School.objects.filter(id=school_id)
 
         # service type
@@ -31,7 +32,8 @@ def generateuser(N):
         if departments_count == 0:
             continue
         start_id = departments.first().id
-        department_index = random.randint(1, departments_count)
+        # department_index = random.randint(1, departments_count)
+        department_index = random.randint(1, 2)
         department_id = start_id + department_index - 1
         user["department"] = Department.objects.filter(id=department_id)
 

@@ -64,7 +64,7 @@ def recommend_restaurants(user1, user2, cuisinelist):
         if getDistanceFromLatLonInKm(school2.latitude, school2.longitude, each.latitude, each.longitude) < 1:
             restaurantdistanceset.add(each)
 
-    p_restautants = random.sample(list(restaurantdistanceset), 3)
+    p_restautants = random.sample(list(restaurantdistanceset), 1)
     print("Recommanded restautants:")
     for r in p_restautants:
         print("Name: " + r.name + " ; cuisine: " + r.cuisine)
@@ -100,7 +100,6 @@ def initiate_email(match):
     for each in match:
         req1 = each[0]
         req2 = each[1]
-
         user1 = LunchNinjaUser.objects.get(id=req1.user_id)
         user2 = LunchNinjaUser.objects.get(id=req2.user_id)
         cuisine_set1 = set(req1.cuisines.all())
@@ -114,12 +113,21 @@ def initiate_email(match):
         # send_email(user2, user1, cuisinelist)
 
 
-def cuisine_filter(matchpool, available_set, req):
+def cuisine_filter(matchpool, req):
     # get the preferred cuisine
     cuisine_list = req.cuisines.all()
+    available_set=set()
     for c in cuisine_list:
         available_set = available_set.union(c.userrequest_set.all())
     available_set = available_set.intersection(matchpool)
+    return available_set
+def dual_department_filter(matchpool, req):
+    available_set = set()
+    print(req.department)
+    print(req.user.department)
+
+
+
     return available_set
 
 
@@ -133,6 +141,11 @@ def save_matches(matchs):
         #     #remove selected user
         #     matchpool.remove(user_id)
 
+def find_match_user(available_set):
+
+    match_request = random.choice(list(available_set))
+    return match_request
+
 
 def match():
     match_result = []
@@ -140,31 +153,42 @@ def match():
     matched_user_request = []
     matchpool = set()
     reqlist = UserRequest.objects.all()
+    # print(UserRequest.objects.filt="Computer Science"))
 
     for req in reqlist:
         matchpool.add(req)
 
     # match each user
+
+    # Round1 dual match
     for req in reqlist:
         if req in matchpool:
             user_id = req.user_id
             matchpool.remove(req)
-            # >>>>>>> e9c9f8b9ea94cc614df13d1faa2baf6b2a6c7be7
+
             # find available users for this user(filter)
-            available_set = set()
-            available_set = cuisine_filter(matchpool, available_set, req)
+
+            available_set_cuisine = cuisine_filter(matchpool, req)
+            available_set_dual_department=dual_department_filter(matchpool, req)
+            # available_set = available_set_cuisine
+            available_set=available_set_cuisine.intersection(available_set_dual_department)
+
             # available_set = matched_user_filter(matchpool, available_set, user)
 
             # pick a user from the available users
             try:
-                match_request = random.choice(list(available_set))
-                match_user_id = match_request.user_id
-                # match_user_id = random.choice(list(available_set))
-                matchpool.remove(UserRequest.objects.get(user_id=match_user_id))
+                # find match user in the available set
+                match_request = find_match_user(available_set)
+                matchpool.remove(UserRequest.objects.get(user_id=match_request.user_id))
+
+
+                # for test can be removed
                 result = []
                 result.append(user_id)
-                result.append(match_user_id)
+                result.append(match_request.user_id)
                 match_result.append(result)
+
+                # collect match information
                 request_result = []
                 request_result.append(req)
                 request_result.append(match_request)
@@ -173,9 +197,9 @@ def match():
                 unmached_user_request.append(req)
     print(match_result)
     print(matched_user_request)
-    save_matches(matched_user_request)
-    initiate_email(matched_user_request)
-    print(unmached_user_request)
+    # save_matches(matched_user_request)
+    # initiate_email(matched_user_request)
+    # print(unmached_user_request)
 
 
 match()
