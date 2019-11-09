@@ -76,7 +76,7 @@ def recommend_restaurants(user1, user2, cuisinelist):
         ):
             restaurantdistanceset.add(each)
 
-    p_restautants = random.sample(list(restaurantdistanceset), 3)
+    p_restautants = random.sample(list(restaurantdistanceset), 1)
     print("Recommanded restautants:")
     for r in p_restautants:
         print("Name: " + r.name + " ; cuisine: " + r.cuisine)
