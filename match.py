@@ -1,21 +1,5 @@
 import os
-# import datetime
-# def load_cuisine(file):
-#     with open(file,"r",encoding='utf-8') as in_f:
-#         cuisinelist=[]
-#         f_csv = csv.reader(in_f)
-#         for linelist in f_csv:
-#             cuisinelist.append(linelist[7])
-#         return cuisinelist[1:]
-# #change string to list
-# def str_to_list(string):
-#     string_content = string.strip('[').strip(']')
-#     string_list = string_content.split('\'')
-#     out_list = []
-#     for item in string_list:
-#         if item == ', ' or item == '':
-#             continue
-
+import time
 import math
 import random
 import django
@@ -58,8 +42,10 @@ def recommend_restaurants(user1, user2, cuisinelist):
     for cui in cuisinelist:
         rest = Restaurant.objects.filter(cuisine=cui)
         restaurantset = restaurantset.union(set(rest))
-
-    restaurantdistanceset = set()
+    print("restaurantste count is")
+    print(len(restaurantset))
+    close_to_1 = set()
+    close_to_2 = set()
     for each in restaurantset:
         if (
             getDistanceFromLatLonInKm(
@@ -67,23 +53,23 @@ def recommend_restaurants(user1, user2, cuisinelist):
             )
             < 1
         ):
-            restaurantdistanceset.add(each)
-        if (
-            getDistanceFromLatLonInKm(
-                school2.latitude, school2.longitude, each.latitude, each.longitude
-            )
-            < 1
-        ):
-            restaurantdistanceset.add(each)
+            close_to_1.add(each)
+        else:
+            if getDistanceFromLatLonInKm(school2.latitude, school2.longitude, each.latitude, each.longitude) < 1:
+                close_to_2.add(each)
 
-    if len(restaurantdistanceset) != 0:
-        p_restautants = random.sample(list(restaurantdistanceset), 1)
-        print("Recommanded restautants:")
-        for r in p_restautants:
-            print("Name: " + r.name + " ; cuisine: " + r.cuisine)
-    else:
-        p_restautants = {}
-    return p_restautants
+    restautants_1 = {}
+    restautants_2 = {}
+    if len(close_to_1) != 0:
+        restautants_1 = random.sample(list(close_to_1), 1)
+    if len(close_to_2) != 0:
+        restautants_2 = random.sample(list(close_to_2), 1)
+    result = set(restautants_1).union(set(restautants_2))
+    result = list(result)
+    print("Recommanded restautants:")
+    for r in result:
+        print("Name: " + r.name + " ; cuisine: " + r.cuisine)
+    return result
 
 
 # send_email() will trigger mailtrap to send out email to matched users
@@ -131,12 +117,11 @@ def initiate_email(match):
         cuisine_set1 = set(req1.cuisines.all())
         cuisine_set2 = set(req2.cuisines.all())
         cuisinelist = list(cuisine_set1 & cuisine_set2)
-        # print(cuisinelist)
         recommend_restaurants(user1, user2, cuisinelist)
-        # # time.sleep(5)
-        # send_email(user1, user2, cuisinelist)
-        # # time.sleep(5)
-        # send_email(user2, user1, cuisinelist)
+        time.sleep(5)
+        send_email(user1, user2, cuisinelist)
+        time.sleep(5)
+        send_email(user2, user1, cuisinelist)
 
 
 def cuisine_filter(matchpool, available_set, req):
