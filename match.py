@@ -4,7 +4,7 @@ import math
 import random
 import django
 from django.core.mail import EmailMessage
-from django.db.models import Q
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
@@ -131,36 +131,40 @@ def initiate_email(match):
 def cuisine_filter(matchpool, req):
     # get the preferred cuisine
     cuisine_list = req.cuisines.all()
-    available_set=set()
+    available_set = set()
     for c in cuisine_list:
         available_set = available_set.union(c.userrequest_set.all())
     available_set = available_set.intersection(matchpool)
 
     return available_set
+
+
 def dual_department_filter(matchpool, req):
-    available_set_A=set()
-    A_users=LunchNinjaUser.objects.filter(department=req.department)
+    available_set_A = set()
+    A_users = LunchNinjaUser.objects.filter(department=req.department)
     for each in A_users:
-        ur=UserRequest.objects.filter(user_id=each.id)
-        available_set_A=available_set_A.union(set(ur))
+        ur = UserRequest.objects.filter(user_id=each.id)
+        available_set_A = available_set_A.union(set(ur))
 
     B = UserRequest.objects.filter(department=req.user.department)
-    M_A_B=available_set_A.intersection(set(B))
-    available_set=M_A_B
+    M_A_B = available_set_A.intersection(set(B))
+    available_set = M_A_B
     available_set = available_set.intersection(matchpool)
     return available_set
 
+
 def single_department_filter(matchpool, req):
-    available_set=set()
-    users=LunchNinjaUser.objects.filter(department=req.department)
+    available_set = set()
+    users = LunchNinjaUser.objects.filter(department=req.department)
     for each in users:
-        ur=UserRequest.objects.filter(user_id=each.id)
-        available_set=available_set.union(set(ur))
-    available_set=available_set.intersection(matchpool)
+        ur = UserRequest.objects.filter(user_id=each.id)
+        available_set = available_set.union(set(ur))
+    available_set = available_set.intersection(matchpool)
     return available_set
 
+
 def same_department_filter(matchpool, req):
-    available_set=set()
+    available_set = set()
     users = LunchNinjaUser.objects.filter(department=req.user.department)
     # print("users")
     # print(users)
@@ -169,11 +173,12 @@ def same_department_filter(matchpool, req):
         ur = UserRequest.objects.filter(user_id=each.id)
         # print("ur")
         # print(set(ur))
-        available_set=available_set.union(set(ur))
+        available_set = available_set.union(set(ur))
     # print("available set")
     # print(available_set)
     available_set = available_set.intersection(matchpool)
     return available_set
+
 
 def save_matches(matchs):
     # save matches to user_request_match table
@@ -184,6 +189,7 @@ def save_matches(matchs):
         # if user_id in matchpool:
         #     #remove selected user
         #     matchpool.remove(user_id)
+
 
 def find_match_user(available_set):
 
@@ -211,8 +217,8 @@ def match():
     # match each user
 
     # Round1 dual match
-    Round1=matchpool
-    unmatched_user=[]
+    Round1 = matchpool
+    unmatched_user = []
     for req in reqlist:
         if req in Round1:
             user_id = req.user_id
@@ -222,11 +228,12 @@ def match():
 
             available_set_cuisine = cuisine_filter(Round1, req)
 
-            available_set_dual_department=dual_department_filter(Round1, req)
+            available_set_dual_department = dual_department_filter(Round1, req)
 
             # available_set = available_set_cuisine
-            available_set=available_set_cuisine.intersection(available_set_dual_department)
-
+            available_set = available_set_cuisine.intersection(
+                available_set_dual_department
+            )
 
             # available_set = matched_user_filter(matchpool, available_set, user)
 
@@ -250,20 +257,21 @@ def match():
             except Exception:
                 unmatched_user.append(req)
     # Round2 part match
-    Round2=set(unmatched_user)
+    Round2 = set(unmatched_user)
     unmatched_user = []
-    i=0
+    i = 0
     for req in reqlist:
-        i+=1
+        i += 1
         if req in Round2:
             user_id = req.user_id
             Round2.remove(req)
             # find available users for this user(filter)
             available_set_cuisine = cuisine_filter(Round2, req)
-            available_set_single_department= single_department_filter(Round2,req)
+            available_set_single_department = single_department_filter(Round2, req)
             # available_set = available_set_cuisine
-            available_set=available_set_cuisine.intersection(available_set_single_department)
-
+            available_set = available_set_cuisine.intersection(
+                available_set_single_department
+            )
 
             # available_set = matched_user_filter(matchpool, available_set, user)
 
@@ -272,7 +280,6 @@ def match():
                 # find match user in the available set
                 match_request = find_match_user(available_set)
                 Round2.remove(UserRequest.objects.get(user_id=match_request.user_id))
-
 
                 # for test can be removed
                 result2 = []
@@ -301,7 +308,9 @@ def match():
 
             available_set_same_department = same_department_filter(Round3, req)
             # available_set = available_set_cuisine
-            available_set = available_set_cuisine.intersection(available_set_same_department)
+            available_set = available_set_cuisine.intersection(
+                available_set_same_department
+            )
 
             # available_set = matched_user_filter(matchpool, available_set, user)
 
@@ -360,9 +369,6 @@ def match():
                 unmatched_user.append(req)
     print(unmatched_user)
 
-
-
-
     print(match_result1)
     print(matched_user_request_1)
     print(match_result2)
@@ -373,7 +379,6 @@ def match():
     print(matched_user_request_4)
     # save_matches(matched_user_request)
     # initiate_email(matched_user_request)
-
 
 
 match()
