@@ -83,6 +83,7 @@ class UserRequest(models.Model):
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     cuisines = models.ManyToManyField(Cuisine, blank=True)
+    interests =  models.ManyToManyField(Interests, blank=True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
     service_status = models.BooleanField(default=True)
