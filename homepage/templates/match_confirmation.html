@@ -1,0 +1,17 @@
+{% autoescape off %}
+Hi {{ user }},
+    You got it! You have been matched with a NYU member:
+    {{firstname}} {{lastname}} ({{email}}); This person is from {{school}}, {{department}}
+    Your match was based on your preferred department and cuisine type(s):
+    Preferred cuisine: {{ cuisines_selected }}
+
+
+    Best,
+    Lunch Ninja
+
+        + ""
+        + " ".join(str(cuisine) for cuisine in commonCuisines)
+        + "\n"
+        + "\n"
+        + "Here are recommanded restaurants based on both of your locations and cuisines types:\n"
+{% endautoescape %}

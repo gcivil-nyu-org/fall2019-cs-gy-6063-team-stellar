@@ -3,11 +3,15 @@ import math
 import random
 import django
 from django.core.mail import EmailMessage
-
+# from django.template.loader import render_to_string
 import datetime
+import requests
+import json
 from email.mime.base import MIMEBase
 
 
+api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
+headers = {"Authorization": "Bearer %s" % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 from homepage.models import (
@@ -15,6 +19,7 @@ from homepage.models import (
     UserRequestMatch,
     Restaurant,
     School,
+    Days_left,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -45,8 +50,6 @@ def recommend_restaurants(user1, user2, cuisinelist):
     for cui in cuisinelist:
         rest = Restaurant.objects.filter(cuisine=cui)
         restaurantset = restaurantset.union(set(rest))
-    print("restaurantste count is")
-    print(len(restaurantset))
     close_to_1 = set()
     close_to_2 = set()
     for each in restaurantset:
@@ -103,8 +106,18 @@ def send_invitations(userRequest, userMatch):
 
     dtend = match_time + dur
     dtstamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%SZ")
-    dtstart = match_time.strftime("%Y%m%dT%H%M%SZ")
-    dtend = dtend.strftime("%Y%m%dT%H%M%SZ")
+    dtstart = match_time.strftime("%Y%m%dT%H%M%S")
+    dtend = dtend.strftime("%Y%m%dT%H%M%S")
+
+    # message = render_to_string(
+    #     "activate_account.html",
+    #     {
+    #         "user": user,
+    #         "domain": current_site.domain,
+    #         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+    #         "token": account_activation_token.make_token(user),
+    #     },
+    # )
     message = (
         "You got it! You have been matched with a NYU member. "
         + "\n"
@@ -117,6 +130,23 @@ def send_invitations(userRequest, userMatch):
     )  # noqa: E501
 
     for resturant in resturants:
+        url = "https://api.yelp.com/v3/businesses/search"
+
+        # In the dictionary, term can take values like food, cafes or businesses like McDonalds
+        params = {
+            "term": resturant.name.capitalize(),
+            "location": resturant.building
+            + " "
+            + resturant.street
+            + ", "
+            + resturant.borough,
+        }  # noqa: E501
+        req = requests.get(url, params=params, headers=headers)
+
+        # proceed only if the status code is 200
+        # print('The status code is {}'.format(req.status_code))
+        yelp_result = json.loads(req.text)
+
         address = (
             "address: "
             + resturant.building
@@ -126,7 +156,12 @@ def send_invitations(userRequest, userMatch):
             + resturant.borough
             + "\n"
         )
-        message = message + resturant.name + "; " + address
+        yelp_link = (
+            "Yelp link for this restaurant is "
+            + yelp_result["businesses"][0]["url"]
+            + "\n"
+        )
+        message = message + resturant.name + "; " + address + yelp_link
 
     attendees = [user1Email, user2Email]
     # attendees = ["utkarshprakash21@gmail.com", "monsieurutkarsh@gmail.com"]
@@ -208,9 +243,9 @@ def send_invitations(userRequest, userMatch):
     )
     email.attach(ical_atch)
     email.send()
-    import pdb
-
-    pdb.set_trace()
+    # import pdb
+    #
+    # pdb.set_trace()
 
 
 def cuisine_filter(matchpool, req):
@@ -265,7 +300,6 @@ def same_department_filter(matchpool, req):
     return available_set
 
 
-
 def save_matches(matches):
     # save matches to user_request_match table
     for match in matches:
@@ -297,14 +331,17 @@ def match():
     matched_user_request_3 = []
     matched_user_request_4 = []
     matchpool = set()
-    reqlist = UserRequest.objects.all()
+    reqlist = []
+    days_entry = Days_left.objects.filter(days=1)
     # print(UserRequest.objects.filt="Computer Science"))
-
-    for req in reqlist:
-        matchpool.add(req)
-
+    for day in days_entry:
+        user = day.user
+        matchpool.add(UserRequest.objects.get(user_id=user.id))
+        reqlist.append(UserRequest.objects.get(user_id=user.id))
+    print("matchpool is")
+    print(matchpool)
     # match each user
-
+    print("matchpool done")
     # Round1 dual match
     Round1 = matchpool
     unmatched_user = []
@@ -472,5 +509,6 @@ def match():
         + matched_user_request_3
         + matched_user_request_4
     )
+
 
 match()
