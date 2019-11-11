@@ -12,10 +12,10 @@ from homepage.models import UserRequest, School, Department, Cuisine  # noqa: E4
 # This function generates random user requests
 def generateuser(N):
     userlist = []
-    i=0
+    i = 0
     all_users = LunchNinjaUser.objects.all()
     for user_obj in all_users:
-        i+=1
+        i += 1
         user = {}
         user["user"] = user_obj
         # school
