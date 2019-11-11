@@ -3,7 +3,7 @@ import math
 import random
 import django
 from django.core.mail import EmailMessage
-
+from django.template.loader import render_to_string
 import datetime
 import requests
 import json
@@ -108,6 +108,16 @@ def send_invitations(userRequest, userMatch):
     dtstamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%SZ")
     dtstart = match_time.strftime("%Y%m%dT%H%M%S")
     dtend = dtend.strftime("%Y%m%dT%H%M%S")
+
+    # message = render_to_string(
+    #     "activate_account.html",
+    #     {
+    #         "user": user,
+    #         "domain": current_site.domain,
+    #         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+    #         "token": account_activation_token.make_token(user),
+    #     },
+    # )
     message = (
         "You got it! You have been matched with a NYU member. "
         + "\n"

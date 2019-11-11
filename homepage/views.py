@@ -128,7 +128,8 @@ def user_service(request):
                 req.time_stamp = datetime.datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
-                day = Days_left.objects.get(user = logged_user.id)
+
+                day = Days_left.objects.get(user_id = logged_user.id)
                 day.days = Service_days[req.service_type]
                 day.save()
             except ObjectDoesNotExist:
