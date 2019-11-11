@@ -55,4 +55,15 @@ def generateuser(N):
 
 
 if __name__ == "__main__":
-    generateuser(100)
+    user = LunchNinjaUser(
+        username="yixin",
+        email="yh3244@nyu.edu",
+        school="Tandon School of Engineering",
+        department="Computer Science",
+        first_name="yx",
+        last_name="h",
+        is_active=True,
+    )
+    user.set_password("1234mnbv")
+    user.save()
+    generateuser(20)

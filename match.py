@@ -45,8 +45,6 @@ def recommend_restaurants(user1, user2, cuisinelist):
     for cui in cuisinelist:
         rest = Restaurant.objects.filter(cuisine=cui)
         restaurantset = restaurantset.union(set(rest))
-    print("restaurantste count is")
-    print(len(restaurantset))
     close_to_1 = set()
     close_to_2 = set()
     for each in restaurantset:
@@ -103,8 +101,8 @@ def send_invitations(userRequest, userMatch):
 
     dtend = match_time + dur
     dtstamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%SZ")
-    dtstart = match_time.strftime("%Y%m%dT%H%M%SZ")
-    dtend = dtend.strftime("%Y%m%dT%H%M%SZ")
+    dtstart = match_time.strftime("%Y%m%dT%H%M%S")
+    dtend = dtend.strftime("%Y%m%dT%H%M%S")
     message = (
         "You got it! You have been matched with a NYU member. "
         + "\n"
@@ -208,9 +206,9 @@ def send_invitations(userRequest, userMatch):
     )
     email.attach(ical_atch)
     email.send()
-    import pdb
-
-    pdb.set_trace()
+    # import pdb
+    #
+    # pdb.set_trace()
 
 
 def cuisine_filter(matchpool, req):
