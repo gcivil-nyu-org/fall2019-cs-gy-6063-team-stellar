@@ -3,8 +3,10 @@ import math
 import random
 import django
 from django.core.mail import EmailMessage
+
 import datetime
 from email.mime.base import MIMEBase
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
@@ -263,6 +265,7 @@ def same_department_filter(matchpool, req):
     return available_set
 
 
+
 def save_matches(matches):
     # save matches to user_request_match table
     for match in matches:
@@ -469,6 +472,5 @@ def match():
         + matched_user_request_3
         + matched_user_request_4
     )
-
 
 match()
