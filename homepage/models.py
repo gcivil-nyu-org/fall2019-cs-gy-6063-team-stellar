@@ -8,6 +8,8 @@ m_state = False
 
 class School(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
     def __str__(self):
         return self.name
@@ -28,6 +30,16 @@ class Department(models.Model):
         managed = m_state
 
 
+class Cuisine(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        managed = m_state
+
+
 class Restaurant(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     cuisine = models.CharField(max_length=100, blank=True, null=True)
@@ -37,18 +49,8 @@ class Restaurant(models.Model):
     street = models.CharField(max_length=100, blank=True, null=True)
     zipcode = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=100, blank=True, null=True)
-    latitude = models.CharField(max_length=100, blank=True, null=True)
-    longitude = models.CharField(max_length=100, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        managed = m_state
-
-
-class Cuisine(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
     def __str__(self):
         return self.name
