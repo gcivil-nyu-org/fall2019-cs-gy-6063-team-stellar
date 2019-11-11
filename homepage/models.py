@@ -44,6 +44,9 @@ class Interests(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        managed = m_state
+
 class Restaurant(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     cuisine = models.CharField(max_length=100, blank=True, null=True)
@@ -119,4 +122,4 @@ class UserRequestMatch(models.Model):
         return "Match for " + self.user1.username + " and " + self.user2.username
 
 
-UserRequestMatch.objects.
+# UserRequestMatch.objects.

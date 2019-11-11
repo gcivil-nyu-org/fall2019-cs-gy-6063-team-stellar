@@ -181,13 +181,13 @@ def importInterests():
     cur.execute("DROP TABLE IF EXISTS homepage_interests")
     cur.execute("CREATE TABLE homepage_interests (name VARCHAR, id INTEGER PRIMARY KEY)")
     
-    # interests = ["casual_conversation", "homework", "exam-prep", "networking", "politics" , "sports" , "entertainment" , "theatre " , "nyu-events" , "parties"]
-    # id = 0
-    # for interest in interests:
-    #     cur.execute(
-    #         "INSERT INTO homepage_interests (name, id) VALUES (?, ?)", (interest, id)
-    #     )
-    #     id = id + 1
+    interests = ["casual_conversation", "homework", "exam-prep", "networking", "politics" , "sports" , "entertainment" , "theatre " , "nyu-events" , "parties"]
+    id = 0
+    for interest in interests:
+        cur.execute(
+            "INSERT INTO homepage_interests (name, id) VALUES (?, ?)", (interest, id)
+        )
+        id = id + 1
 
     conn.commit()
     conn.close()
