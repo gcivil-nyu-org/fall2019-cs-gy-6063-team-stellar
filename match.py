@@ -1,9 +1,11 @@
 import os
-import time
 import math
 import random
 import django
 from django.core.mail import EmailMessage
+
+import datetime
+from email.mime.base import MIMEBase
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
@@ -78,54 +80,137 @@ def recommend_restaurants(user1, user2, cuisinelist):
     return result
 
 
-# send_email() will trigger mailtrap to send out email to matched users
-def send_email(user1, user2, cuisinelist):
-    restaurantlist = recommend_restaurants(user1, user2, cuisinelist)
-    cuisineline = ""
-    for i in range(len(cuisinelist)):
-        if i == len(cuisinelist) - 1:
-            cuisineline = cuisineline + cuisinelist[i].name
-        else:
-            cuisineline = cuisineline + cuisinelist[i].name + ","
-    email_subject = "Lunch Confirmation"
+def send_invitations(userRequest, userMatch):
+    # Send email to matched users
 
+    user1Email = userRequest[0].user.email
+    user2Email = userRequest[1].user.email
+    match_time = userMatch.match_time
+
+    user1Cuisines = userRequest[0].cuisines.all()
+    user2Cuisines = userRequest[1].cuisines.all()
+
+    commonCuisines = list(user1Cuisines & user2Cuisines)
+
+    resturants = recommend_restaurants(
+        userRequest[0].user, userRequest[1].user, commonCuisines
+    )
+
+    CRLF = "\r\n"
+    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
+
+    dur = datetime.timedelta(hours=1)
+
+    dtend = match_time + dur
+    dtstamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%SZ")
+    dtstart = match_time.strftime("%Y%m%dT%H%M%SZ")
+    dtend = dtend.strftime("%Y%m%dT%H%M%SZ")
     message = (
-        "You got it! You will have a lunch with the user "
-        + user2.first_name
-        + "("
-        + user2.email
-        + ").\n"
-        + "You have been matched based on cuisine type(s): "
-        + cuisineline
+        "You got it! You have been matched with a NYU member. "
+        + "\n"
+        + "\n"
+        + "Your match was based on your preferred department and cuisine type(s): "
+        + " ".join(str(cuisine) for cuisine in commonCuisines)
+        + "\n"
         + "\n"
         + "Here are recommanded restaurants based on both of your locations and cuisines types:\n"
     )  # noqa: E501
-    for each in restaurantlist:
+
+    for resturant in resturants:
         address = (
-            "address: " + each.building + " " + each.street + ", " + each.borough + "\n"
+            "address: "
+            + resturant.building
+            + " "
+            + resturant.street
+            + ", "
+            + resturant.borough
+            + "\n"
         )
-        message = message + each.name + "; " + address
-    email_message = message
-    to_email = user1.email
-    email = EmailMessage(email_subject, email_message, to=[to_email])
+        message = message + resturant.name + "; " + address
+
+    attendees = [user1Email, user2Email]
+    # attendees = ["utkarshprakash21@gmail.com", "monsieurutkarsh@gmail.com"]
+
+    description = "DESCRIPTION: test invitation from pyICSParser" + CRLF
+    attendee = ""
+    for att in attendees:
+        attendee += (
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-    PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE"
+            + CRLF
+            + " ;CN="
+            + att
+            + ";X-NUM-GUESTS=0:"
+            + CRLF
+            + " mailto:"
+            + att
+            + CRLF
+        )
+    ical = (
+        "BEGIN:VCALENDAR"
+        + CRLF
+        + "PRODID:pyICSParser"
+        + CRLF
+        + "VERSION:2.0"
+        + CRLF
+        + "CALSCALE:GREGORIAN"
+        + CRLF
+    )
+    ical += (
+        "METHOD:REQUEST"
+        + CRLF
+        + "BEGIN:VEVENT"
+        + CRLF
+        + "DTSTART:"
+        + dtstart
+        + CRLF
+        + "DTEND:"
+        + dtend
+        + CRLF
+        + "DTSTAMP:"
+        + dtstamp
+        + CRLF
+        + organizer
+        + CRLF
+    )
+    ical += "UID:FIXMEUID" + dtstamp + CRLF
+    ical += (
+        attendee
+        + "CREATED:"
+        + dtstamp
+        + CRLF
+        + description
+        + "LAST-MODIFIED:"
+        + dtstamp
+        + CRLF
+        + "LOCATION:"
+        + CRLF
+        + "SEQUENCE:0"
+        + CRLF
+        + "STATUS:CONFIRMED"
+        + CRLF
+    )
+    ical += (
+        "SUMMARY:LunchNinja lunch"
+        + CRLF
+        + "TRANSP:OPAQUE"
+        + CRLF
+        + "END:VEVENT"
+        + CRLF
+        + "END:VCALENDAR"
+        + CRLF
+    )
+
+    ical_atch = MIMEBase("application/ics", ' ;name="%s"' % ("invite.ics"))
+    ical_atch.set_payload(ical)
+
+    email = EmailMessage(
+        "LunchNinja Match found!!", message, "teamstellarse@gmail.com", attendees
+    )
+    email.attach(ical_atch)
     email.send()
+    import pdb
 
-
-# initiate_email() takes in matching result and call send_email() by 1 email/5 second rate
-def initiate_email(match):
-    for each in match:
-        req1 = each[0]
-        req2 = each[1]
-        user1 = LunchNinjaUser.objects.get(id=req1.user_id)
-        user2 = LunchNinjaUser.objects.get(id=req2.user_id)
-        cuisine_set1 = set(req1.cuisines.all())
-        cuisine_set2 = set(req2.cuisines.all())
-        cuisinelist = list(cuisine_set1 & cuisine_set2)
-        recommend_restaurants(user1, user2, cuisinelist)
-        time.sleep(5)
-        send_email(user1, user2, cuisinelist)
-        time.sleep(5)
-        send_email(user2, user1, cuisinelist)
+    pdb.set_trace()
 
 
 def cuisine_filter(matchpool, req):
@@ -180,11 +265,15 @@ def same_department_filter(matchpool, req):
     return available_set
 
 
-def save_matches(matchs):
+
+def save_matches(matches):
     # save matches to user_request_match table
-    for match in matchs:
-        request_match = UserRequestMatch(user1=match[0].user, user2=match[1].user)
+    for match in matches:
+        user1 = match[0].user
+        user2 = match[1].user
+        request_match = UserRequestMatch(user1=user1, user2=user2)
         request_match.save()
+        send_invitations(match, request_match)
 
         # if user_id in matchpool:
         #     #remove selected user
@@ -377,8 +466,11 @@ def match():
     print(matched_user_request_3)
     print(match_result4)
     print(matched_user_request_4)
-    # save_matches(matched_user_request)
-    # initiate_email(matched_user_request)
-
+    save_matches(
+        matched_user_request_1
+        + matched_user_request_2
+        + matched_user_request_3
+        + matched_user_request_4
+    )
 
 match()
