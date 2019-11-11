@@ -1,15 +1,13 @@
 from django.shortcuts import render, redirect
 from subprocess import run, PIPE
-
-# Days_left,
-
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserRequest, School, Cuisine, UserRequestMatch
+from .models import UserRequest, School, Cuisine, UserRequestMatch, Days_left
 from .models import Department
+import datetime
 
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
@@ -126,8 +124,12 @@ def user_service(request):
                 req.school = school
                 req.department = department
                 req.cuisines.clear()
+                req.time_stamp = datetime.datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
+                day = Days_left.object.get(pk=logged_user)
+                day.days = Service_days[req.service_type]
+                day.save()
             except ObjectDoesNotExist:
                 req = UserRequest(
                     user=logged_user,
@@ -137,6 +139,8 @@ def user_service(request):
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)
+                days = Days_left(user=logged_user, days=Service_days[req.service_type])
+                days.save()
 
             # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
             # daysleft.save()

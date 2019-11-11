@@ -10,8 +10,8 @@ import json
 from email.mime.base import MIMEBase
 
 
-api_key='K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx'
-headers = {'Authorization': 'Bearer %s' % api_key}
+api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
+headers = {"Authorization": "Bearer %s" % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 from homepage.models import (
@@ -19,6 +19,7 @@ from homepage.models import (
     UserRequestMatch,
     Restaurant,
     School,
+    Days_left,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -119,16 +120,23 @@ def send_invitations(userRequest, userMatch):
     )  # noqa: E501
 
     for resturant in resturants:
-        url = 'https://api.yelp.com/v3/businesses/search'
+        url = "https://api.yelp.com/v3/businesses/search"
 
         # In the dictionary, term can take values like food, cafes or businesses like McDonalds
-        params = {'term': resturant.name.capitalize(), 'location': resturant.building + " " + resturant.street + ", " + resturant.borough}   # noqa: E501
+        params = {
+            "term": resturant.name.capitalize(),
+            "location": resturant.building
+            + " "
+            + resturant.street
+            + ", "
+            + resturant.borough,
+        }  # noqa: E501
         req = requests.get(url, params=params, headers=headers)
 
         # proceed only if the status code is 200
         # print('The status code is {}'.format(req.status_code))
         yelp_result = json.loads(req.text)
-        
+
         address = (
             "address: "
             + resturant.building
@@ -138,7 +146,11 @@ def send_invitations(userRequest, userMatch):
             + resturant.borough
             + "\n"
         )
-        yelp_link = "Yelp link for this restaurant is " + yelp_result["businesses"][0]['url'] + "\n"
+        yelp_link = (
+            "Yelp link for this restaurant is "
+            + yelp_result["businesses"][0]["url"]
+            + "\n"
+        )
         message = message + resturant.name + "; " + address + yelp_link
 
     attendees = [user1Email, user2Email]
@@ -278,7 +290,6 @@ def same_department_filter(matchpool, req):
     return available_set
 
 
-
 def save_matches(matches):
     # save matches to user_request_match table
     for match in matches:
@@ -310,14 +321,17 @@ def match():
     matched_user_request_3 = []
     matched_user_request_4 = []
     matchpool = set()
-    reqlist = UserRequest.objects.all()
+    reqlist = []
+    days_entry = Days_left.objects.filter(days=1)
     # print(UserRequest.objects.filt="Computer Science"))
-
-    for req in reqlist:
-        matchpool.add(req)
-
+    for day in days_entry:
+        user = day.user
+        matchpool.add(UserRequest.objects.get(user_id=user.id))
+        reqlist.append(UserRequest.objects.get(user_id=user.id))
+    print("matchpool is")
+    print(matchpool)
     # match each user
-
+    print("matchpool done")
     # Round1 dual match
     Round1 = matchpool
     unmatched_user = []
@@ -485,5 +499,6 @@ def match():
         + matched_user_request_3
         + matched_user_request_4
     )
+
 
 match()

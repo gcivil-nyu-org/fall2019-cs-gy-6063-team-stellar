@@ -1,12 +1,21 @@
 import os
 import random
 import django
+import datetime
+from django.utils import timezone
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
+Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 from user_account.models import LunchNinjaUser  # noqa: E402
-from homepage.models import UserRequest, School, Department, Cuisine  # noqa: E402
+from homepage.models import (
+    UserRequest,
+    School,
+    Department,
+    Cuisine,
+    Days_left,
+)  # noqa: E402
 
 
 # This function generates random user requests
@@ -59,11 +68,15 @@ def save_users(userlist):
     for user in userlist:
         r = UserRequest(
             user=user["user"],
-            service_type=user["service_type"],
+            # service_type=user["service_type"],
+            service_type="Daily",
             school=user["school"][0].name,
             department=user["department"][0].name,
+            time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
         )
         r.save()
+        days = Days_left(user=user["user"], days=Service_days[r.service_type])
+        days.save()
         for each in user["prefered cuisines"]:
             r.cuisines.add(each)
 
