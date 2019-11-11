@@ -29,6 +29,27 @@ class UserserviceViewTest(TestCase):
 
         return userObj()
 
+    # def Days_left_Obj(**kargs):
+    #     class days_for_mock:
+    #         def __init__(self):
+    #             pass
+    #
+    #         def clear(**kargs):
+    #             return "Cleared"
+    #
+    #         def add(**kargs):
+    #             return "Added"
+    #
+    #     class userObj:
+    #         def __init__(self):
+    #             self.service_type = "Monthly"
+    #             self.school = "Tandon School of Engineering"
+    #
+    #         def save(self):
+    #             return "Saved"
+    #
+    #     return days_for_mock
+
     def send_email_mock(self, p2, p3):
         pass
 
@@ -37,6 +58,7 @@ class UserserviceViewTest(TestCase):
         side_effect=send_email_mock,
     )
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
+    # @mock.patch("homepage.views.Days_left.objects.get", side_effect=Days_left_Obj)
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
     def test_authenticate_user(self, mock_authenticated, mock_request, mock_email):
         service_type_Obj = {
@@ -45,6 +67,10 @@ class UserserviceViewTest(TestCase):
             "department": "Computer Science",
             "user": {"first_name": "donald", "last_name": "trump"},
         }
+        # Days_left_Obj = {
+        #     "days": 30,
+        #     "user": {"first_name": "donald", "last_name": "trump"},
+        # }
         response = self.client.post("/serviceRequest/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 

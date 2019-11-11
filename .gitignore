@@ -95,6 +95,9 @@ local_settings.py
 /htmlcov
 /covhtml
 .env
+datasource/Department.csv
+datasouce/School.csv
+datasouce/DOHMH_New_York_City_Restaurant_Inspection_Results.csv
 #db.sqlite3
 #db.sqlite3-journal
 media
