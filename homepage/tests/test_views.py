@@ -61,17 +61,13 @@ class UserserviceViewTest(TestCase):
         side_effect=send_email_mock,
     )
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
-    @mock.patch("homepage.views.Days_left.objects.get", side_effect= Days_Obj)
+    @mock.patch("homepage.views.Days_left.objects.get", side_effect=Days_Obj)
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
-    def test_authenticate_user(self, mock_authenticated,mock_dayleft, mock_request, mock_email):
+    def test_authenticate_user(self, mock_authenticated, mock_dayleft, mock_request, mock_email):
         service_type_Obj = {
             "service_type": "Monthly",
             "school": "Tandon School of Engineering",
             "department": "Computer Science",
-            "user": {"first_name": "donald", "last_name": "trump"},
-        }
-        Days2_Obj = {
-            "days": 30,
             "user": {"first_name": "donald", "last_name": "trump"},
         }
         response = self.client.post("/serviceRequest/", service_type_Obj)

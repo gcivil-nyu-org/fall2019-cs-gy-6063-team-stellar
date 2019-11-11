@@ -7,7 +7,6 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from .models import UserRequest, School, Cuisine, UserRequestMatch, Days_left
 from .models import Department
-from user_account.models import LunchNinjaUser
 import datetime
 
 # Create your views here.
@@ -129,12 +128,12 @@ def user_service(request):
                 req.save()
                 req.cuisines.add(*cuisine_objects)
 
-                day = Days_left.objects.get(user_id = logged_user.id)
+                day = Days_left.objects.get(user_id=logged_user.id)
                 day.days = Service_days[req.service_type]
                 day.save()
             except ObjectDoesNotExist:
                 req = UserRequest(
-                    user= logged_user,
+                    user=logged_user,
                     service_type=service_type,
                     school=school,
                     department=department,
