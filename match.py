@@ -5,9 +5,13 @@ import django
 from django.core.mail import EmailMessage
 
 import datetime
+import requests
+import json
 from email.mime.base import MIMEBase
 
 
+api_key='K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx'
+headers = {'Authorization': 'Bearer %s' % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 from homepage.models import (
@@ -115,6 +119,16 @@ def send_invitations(userRequest, userMatch):
     )  # noqa: E501
 
     for resturant in resturants:
+        url = 'https://api.yelp.com/v3/businesses/search'
+
+        # In the dictionary, term can take values like food, cafes or businesses like McDonalds
+        params = {'term': resturant.name.capitalize(), 'location': resturant.building + " " + resturant.street + ", " + resturant.borough}   # noqa: E501
+        req = requests.get(url, params=params, headers=headers)
+
+        # proceed only if the status code is 200
+        # print('The status code is {}'.format(req.status_code))
+        yelp_result = json.loads(req.text)
+        
         address = (
             "address: "
             + resturant.building
@@ -124,7 +138,8 @@ def send_invitations(userRequest, userMatch):
             + resturant.borough
             + "\n"
         )
-        message = message + resturant.name + "; " + address
+        yelp_link = "Yelp link for this restaurant is " + yelp_result["businesses"][0]['url'] + "\n"
+        message = message + resturant.name + "; " + address + yelp_link
 
     attendees = [user1Email, user2Email]
     # attendees = ["utkarshprakash21@gmail.com", "monsieurutkarsh@gmail.com"]
