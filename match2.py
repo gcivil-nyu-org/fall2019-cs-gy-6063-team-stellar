@@ -247,6 +247,8 @@ def cuisine_filter(matchpool, req):
     available_set = available_set.intersection(matchpool)
 
     return available_set
+
+
 def interest_filter(matchpool, req):
     # get the preferred cuisine
     interests_list = req.interests.all()
@@ -256,6 +258,7 @@ def interest_filter(matchpool, req):
     available_set = available_set.intersection(matchpool)
 
     return available_set
+
 
 def dual_department_filter(matchpool, req):
     available_set_A = set()
@@ -316,6 +319,8 @@ def find_match_user(available_set):
 
     match_request = random.choice(list(available_set))
     return match_request
+
+
 def get_matchpool():
     matchpool = set()
     reqlist = []
@@ -325,110 +330,131 @@ def get_matchpool():
         user = day.user
         matchpool.add(UserRequest.objects.get(user_id=user.id))
         reqlist.append(UserRequest.objects.get(user_id=user.id))
-    return matchpool,reqlist
+    return matchpool, reqlist
 
-def creat_match_matrix(matchpool,matchlist,preference_score):
-    match_matrix=np.zeros((len(matchpool),len(matchpool)))
-    cuisine_score=preference_score["cuisine"]
-    same_department_score=preference_score["same department"]
-    single_department_score=preference_score["single department"]
-    dual_department_score=preference_score["dual department"]
-    interest_score=preference_score["interest"]
+
+def creat_match_matrix(matchpool, matchlist, preference_score):
+    match_matrix = np.zeros((len(matchpool), len(matchpool)))
+    cuisine_score = preference_score["cuisine"]
+    same_department_score = preference_score["same department"]
+    single_department_score = preference_score["single department"]
+    dual_department_score = preference_score["dual department"]
+    interest_score = preference_score["interest"]
     # print(matchlist)
     for user_r in matchlist:
         # print(user_r.user.username)
-        match_history=UserRequestMatch.objects.filter(Q(user1=user_r.user) | Q(user2=user_r.user))
+        match_history = UserRequestMatch.objects.filter(
+            Q(user1=user_r.user) | Q(user2=user_r.user)
+        )
         # print(match_history)
         for matched_user in match_history:
             # print(matched_user.user1.username)
             # print(matched_user.user2.username)
-            user1=UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
-            user2=UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
+            user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
+            user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
             # print(user1)
             match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
             match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
 
-        available_set_cuisine=cuisine_filter(matchpool,user_r)
-        available_set_interest=interest_filter(matchpool,user_r)
-        available_set_single_department=single_department_filter(matchpool,user_r)
-        available_set_same_department=same_department_filter(matchpool,user_r)
-        available_set_dual_department=dual_department_filter(matchpool,user_r)
-
-
+        available_set_cuisine = cuisine_filter(matchpool, user_r)
+        available_set_interest = interest_filter(matchpool, user_r)
+        available_set_single_department = single_department_filter(matchpool, user_r)
+        available_set_same_department = same_department_filter(matchpool, user_r)
+        available_set_dual_department = dual_department_filter(matchpool, user_r)
 
         for user_m in matchlist:
             matched_prefer = 0
             if user_m in available_set_cuisine:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += cuisine_score
-                 matched_prefer+=1
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += cuisine_score
+                matched_prefer += 1
             else:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= cuisine_score
-        # for user_m in matchlist:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] -= cuisine_score
+            # for user_m in matchlist:
             if user_m in available_set_interest:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += interest_score
-                 matched_prefer+=1
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += interest_score
+                matched_prefer += 1
             else:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= interest_score
-        # for user_m in matchlist:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] -= interest_score
+            # for user_m in matchlist:
             if user_m in available_set_single_department:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += single_department_score
-                 matched_prefer+=1
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += single_department_score
+                matched_prefer += 1
             else:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= single_department_score
-        # for user_m in matchlist:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] -= single_department_score
+            # for user_m in matchlist:
             if user_m in available_set_same_department:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += same_department_score
-                 matched_prefer+=1
-            else:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
-        # for user_m in matchlist:
-            if user_m in available_set_dual_department:
-                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += dual_department_score
-                 matched_prefer+=1
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += same_department_score
+                matched_prefer += 1
             else:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
-            if matched_prefer==5:
+            # for user_m in matchlist:
+            if user_m in available_set_dual_department:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += dual_department_score
+                matched_prefer += 1
+            else:
+                match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
+            if matched_prefer == 5:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] = 1000
 
-        match_matrix[matchlist.index(user_r)][matchlist.index(user_r)]=-1000
+        match_matrix[matchlist.index(user_r)][matchlist.index(user_r)] = -1000
     print(match_matrix)
     return match_matrix
+
+
 def match():
     matchpool, reqlist = get_matchpool()
-    preference_score={"cuisine":10,
-                      "interest":10,
-                      "same department":10,
-                      "single department":10,
-                      "dual department":100
-                      }
-    matchlist=[]
+    preference_score = {
+        "cuisine": 10,
+        "interest": 10,
+        "same department": 10,
+        "single department": 10,
+        "dual department": 100,
+    }
+    matchlist = []
     for user in matchpool:
         matchlist.append(user)
-    match_matrix = creat_match_matrix(matchpool,matchlist,preference_score)
-    match_score_list=[]
+    match_matrix = creat_match_matrix(matchpool, matchlist, preference_score)
+    match_score_list = []
 
-    for i in range(0,len(matchlist)):
+    for i in range(0, len(matchlist)):
 
-        for j in range(0,len(matchlist)):
-            bi_score=match_matrix[i][j]+match_matrix[j][i]
-            match_score_list.append((i,j,bi_score))
+        for j in range(0, len(matchlist)):
+            bi_score = match_matrix[i][j] + match_matrix[j][i]
+            match_score_list.append((i, j, bi_score))
 
     def take_2(elem):
         return elem[2]
+
     print(match_score_list)
     random.shuffle(match_score_list)
-    match_score_list.sort(key=take_2,reverse=True)
+    match_score_list.sort(key=take_2, reverse=True)
     print(match_score_list)
-    matched_user_request=[]
-    matched_user=[]
+    matched_user_request = []
+    matched_user = []
 
     for user_tuple in match_score_list:
-        if user_tuple[2]<0:
+        if user_tuple[2] < 0:
             continue
-        user_num1=user_tuple[0]
-        user_num2=user_tuple[1]
-        user1=matchlist[user_num1]
-        user2=matchlist[user_num2]
+        user_num1 = user_tuple[0]
+        user_num2 = user_tuple[1]
+        user1 = matchlist[user_num1]
+        user2 = matchlist[user_num2]
         if user1 in matchpool and user2 in matchpool:
             matched_user.append([user1.user_id, user2.user_id])
             matched_user_request.append([user1, user2])
@@ -436,10 +462,10 @@ def match():
             matchpool.remove(user1)
             matchpool.remove(user2)
 
-
-
     print(matched_user)
     print(matched_user_request)
     save_matches(matched_user_request)
     print(matchpool)
+
+
 match()

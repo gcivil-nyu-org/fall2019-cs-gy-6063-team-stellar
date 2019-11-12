@@ -320,6 +320,7 @@ def find_match_user(available_set):
     match_request = random.choice(list(available_set))
     return match_request
 
+
 def get_matchpool():
     matchpool = set()
     reqlist = []
@@ -329,7 +330,8 @@ def get_matchpool():
         user = day.user
         matchpool.add(UserRequest.objects.get(user_id=user.id))
         reqlist.append(UserRequest.objects.get(user_id=user.id))
-    return matchpool,reqlist
+    return matchpool, reqlist
+
 
 def match():
     match_result1 = []
@@ -341,7 +343,7 @@ def match():
     matched_user_request_2 = []
     matched_user_request_3 = []
     matched_user_request_4 = []
-    matchpool,reqlist=get_matchpool()
+    matchpool, reqlist = get_matchpool()
     print("matchpool is")
     print(matchpool)
     # match each user
