@@ -425,6 +425,18 @@ def find_match_user(available_set):
     return match_request
 
 
+def get_matchpool():
+    matchpool = set()
+    reqlist = []
+    days_entry = Days_left.objects.filter(days=1)
+    # print(UserRequest.objects.filt="Computer Science"))
+    for day in days_entry:
+        user = day.user
+        matchpool.add(UserRequest.objects.get(user_id=user.id))
+        reqlist.append(UserRequest.objects.get(user_id=user.id))
+    return matchpool, reqlist
+
+
 def match():
     match_result1 = []
     match_result2 = []
@@ -435,14 +447,7 @@ def match():
     matched_user_request_2 = []
     matched_user_request_3 = []
     matched_user_request_4 = []
-    matchpool = set()
-    reqlist = []
-    days_entry = Days_left.objects.filter(days=1)
-    # print(UserRequest.objects.filt="Computer Science"))
-    for day in days_entry:
-        user = day.user
-        matchpool.add(UserRequest.objects.get(user_id=user.id))
-        reqlist.append(UserRequest.objects.get(user_id=user.id))
+    matchpool, reqlist = get_matchpool()
     print("matchpool is")
     print(matchpool)
     # match each user
