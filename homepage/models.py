@@ -51,6 +51,7 @@ class Interests(models.Model):
 
 
 class Restaurant(models.Model):
+    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     cuisine = models.CharField(max_length=100, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True)
@@ -120,6 +121,7 @@ class UserRequestMatch(models.Model):
         related_name="%(class)s_user2",
     )
     match_time = models.DateTimeField(default=in_one_day)
+    restaurants = models.ManyToManyField(Restaurant, blank=True)
 
     def __str__(self):
         return "Match for " + self.user1.username + " and " + self.user2.username

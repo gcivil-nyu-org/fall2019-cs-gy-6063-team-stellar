@@ -5,8 +5,15 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserRequest, School, Cuisine, UserRequestMatch, Days_left, Interests
-from .models import Department
+from .models import (
+    UserRequest,
+    School,
+    Cuisine,
+    UserRequestMatch,
+    Days_left,
+    Interests,
+    Department,
+)
 from datetime import datetime, timezone
 
 # Create your views here.
@@ -230,6 +237,10 @@ def match_history(request):
             matched_user_cuisines = ", ".join(
                 [cuisine.name for cuisine in matched_user_cuisines_instance]
             )
+            matched_restaurants = ", ".join(
+                [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
+            )
+            print(matched_restaurants)
             match_dict = {
                 "match_time": match.match_time,
                 "matched_user_name": matched_user.first_name
@@ -239,6 +250,7 @@ def match_history(request):
                 "matched_user_school": matched_user.school,
                 "matched_user_department": matched_user.department,
                 "matched_user_cuisines": matched_user_cuisines,
+                "matched_restaurants": matched_restaurants,
             }
             if datetime.now(timezone.utc) <= match.match_time:
                 next_lunch_matches.append(match_dict)
