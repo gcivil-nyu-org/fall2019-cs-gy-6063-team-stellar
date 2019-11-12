@@ -110,7 +110,7 @@ class UserRequestMatch(models.Model):
         related_name="%(class)s_user2",
     )
     match_time = models.DateTimeField(default=in_one_day)
-    # restaurants = models.ManyToManyField(Restaurant, blank=True)
+    restaurants = models.ManyToManyField(Restaurant, blank=True)
 
     def __str__(self):
         return "Match for " + self.user1.username + " and " + self.user2.username

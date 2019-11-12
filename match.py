@@ -357,9 +357,9 @@ def save_matches(matches):
 
         request_match = UserRequestMatch(user1=user1, user2=user2)
         request_match.save()
-        # for r in restaurants1 and restaurants2:
-        #     request_match.restaurants.add(r)
-        # request_match.restaurants
+        for r in restaurants1 and restaurants2:
+            request_match.restaurants.add(r)
+        request_match.restaurants
         send_invitations(match, request_match)
 
         # if user_id in matchpool:
