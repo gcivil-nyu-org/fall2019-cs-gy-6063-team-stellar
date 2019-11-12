@@ -3,6 +3,7 @@ import math
 import random
 import django
 from django.core.mail import EmailMessage
+
 # from django.template.loader import render_to_string
 import datetime
 import requests
@@ -307,7 +308,7 @@ def save_matches(matches):
         user2 = match[1].user
         request_match = UserRequestMatch(user1=user1, user2=user2)
         request_match.save()
-        send_invitations(match, request_match)
+        # send_invitations(match, request_match)
 
         # if user_id in matchpool:
         #     #remove selected user

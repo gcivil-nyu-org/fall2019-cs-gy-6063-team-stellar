@@ -15,6 +15,7 @@ from homepage.models import (
     Department,
     Cuisine,
     Days_left,
+    Interests,
 )  # noqa: E402
 
 
@@ -50,9 +51,14 @@ def generateuser(N):
 
         # cuisine
         cuisines = Cuisine.objects.all()
-        p_cuisine_number = random.randint(1, Cuisine.objects.all().count() - 1)
+        p_cuisine_number = random.randint(1, Cuisine.objects.all().count())
         p_cuisine = random.sample(list(cuisines), p_cuisine_number)
         user["prefered cuisines"] = p_cuisine
+
+        interests = Interests.objects.all()
+        p_interest_number = random.randint(1, Interests.objects.all().count())
+        p_interests = random.sample(list(interests), p_interest_number)
+        user["interests"] = p_interests
 
         user["meet history"] = []
         userlist.append(user)
@@ -75,10 +81,12 @@ def save_users(userlist):
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
         )
         r.save()
-        days = Days_left(user=user["user"], days=Service_days[r.service_type])
-        days.save()
         for each in user["prefered cuisines"]:
             r.cuisines.add(each)
+        for each in user["interests"]:
+            r.interests.add(each)
+        days = Days_left(user=user["user"], days=Service_days[r.service_type])
+        days.save()
 
 
 if __name__ == "__main__":

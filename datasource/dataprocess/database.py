@@ -24,7 +24,7 @@ def deg2rad(deg):
     return deg * (math.pi / 180)
 
 
-def importschool():
+def importSchool():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_school")
@@ -51,7 +51,7 @@ def importschool():
     print("imported school data")
 
 
-def importdepartment():
+def importDepartment():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_department")
@@ -76,7 +76,7 @@ def importdepartment():
     print("imported department data")
 
 
-def importrestaurant():
+def importRestaurant():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_restaurant")
@@ -156,10 +156,9 @@ def importrestaurant():
     print("imported restaurant data")
 
 
-def importcuisine():
+def importCuisine():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS cuisine")
     cur.execute("DROP TABLE IF EXISTS homepage_cuisine")
     cur.execute("CREATE TABLE homepage_cuisine (name VARCHAR, id INTEGER PRIMARY KEY)")
     cur.execute("SELECT DISTINCT cuisine FROM homepage_restaurant")
@@ -176,11 +175,44 @@ def importcuisine():
     print("imported cuisine data")
 
 
+def importInterests():
+    conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS homepage_interests")
+    cur.execute(
+        "CREATE TABLE homepage_interests (name VARCHAR, id INTEGER PRIMARY KEY)"
+    )
+
+    interests = [
+        "casual_conversation",
+        "homework",
+        "exam-prep",
+        "networking",
+        "politics",
+        "sports",
+        "entertainment",
+        "theatre ",
+        "nyu-events",
+        "parties",
+    ]
+    id = 0
+    for interest in interests:
+        cur.execute(
+            "INSERT INTO homepage_interests (name, id) VALUES (?, ?)", (interest, id)
+        )
+        id = id + 1
+
+    conn.commit()
+    conn.close()
+    print("imported interested data")
+
+
 def main():
-    importschool()
-    importdepartment()
-    importrestaurant()
-    importcuisine()
+    importSchool()
+    importDepartment()
+    importRestaurant()
+    importCuisine()
+    importInterests()
     return ()
 
 
