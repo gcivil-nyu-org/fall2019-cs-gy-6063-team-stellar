@@ -63,7 +63,9 @@ class UserserviceViewTest(TestCase):
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.Days_left.objects.get", side_effect=Days_Obj)
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
-    def test_authenticate_user(self, mock_authenticated, mock_dayleft, mock_request, mock_email):
+    def test_authenticate_user(
+        self, mock_authenticated, mock_dayleft, mock_request, mock_email
+    ):
         service_type_Obj = {
             "service_type": "Monthly",
             "school": "Tandon School of Engineering",
