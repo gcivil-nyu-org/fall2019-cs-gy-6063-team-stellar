@@ -308,18 +308,97 @@ def find_match_user(available_set):
 
     match_request = random.choice(list(available_set))
     return match_request
+def get_matchpool():
+    matchpool = set()
+    reqlist = []
+    days_entry = Days_left.objects.filter(days=1)
+    # print(UserRequest.objects.filt="Computer Science"))
+    for day in days_entry:
+        user = day.user
+        matchpool.add(UserRequest.objects.get(user_id=user.id))
+        reqlist.append(UserRequest.objects.get(user_id=user.id))
+    return matchpool,reqlist
 
-def creat_match_matrix(matchpool,preference_score):
+def creat_match_matrix(matchpool,matchlist,preference_score):
     match_matrix=np.zeros((len(matchpool),len(matchpool)))
-
-    for user_r in matchpool:
+    cuisine_score=preference_score["cuisine"]
+    same_department_score=preference_score["same department"]
+    single_department_score=preference_score["single department"]
+    dual_department_score=preference_score["dual department"]
+    for user_r in matchlist:
         available_set_cuisine=cuisine_filter(matchpool,user_r)
         available_set_single_department=single_department_filter(matchpool,user_r)
         available_set_same_department=same_department_filter(matchpool,user_r)
         available_set_dual_department=dual_department_filter(matchpool,user_r)
-        return 0
+        for user_m in matchlist:
+            if user_m in available_set_cuisine:
+                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)]+=cuisine_score
+            else:
+                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= cuisine_score
+        for user_m in matchlist:
+            if user_m in available_set_single_department:
+                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += single_department_score
+            else:
+                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= single_department_score
+        for user_m in matchlist:
+            if user_m in available_set_same_department:
+                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += same_department_score
+            else:
+                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
+        for user_m in matchlist:
+            if user_m in available_set_dual_department:
+                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] += dual_department_score
+            else:
+                match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
+        match_matrix[matchlist.index(user_r)][matchlist.index(user_r)]=-1000
+    print(match_matrix)
+    return match_matrix
 def match():
-    creat_match_matrix()
+    matchpool, reqlist = get_matchpool()
+    preference_score={"cuisine":10,
+                      "same department":10,
+                      "single department":10,
+                      "dual department":100
+                      }
+    matchlist=[]
+    for user in matchpool:
+        matchlist.append(user)
+    match_matrix = creat_match_matrix(matchpool,matchlist,preference_score)
+    match_score_list=[]
 
+    for i in range(0,len(matchlist)):
+
+        for j in range(0,len(matchlist)):
+            bi_score=match_matrix[i][j]+match_matrix[j][i]
+            match_score_list.append((i,j,bi_score))
+
+    def take_2(elem):
+        return elem[2]
+    print(match_score_list)
+    random.shuffle(match_score_list)
+    match_score_list.sort(key=take_2,reverse=True)
+    print(match_score_list)
+    matched_user_request=[]
+    matched_user=[]
+
+    for user_tuple in match_score_list:
+        if user_tuple[2]<10:
+            continue
+        user_num1=user_tuple[0]
+        user_num2=user_tuple[1]
+        user1=matchlist[user_num1]
+        user2=matchlist[user_num2]
+        if user1 in matchpool and user2 in matchpool:
+            matched_user.append([user1.user_id, user2.user_id])
+            matched_user_request.append([user1, user2])
+
+            matchpool.remove(user1)
+            matchpool.remove(user2)
+
+
+
+    print(matched_user)
+    print(matched_user_request)
+    save_matches(matched_user_request)
 
 match()
