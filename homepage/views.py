@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from .models import UserRequest, School, Cuisine, UserRequestMatch, Days_left, Interests
 from .models import Department
-import datetime
+from datetime import datetime, timezone
 
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
@@ -140,7 +140,8 @@ def user_service(request):
                 req.school = school
                 req.department = department
                 req.cuisines.clear()
-                req.time_stamp = datetime.datetime.now()
+                req.interests.clear()
+                req.time_stamp = datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
@@ -197,6 +198,20 @@ def user_service(request):
         return redirect("/login/")
 
 
+def toggle_user_service(request):
+    if request.method == "POST":
+        if check_user_authenticated(request):
+            logged_user = request.user
+            req = UserRequest.objects.get(pk=logged_user)
+            req.service_status = (
+                True if request.POST["service_status"] == "true" else False
+            )
+            req.save()
+            return JsonResponse({"service_status": req.service_status}, safe=False)
+        else:
+            return redirect("/login/")
+
+
 def match_history(request):
     if check_login(request):
         # request.user
@@ -204,7 +219,8 @@ def match_history(request):
             Q(user1=request.user) | Q(user2=request.user)
         ).order_by("-match_time")
 
-        all_matches = []
+        next_lunch_matches = []
+        past_lunch_macthes = []
 
         for match in user_matches:
             matched_user = match.user2 if match.user1 == request.user else match.user1
@@ -224,7 +240,10 @@ def match_history(request):
                 "matched_user_department": matched_user.department,
                 "matched_user_cuisines": matched_user_cuisines,
             }
-            all_matches.append(match_dict)
+            if datetime.now(timezone.utc) <= match.match_time:
+                next_lunch_matches.append(match_dict)
+            else:
+                past_lunch_macthes.append(match_dict)
 
         department = Department.objects.all()
         school = School.objects.all()
@@ -235,7 +254,8 @@ def match_history(request):
             request,
             "match_history.html",
             {
-                "matches": all_matches,
+                "next_lunch_matches": next_lunch_matches,
+                "past_lunch_macthes": past_lunch_macthes,
                 "cuisines": cuisine,
                 "schools": school,
                 "departments": department,

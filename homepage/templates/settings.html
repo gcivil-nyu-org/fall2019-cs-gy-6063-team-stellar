@@ -26,40 +26,45 @@
 	<!-- Body -->
 	<div class="container">
 		<br>
-        <h3>Active Service</h3>
-			{% if user_request%}
-				<table class="table">
-					<thead>
+		<h3 id="active_service_header">Active Service</h3>
+		<a id="change_service_button" type="button" class="btn btn-warning" data-toggle="modal"  data-target="#myModal1" href="#myModal1">Change Service Preferences</a>
+		{% if user_request%}
+			<table id="service_table" class="table">
+				<thead>
+					<tr>
+						<th scope="col">Service type</th>
+						<th scope="col">Service started on</th>
+						<th scope="col">Preffered School</th>
+						<th scope="col">Preffered Department</th>
+						<th scope="col">Preffered Interests</th>
+						<th scope="col">Preffered Cuisines</th>
+						<th scope="col">Service Status</th>
+					</tr>
+				</thead>
+				<tbody>
 						<tr>
-							<th scope="col">Service type</th>
-							<th scope="col">Service started on</th>
-							<th scope="col">Preffered School</th>
-							<th scope="col">Preffered Department</th>
-							<th scope="col">Preffered Interests</th>
-							<th scope="col">Preffered Cuisines</th>
-							<th scope="col">Service Status</th>
+							<td>{{user_request.service_type}}</td>
+							<td>{{user_request.service_start_date  | date:"jS F Y"}}</td>
+							<td>{{user_request.preffered_school}}</td>
+							<td>{{user_request.preffered_department}}</td>
+							<td>{{user_request.preferred_interests}}</td>
+							<td>{{user_request.preferred_cuisines}}</td>
+							<td>
+								<label class="switch">
+									<input id="serviceToggle" type="checkbox">
+									<span class="slider round"></span>
+								</label>
+							</td>
 						</tr>
-					</thead>
-					<tbody>
-							<tr>
-								<td>{{user_request.service_type}}</td>
-								<td>{{user_request.service_start_date  | date:"jS F Y"}}</td>
-								<td>{{user_request.preffered_school}}</td>
-								<td>{{user_request.preffered_department}}</td>
-								<td>{{user_request.preferred_interests}}</td>
-								<td>{{user_request.preferred_cuisines}}</td>
-								{% if user_request.service_status%}
-									<td>Active</td>
-								{% else %}
-									<td>Inactive</td>
-								{% endif %}
-							</tr>
-					</tbody>
-				</table>
-			{% else %}
-				<p>No service found, please subscribe to Lunch Ninja from service tab :)</p>
-			{% endif %}
+				</tbody>
+			</table>
+		{% else %}
+			<p>No service found, please subscribe to Lunch Ninja from service tab :)</p>
+		{% endif %}
 	</div>
+
+	<!-- Pop-up models -->
+	{% include "service_pop_up.html" %}
 	
 	<!-- Footer -->
 	{% comment %} {% include "footer.html" %} {% endcomment %}
@@ -69,4 +74,10 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/multiselect/2.2.9/js/multiselect.min.js"></script>
 <script type="text/javascript" src="{% static 'js/service-pop-up.js' %}"></script>
+<script type="text/javascript">
+	var userServiceStatus = '{{user_request.service_status}}' == 'True'? true:false
+</script>
+<script type="text/javascript" src="{% static 'js/settings.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/service-pop-up.js' %}"></script>
+
 </html>

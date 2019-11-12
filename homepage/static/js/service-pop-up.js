@@ -100,7 +100,8 @@ $(document).on('submit', '#interest_select_form', function (e) {
         url: '/serviceRequest/',
         data: service_request,
         success: function () {
-            alert("success");
+            window.location.href = "/settings/";
+            alert("Thank you for using Lunch Ninja! We'll send you a follow-up email when your matching is ready.");
         }
     })
 })
