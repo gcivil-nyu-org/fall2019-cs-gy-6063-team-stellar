@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(blank=True, max_length=100, null=True)),
             ],
-            options={"managed": False,},
+            options={"managed": False},
         ),
         migrations.CreateModel(
             name="Department",
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                     models.CharField(blank=True, max_length=100, null=True),
                 ),
             ],
-            options={"managed": False,},
+            options={"managed": False},
         ),
         migrations.CreateModel(
             name="Interests",
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(blank=True, max_length=100, null=True)),
             ],
-            options={"managed": False,},
+            options={"managed": False},
         ),
         migrations.CreateModel(
             name="Restaurant",
@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
                 ("latitude", models.FloatField()),
                 ("longitude", models.FloatField()),
             ],
-            options={"managed": False,},
+            options={"managed": False},
         ),
         migrations.CreateModel(
             name="School",
@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
                 ("latitude", models.FloatField()),
                 ("longitude", models.FloatField()),
             ],
-            options={"managed": False,},
+            options={"managed": False},
         ),
         migrations.CreateModel(
             name="Days_left",
@@ -125,7 +125,7 @@ class Migration(migrations.Migration):
                 ),
                 ("days", models.IntegerField()),
             ],
-            options={"managed": True,},
+            options={"managed": True},
         ),
         migrations.CreateModel(
             name="UserRequestMatch",
@@ -185,6 +185,6 @@ class Migration(migrations.Migration):
                     models.ManyToManyField(blank=True, to="homepage.Interests"),
                 ),
             ],
-            options={"managed": True,},
+            options={"managed": True},
         ),
     ]

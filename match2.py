@@ -409,7 +409,7 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
                 matched_prefer += 1
             else:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
-            if matched_prefer >=3:
+            if matched_prefer >= 3:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] = 1000
 
         match_matrix[matchlist.index(user_r)][matchlist.index(user_r)] = -1000
