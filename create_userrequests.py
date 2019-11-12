@@ -57,9 +57,9 @@ def generateuser(N):
         user["meet history"] = []
         userlist.append(user)
 
-        print(i)
-        print(user)
-    print(len(userlist))
+    #     print(i)
+    #     print(user)
+    # print(len(userlist))
     return userlist
 
 

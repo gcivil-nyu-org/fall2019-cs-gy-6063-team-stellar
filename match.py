@@ -3,12 +3,13 @@ import math
 import random
 import django
 from django.core.mail import EmailMessage
-# from django.template.loader import render_to_string
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 import datetime
 import requests
 import json
-from email.mime.base import MIMEBase
-
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
@@ -48,39 +49,77 @@ def recommend_restaurants(user1, user2, cuisinelist):
     school2 = School.objects.get(name=user2.school)
     restaurantset = set()
     for cui in cuisinelist:
-        rest = Restaurant.objects.filter(cuisine=cui)
+        rest = Restaurant.objects.filter(cuisine=cui).order_by("score")
         restaurantset = restaurantset.union(set(rest))
-    close_to_1 = set()
-    close_to_2 = set()
+    close_to_1 = []
+    close_to_2 = []
     for each in restaurantset:
         if (
             getDistanceFromLatLonInKm(
                 school1.latitude, school1.longitude, each.latitude, each.longitude
             )
-            < 1
+            < 2
         ):
-            close_to_1.add(each)
+            close_to_1.append(each)
         else:
             if (
                 getDistanceFromLatLonInKm(
                     school2.latitude, school2.longitude, each.latitude, each.longitude
                 )
-                < 1
+                < 2
             ):
-                close_to_2.add(each)
+                close_to_2.append(each)
 
     restautants_1 = {}
     restautants_2 = {}
     if len(close_to_1) != 0:
-        restautants_1 = random.sample(list(close_to_1), 1)
+        try:
+            restautants_1 = random.sample(close_to_1, 5)
+        except Exception:
+            restautants_1 = random.sample(close_to_1, 1)
+        # restautants_1 = random.sample(list(close_to_1), 1)
     if len(close_to_2) != 0:
-        restautants_2 = random.sample(list(close_to_2), 1)
-    result = set(restautants_1).union(set(restautants_2))
-    result = list(result)
-    print("Recommanded restautants:")
-    for r in result:
-        print("Name: " + r.name + " ; cuisine: " + r.cuisine)
-    return result
+        try:
+            restautants_2 = random.sample(close_to_2, 5)
+        except Exception:
+            restautants_2 = random.sample(close_to_2, 1)
+    return restautants_1, restautants_2
+
+
+def get_yelp_link(restaurant):
+    url = "https://api.yelp.com/v3/businesses/search"
+
+    # In the dictionary, term can take values like food, cafes or businesses like McDonalds
+    params = {
+        "term": restaurant.name.capitalize(),
+        "location": restaurant.building
+                    + " "
+                    + restaurant.street
+                    + ", "
+                    + restaurant.borough,
+    }  # noqa: E501
+    req = requests.get(url, params=params, headers=headers)
+    # proceed only if the status code is 200
+    # print('The status code is {}'.format(req.status_code))
+    if not req.status_code == 200:
+        return -1
+    yelp_result = json.loads(req.text)
+    if len(yelp_result["businesses"]) == 0:
+        return -1
+    yelp_link = yelp_result["businesses"][0]["url"]
+    return yelp_link
+
+# if req.status_code == 200:
+#     yelp_result = json.loads(req.text)
+#     yelp_link = "Yelp link for this restaurant is " + str(yelp_result["businesses"][0]["url"]) + "\n"
+#     # yelp_link = str(yelp_result["businesses"][0]["url"])
+# else:
+#     yelp_link = "\nWe have not found the yelp link for this restaurant yet.\n"
+#     # yelp_link = ""
+#
+# address = "" + resturant.building + " " + resturant.street + ", " + resturant.borough + " " + str(resturant.zipcode)
+# message = message + resturant.name + "; " + address + "\n"  + yelp_link
+# return message
 
 
 def send_invitations(userRequest, userMatch):
@@ -94,8 +133,9 @@ def send_invitations(userRequest, userMatch):
     user2Cuisines = userRequest[1].cuisines.all()
 
     commonCuisines = list(user1Cuisines & user2Cuisines)
+    cuisine_names = ", ".join([cuisine.name for cuisine in (user1Cuisines & user2Cuisines)])
 
-    resturants = recommend_restaurants(
+    restaurants1, restaurants2 = recommend_restaurants(
         userRequest[0].user, userRequest[1].user, commonCuisines
     )
 
@@ -109,62 +149,7 @@ def send_invitations(userRequest, userMatch):
     dtstart = match_time.strftime("%Y%m%dT%H%M%S")
     dtend = dtend.strftime("%Y%m%dT%H%M%S")
 
-    # message = render_to_string(
-    #     "activate_account.html",
-    #     {
-    #         "user": user,
-    #         "domain": current_site.domain,
-    #         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-    #         "token": account_activation_token.make_token(user),
-    #     },
-    # )
-    message = (
-        "You got it! You have been matched with a NYU member. "
-        + "\n"
-        + "\n"
-        + "Your match was based on your preferred department and cuisine type(s): "
-        + " ".join(str(cuisine) for cuisine in commonCuisines)
-        + "\n"
-        + "\n"
-        + "Here are recommanded restaurants based on both of your locations and cuisines types:\n"
-    )  # noqa: E501
-
-    for resturant in resturants:
-        url = "https://api.yelp.com/v3/businesses/search"
-
-        # In the dictionary, term can take values like food, cafes or businesses like McDonalds
-        params = {
-            "term": resturant.name.capitalize(),
-            "location": resturant.building
-            + " "
-            + resturant.street
-            + ", "
-            + resturant.borough,
-        }  # noqa: E501
-        req = requests.get(url, params=params, headers=headers)
-
-        # proceed only if the status code is 200
-        # print('The status code is {}'.format(req.status_code))
-        yelp_result = json.loads(req.text)
-
-        address = (
-            "address: "
-            + resturant.building
-            + " "
-            + resturant.street
-            + ", "
-            + resturant.borough
-            + "\n"
-        )
-        yelp_link = (
-            "Yelp link for this restaurant is "
-            + yelp_result["businesses"][0]["url"]
-            + "\n"
-        )
-        message = message + resturant.name + "; " + address + yelp_link
-
     attendees = [user1Email, user2Email]
-    # attendees = ["utkarshprakash21@gmail.com", "monsieurutkarsh@gmail.com"]
 
     description = "DESCRIPTION: test invitation from pyICSParser" + CRLF
     attendee = ""
@@ -238,14 +223,67 @@ def send_invitations(userRequest, userMatch):
     ical_atch = MIMEBase("application/ics", ' ;name="%s"' % ("invite.ics"))
     ical_atch.set_payload(ical)
 
-    email = EmailMessage(
-        "LunchNinja Match found!!", message, "teamstellarse@gmail.com", attendees
+    html_content = (
+            "<p>Hi " + userRequest[0].user.first_name + ",</p>"
+            + "<p>You got it! You have been matched with a NYU member:</p>"
+            + "<p>" + userRequest[1].user.first_name + " " + userRequest[1].user.last_name
+            + "(" + userRequest[1].user.email + ")"
+            + " from " + userRequest[1].user.department + " department at " + userRequest[1].user.school + ". "
+            + "</p> <br style=“line-height:2;”>"
+            + "<p>Your match was based on your preferred department and cuisine type(s):</p>"
+            + "<p>" + str(cuisine_names) + "</p><br style=“line-height:2;”>"
+            + "<p>Here are recommanded restaurants based on both of your locations and cuisines types:</p>"
     )
-    email.attach(ical_atch)
-    email.send()
-    # import pdb
-    #
-    # pdb.set_trace()
+
+    # Add restaurant near school1
+    if not len(restaurants1) == 0:
+        html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
+        for resturant in restaurants1:
+            link = get_yelp_link(resturant)
+
+            html_content = html_content + "<p><b>" + resturant.name.capitalize() + "</p>"
+            address = "Address: " + resturant.building + " " + resturant.street + ", " + resturant.borough + " " + str(
+                resturant.zipcode)
+            html_content = html_content + "<p>" + address + "</p>"
+            if not link == -1:
+                html_content = html_content + "<p> Yelp link for this restaurant is: </p>"
+            # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
+                html_content = html_content + "<div>" + link + "</div>"
+
+    # Add restaurant near school2
+    if not len(restaurants2) == 0:
+        html_content = html_content + "<br style=“line-height:2;”><p><b><i>Restaurants near your lunch partner's school:</p>"
+        for resturant in restaurants2:
+            link = get_yelp_link(resturant)
+
+            html_content = html_content + "<p><b>" + resturant.name.capitalize() + "</p>"
+            address = "Address: " + resturant.building + " " + resturant.street + ", " + resturant.borough + " " + str(
+                resturant.zipcode)
+            html_content = html_content + "<p>" + address + "</p>"
+            if not link == -1:
+                html_content = html_content + "<p> Yelp link for this restaurant is: </p>"
+                html_content = html_content + "<div>" + link + "</div>"
+
+    # Add image
+    html_content = html_content + "<p><img src=\"cid:myimage\" /></p>"
+    html_content = html_content + "<p>Bon appétit!</p>"
+    html_content = html_content + "<p>Lunch Ninja</p>"
+
+    if userRequest[0].user.id == 1 or userRequest[1].user.id == 1:
+        img_data = open("homepage/static/img/catcopy.jpg", "rb").read()
+        html_part = MIMEMultipart(_subtype='related')
+        # body = MIMEText('<p>Hello <img src="cid:myimage" /></p>', _subtype='html')
+        body = MIMEText(html_content, _subtype='html')
+        html_part.attach(body)
+        # Now create the MIME container for the image
+        img = MIMEImage(img_data, 'jpg')
+        img.add_header('Content-Id', '<myimage>')  # angle brackets are important
+        img.add_header("Content-Disposition", "inline", filename="myimage")  # David Hess recommended this edit
+        html_part.attach(img)
+        msg = EmailMessage("LunchNinja Match found!!", None, "teamstellarse@gmail.com", attendees)
+        msg.attach(html_part)  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
+        msg.attach(ical_atch)
+        msg.send()
 
 
 def cuisine_filter(matchpool, req):
@@ -305,8 +343,23 @@ def save_matches(matches):
     for match in matches:
         user1 = match[0].user
         user2 = match[1].user
+        ur1 = UserRequest.objects.get(user_id=user1.id)
+        ur2 = UserRequest.objects.get(user_id=user2.id)
+
+        user1Cuisines = ur1.cuisines.all()
+        user2Cuisines = ur2.cuisines.all()
+
+        commonCuisines = list(user1Cuisines & user2Cuisines)
+
+        restaurants1, restaurants2 = recommend_restaurants(
+            user1, user2, commonCuisines
+        )
+
         request_match = UserRequestMatch(user1=user1, user2=user2)
         request_match.save()
+        # for r in restaurants1 and restaurants2:
+        #     request_match.restaurants.add(r)
+        # request_match.restaurants
         send_invitations(match, request_match)
 
         # if user_id in matchpool:
@@ -341,7 +394,6 @@ def match():
     print("matchpool is")
     print(matchpool)
     # match each user
-    print("matchpool done")
     # Round1 dual match
     Round1 = matchpool
     unmatched_user = []
