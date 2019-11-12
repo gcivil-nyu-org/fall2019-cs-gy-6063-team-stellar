@@ -179,9 +179,22 @@ def importInterests():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_interests")
-    cur.execute("CREATE TABLE homepage_interests (name VARCHAR, id INTEGER PRIMARY KEY)")
-    
-    interests = ["casual_conversation", "homework", "exam-prep", "networking", "politics" , "sports" , "entertainment" , "theatre " , "nyu-events" , "parties"]
+    cur.execute(
+        "CREATE TABLE homepage_interests (name VARCHAR, id INTEGER PRIMARY KEY)"
+    )
+
+    interests = [
+        "casual_conversation",
+        "homework",
+        "exam-prep",
+        "networking",
+        "politics",
+        "sports",
+        "entertainment",
+        "theatre ",
+        "nyu-events",
+        "parties",
+    ]
     id = 0
     for interest in interests:
         cur.execute(
@@ -192,6 +205,7 @@ def importInterests():
     conn.commit()
     conn.close()
     print("imported interested data")
+
 
 def main():
     importSchool()

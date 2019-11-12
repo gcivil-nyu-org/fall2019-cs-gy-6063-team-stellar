@@ -12,7 +12,7 @@
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h3>Step 1 of 3</h3>
+                        <h3>Step 1 of 4</h3>
                         Select preferred type of service:
                         <div class="dropdown">
                            <select type="text" id="serviceSelect" name="serviceSelect">
@@ -49,7 +49,7 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h3>Step 2 of 3</h3>
+                        <h3>Step 2 of 4</h3>
                         <p>Select preferred school and department</p>
                         <div class="dropdown">
                             <select size = "1" type="text" id="schoolSelect" name="schoolSelect" width="300" style="width: 300px">
@@ -94,12 +94,53 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h3>Step 3 of 3</h3>
+                        <h3>Step 3 of 4</h3>
                         <p>Select preferred Cuisine:</p>
                         <div class="dropdown">
                             <select size = "4" type="text" multiple id="cuisineSelect" name="cuisineSelect" width="300" style="width: 300px" >
                               {% for cuisine in cuisines %}
                                     <option value="{{ cuisine.id }}" name="{{ cuisine.name }}" selected>{{ cuisine.name }}</option>
+                              {% endfor %}
+                           </select> 
+                        </div>
+                     </div>
+                     <div class="form-top-right">
+                        <i class="fa fa-twitter"></i>
+                     </div>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-warning btn-prev">Prev</button>
+                     <button type="submit" class="btn btn-warning btn-next">Next</button>
+                     <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                  </div>
+               </fieldset>
+            </form>
+             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Interest select Modal -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">Conversation Interest</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         </div>
+         <div class="modal-body">
+            <form id="interest_select_form">
+               {% csrf_token %}
+               <fieldset>
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <h3>Step 4 of 4</h3>
+                        <p>Select preferred conversation type:</p>
+                        <div class="dropdown">
+                            <select size = "4" type="text" multiple id="interestSelect" name="interestSelect" width="300" style="width: 300px" >
+                              {% for interest in interests %}
+                                    <option value="{{ interest.id }}" name="{{ interest.name }}" selected>{{ interest.name }}</option>
                               {% endfor %}
                            </select> 
                         </div>
@@ -116,49 +157,6 @@
                </fieldset>
             </form>
              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-             <script>
-                      $("#schoolSelect").change(function() {
-
-                      var school_id = $(this).val();
-                      $.ajax({
-                        url: 'ajax/load_departments_homepage/',
-                        data: {
-                          'school_id': school_id
-                        },
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            var content='';
-                            $.each(data, function(i, item){
-                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
-                                });
-                            $('#departmentSelect').html(content)
-                        },
-                      });
-                    });
-                  </script>
-
-
-                  <script>
-                      $("#departmentSelect").change(function() {
-                      var department_id = $(this).val();
-                      $.ajax({
-                        url: 'ajax/load_school_homepage/',
-                        data: {
-                          'department_id': department_id
-                        },
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            var content='';
-                            $.each(data, function(i, item){
-                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
-                                });
-                            $('#schoolSelect').html(content)
-                        },
-                      });
-                    });
-                  </script>
          </div>
       </div>
    </div>

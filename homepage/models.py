@@ -39,13 +39,16 @@ class Cuisine(models.Model):
     class Meta:
         managed = m_state
 
+
 class Interests(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         return self.name
 
     class Meta:
         managed = m_state
+
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -86,7 +89,7 @@ class UserRequest(models.Model):
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     cuisines = models.ManyToManyField(Cuisine, blank=True)
-    interests =  models.ManyToManyField(Interests, blank=True)
+    interests = models.ManyToManyField(Interests, blank=True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
     service_status = models.BooleanField(default=True)

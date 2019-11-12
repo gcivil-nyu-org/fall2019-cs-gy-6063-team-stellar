@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserRequest, School, Cuisine, UserRequestMatch, Days_left
+from .models import UserRequest, School, Cuisine, UserRequestMatch, Days_left, Interests
 from .models import Department
 import datetime
 
@@ -75,7 +75,9 @@ def check_user_authenticated(request):
         return False
 
 
-def User_service_send_email_authenticated(request, service_type, cuisine_names):
+def User_service_send_email_authenticated(
+    request, service_type, cuisine_names, interests_names, school, department
+):
     email_subject = "Service Confirmation"
     message = render_to_string(
         "service_confirmation.html",
@@ -83,6 +85,9 @@ def User_service_send_email_authenticated(request, service_type, cuisine_names):
             "user": request.user.first_name,
             "service_type": service_type,
             "cuisines_selected": cuisine_names,
+            "selected_interests": interests_names,
+            "school": school,
+            "department": department,
         },
     )
     to_email = request.user.email
@@ -95,11 +100,16 @@ def index(request):
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
-
+        interests = Interests.objects.all()
         return render(
             request,
             "homepage.html",
-            {"cuisines": cuisine, "schools": school, "departments": department},
+            {
+                "cuisines": cuisine,
+                "schools": school,
+                "departments": department,
+                "interests": interests,
+            },
         )
     return redirect("/login/")
 
@@ -115,6 +125,15 @@ def user_service(request):
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
 
+            interests_ids = request.POST.getlist("interests[]")
+            interests_objects = Interests.objects.filter(id__in=interests_ids)
+            interests_names = ", ".join(
+                [interest.name for interest in interests_objects]
+            )
+
+            import pdb
+
+            pdb.set_trace()
             logged_user = request.user
 
             # if request already exist then update the request otherwise update it
@@ -127,6 +146,7 @@ def user_service(request):
                 req.time_stamp = datetime.datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
+                req.interests.add(*interests_objects)
 
                 day = Days_left.objects.get(user_id=logged_user.id)
                 day.days = Service_days[req.service_type]
@@ -140,12 +160,20 @@ def user_service(request):
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)
+                req.interests.add(*interests_objects)
                 days = Days_left(user=logged_user, days=Service_days[req.service_type])
                 days.save()
 
             # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
             # daysleft.save()
-            User_service_send_email_authenticated(request, service_type, cuisine_names)
+            User_service_send_email_authenticated(
+                request,
+                service_type,
+                cuisine_names,
+                interests_names,
+                school,
+                department,
+            )
         else:
             email_subject = "Service Confirmation"
             message = "Service selected"
@@ -204,6 +232,7 @@ def match_history(request):
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
+        interests = Interests.objects.all()
 
         return render(
             request,
@@ -213,6 +242,7 @@ def match_history(request):
                 "cuisines": cuisine,
                 "schools": school,
                 "departments": department,
+                "interests": interests,
             },
         )
 
@@ -224,6 +254,7 @@ def settings(request):
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
+        interests = Interests.objects.all()
 
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
@@ -249,6 +280,7 @@ def settings(request):
                 "schools": school,
                 "departments": department,
                 "user_request": user_request,
+                "interests": interests,
             },
         )
     return redirect("/login/")

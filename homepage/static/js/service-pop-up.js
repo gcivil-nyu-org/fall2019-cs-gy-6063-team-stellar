@@ -44,10 +44,56 @@ $(document).on('submit', '#school_select_form', function (e) {
     service_request['department'] = $("#departmentSelect option:selected").val();
 })
 
+//Department select
+$("#departmentSelect").change(function () {
+    var department_id = $(this).val();
+    $.ajax({
+        url: 'ajax/load_school_homepage/',
+        data: {
+            'department_id': department_id
+        },
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var content = '';
+            $.each(data, function (i, item) {
+                content += '<option value=' + '\"' + item + '\"' + '>' + item + '</option>'
+            });
+            $('#schoolSelect').html(content)
+        },
+    });
+});
+
+//School Select
+$("#schoolSelect").change(function () {
+    var school_id = $(this).val();
+    $.ajax({
+        url: 'ajax/load_departments_homepage/',
+        data: {
+            'school_id': school_id
+        },
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var content = '';
+            $.each(data, function (i, item) {
+                content += '<option value=' + '\"' + item + '\"' + '>' + item + '</option>'
+            });
+            $('#departmentSelect').html(content)
+        },
+    });
+});
+
 //Cuisine model data
 $(document).on('submit', '#cuisine_select_form', function (e) {
     e.preventDefault();
     service_request['cuisine'] = $("#cuisineSelect").val();
+})
+
+//Interest model data
+$(document).on('submit', '#interest_select_form', function (e) {
+    e.preventDefault();
+    service_request['interests'] = $("#interestSelect").val();
     service_request['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     $.ajax({
         type: 'POST',
