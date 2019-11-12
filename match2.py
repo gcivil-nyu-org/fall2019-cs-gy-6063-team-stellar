@@ -388,7 +388,7 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
                 match_matrix[matchlist.index(user_r)][
                     matchlist.index(user_m)
                 ] += single_department_score
-                matched_prefer += 1
+
             else:
                 match_matrix[matchlist.index(user_r)][
                     matchlist.index(user_m)
@@ -398,7 +398,7 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
                 match_matrix[matchlist.index(user_r)][
                     matchlist.index(user_m)
                 ] += same_department_score
-                matched_prefer += 1
+
             else:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
             # for user_m in matchlist:
@@ -409,7 +409,7 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
                 matched_prefer += 1
             else:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
-            if matched_prefer == 5:
+            if matched_prefer >=3:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] = 1000
 
         match_matrix[matchlist.index(user_r)][matchlist.index(user_r)] = -1000
