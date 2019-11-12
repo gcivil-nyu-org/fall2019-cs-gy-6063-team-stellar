@@ -10,6 +10,7 @@ from email.mime.image import MIMEImage
 import datetime
 import requests
 import json
+import time
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
@@ -112,23 +113,23 @@ def get_yelp_link(restaurant):
     return yelp_link
 
 
-def compose_email(userRequest, restaurants1, restaurants2, cuisine_names):
+def compose_email(userRequest1, userRequest2, restaurants1, restaurants2, cuisine_names):
     html_content = (
             "<p>Hi "
-            + userRequest[0].user.first_name
+            + userRequest1.user.first_name
             + ",</p>"
             + "<p>You got it! You have been matched with a NYU member:</p>"
             + "<p><b>"
-            + userRequest[1].user.first_name
+            + userRequest2.user.first_name
             + " "
-            + userRequest[1].user.last_name
+            + userRequest2.user.last_name
             + "</b>("
-            + userRequest[1].user.email
+            + userRequest2.user.email
             + ")"
             + " from <b>"
-            + userRequest[1].user.department
-            + " department at "
-            + userRequest[1].user.school
+            + userRequest2.user.department
+            + " department </b>at <b>"
+            + userRequest2.user.school
             + "</b>. "
             + "</p> <br style=“line-height:2;”>"
             + "<p>Your match was based on your preferred department and cuisine type(s):</p>"
@@ -145,7 +146,7 @@ def compose_email(userRequest, restaurants1, restaurants2, cuisine_names):
             link = get_yelp_link(resturant)
 
             html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</p>"
+                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
             )
             address = (
                     "Address: "
@@ -175,7 +176,7 @@ def compose_email(userRequest, restaurants1, restaurants2, cuisine_names):
             link = get_yelp_link(resturant)
 
             html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</p>"
+                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
             )
             address = (
                     "Address: "
@@ -200,6 +201,29 @@ def compose_email(userRequest, restaurants1, restaurants2, cuisine_names):
     html_content = html_content + "<p>Lunch Ninja</p>"
     return html_content
 
+def send_email(html_content, ical_atch, attendee):
+    img_data = open("homepage/static/img/catcopy.jpg", "rb").read()
+    html_part = MIMEMultipart(_subtype="related")
+    # body = MIMEText('<p>Hello <img src="cid:myimage" /></p>', _subtype='html')
+    body = MIMEText(html_content, _subtype="html")
+    html_part.attach(body)
+    # Now create the MIME container for the image
+    img = MIMEImage(img_data, "jpg")
+    img.add_header("Content-Id", "<myimage>")  # angle brackets are important
+    img.add_header(
+        "Content-Disposition", "inline", filename="myimage"
+    )  # David Hess recommended this edit
+    html_part.attach(img)
+    msg = EmailMessage(
+        "LunchNinja Match found!!", None, "teamstellarse@gmail.com", attendee
+    )
+    msg.attach(
+        html_part
+    )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
+    msg.attach(ical_atch)
+    time.sleep(5)
+    print("sending out email")
+    msg.send()
 
 def send_invitations(userRequest, userMatch):
     # Send email to matched users
@@ -311,28 +335,13 @@ def send_invitations(userRequest, userMatch):
     ical_atch = MIMEBase("application/ics", ' ;name="%s"' % ("invite.ics"))
     ical_atch.set_payload(ical)
 
-    html_content = compose_email(userRequest, restaurants1, restaurants2, cuisine_names)
-    if userRequest[0].user.id == 1 or userRequest[1].user.id == 1:
-        img_data = open("homepage/static/img/catcopy.jpg", "rb").read()
-        html_part = MIMEMultipart(_subtype="related")
-        # body = MIMEText('<p>Hello <img src="cid:myimage" /></p>', _subtype='html')
-        body = MIMEText(html_content, _subtype="html")
-        html_part.attach(body)
-        # Now create the MIME container for the image
-        img = MIMEImage(img_data, "jpg")
-        img.add_header("Content-Id", "<myimage>")  # angle brackets are important
-        img.add_header(
-            "Content-Disposition", "inline", filename="myimage"
-        )  # David Hess recommended this edit
-        html_part.attach(img)
-        msg = EmailMessage(
-            "LunchNinja Match found!!", None, "teamstellarse@gmail.com", attendees
-        )
-        msg.attach(
-            html_part
-        )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
-        msg.attach(ical_atch)
-        msg.send()
+    to1 = [user1Email]
+    to2 = [user2Email]
+    html_content = compose_email(userRequest[0], userRequest[1], restaurants1, restaurants2, cuisine_names)
+    send_email(html_content, ical_atch, to1)
+    html_content = compose_email(userRequest[1], userRequest[0], restaurants1, restaurants2, cuisine_names)
+    send_email(html_content, ical_atch, to2)
+
 
 
 def cuisine_filter(matchpool, req):
@@ -398,12 +407,7 @@ def save_matches(matches):
         user1Cuisines = ur1.cuisines.all()
         user2Cuisines = ur2.cuisines.all()
         commonCuisines = list(user1Cuisines & user2Cuisines)
-        print("in save. commonscuisine is okay")
         restaurants1, restaurants2 = recommend_restaurants(user1, user2, commonCuisines)
-        print("in save. restaurant1 is")
-        print(restaurants1)
-        print("in save. restaurant2 is")
-        print(restaurants1)
         request_match = UserRequestMatch(user1=user1, user2=user2)
         request_match.save()
         for r in restaurants1:
