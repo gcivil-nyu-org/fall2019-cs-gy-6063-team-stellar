@@ -131,9 +131,6 @@ def user_service(request):
                 [interest.name for interest in interests_objects]
             )
 
-            import pdb
-
-            pdb.set_trace()
             logged_user = request.user
 
             # if request already exist then update the request otherwise update it
@@ -259,6 +256,7 @@ def settings(request):
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
             preffered_cuisines_instances = user_request_instance.cuisines.all()
+            preffered_interests_instances = user_request_instance.interests.all()
             user_request = {
                 "service_type": user_request_instance.service_type,
                 "service_start_date": user_request_instance.time_stamp,
@@ -267,6 +265,9 @@ def settings(request):
                 "service_status": user_request_instance.service_status,
                 "preferred_cuisines": ", ".join(
                     [cuisine.name for cuisine in preffered_cuisines_instances]
+                ),
+                "preferred_interests": ", ".join(
+                    [interest.name for interest in preffered_interests_instances]
                 ),
             }
         except UserRequest.DoesNotExist:
