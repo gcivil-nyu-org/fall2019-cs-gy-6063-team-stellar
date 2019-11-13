@@ -2,15 +2,6 @@ import os
 import math
 import random
 import django
-from django.core.mail import EmailMessage
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
-import datetime
-import requests
-import json
-import time
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
@@ -73,275 +64,18 @@ def recommend_restaurants(user1, user2, cuisinelist):
 
     restautants_1 = {}
     restautants_2 = {}
-    if len(close_to_1) != 0:
+    if len(close_to_1) >= 5:
         try:
             restautants_1 = random.sample(close_to_1, 5)
         except Exception:
-            restautants_1 = random.sample(close_to_1, 1)
+            restautants_1 = random.sample(close_to_1, len(close_to_1))
         # restautants_1 = random.sample(list(close_to_1), 1)
-    if len(close_to_2) != 0:
+    if len(close_to_2) >= 5:
         try:
             restautants_2 = random.sample(close_to_2, 5)
         except Exception:
-            restautants_2 = random.sample(close_to_2, 1)
-    # print("In restaurant, restaurant1 is")
-    # print(restautants_1)
+            restautants_2 = random.sample(close_to_2, len(close_to_2))
     return restautants_1, restautants_2
-
-
-def get_yelp_link(restaurant):
-    url = "https://api.yelp.com/v3/businesses/search"
-
-    # In the dictionary, term can take values like food, cafes or businesses like McDonalds
-    params = {
-        "term": restaurant.name.capitalize(),
-        "location": restaurant.building
-        + " "
-        + restaurant.street
-        + ", "
-        + restaurant.borough,
-    }  # noqa: E501
-    req = requests.get(url, params=params, headers=headers)
-    # proceed only if the status code is 200
-    # print('The status code is {}'.format(req.status_code))
-    if not req.status_code == 200:
-        return -1
-    yelp_result = json.loads(req.text)
-    if len(yelp_result["businesses"]) == 0:
-        return -1
-    yelp_link = yelp_result["businesses"][0]["url"]
-    return yelp_link
-
-
-def compose_email(userRequest1, userRequest2, restaurants1, restaurants2, cuisine_names):
-    html_content = (
-            "<p>Hi "
-            + userRequest1.user.first_name
-            + ",</p>"
-            + "<p>You got it! You have been matched with a NYU member:</p>"
-            + "<p><b>"
-            + userRequest2.user.first_name
-            + " "
-            + userRequest2.user.last_name
-            + "</b>("
-            + userRequest2.user.email
-            + ")"
-            + " from <b>"
-            + userRequest2.user.department
-            + " department </b>at <b>"
-            + userRequest2.user.school
-            + "</b>. "
-            + "</p> <br style=“line-height:2;”>"
-            + "<p>Your match was based on your preferred department and cuisine type(s):</p>"
-            + "<p><b>"
-            + str(cuisine_names)
-            + "</b></p><br style=“line-height:2;”>"
-            + "<p>Here are recommanded restaurants based on both of your locations and cuisines types:</p>"
-    )
-
-    # Add restaurant near school1
-    if not len(restaurants1) == 0:
-        html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
-        for resturant in restaurants1:
-            link = get_yelp_link(resturant)
-
-            html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
-            )
-            address = (
-                    "Address: "
-                    + resturant.building
-                    + " "
-                    + resturant.street
-                    + ", "
-                    + resturant.borough
-                    + " "
-                    + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
-                html_content = (
-                        html_content + "<p> Yelp link for this restaurant is: </p>"
-                )
-                # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
-                html_content = html_content + "<div>" + link + "</div>"
-
-    # Add restaurant near school2
-    if not len(restaurants2) == 0:
-        html_content = (
-                html_content
-                + "<br style=“line-height:2;”><p><b><i>Restaurants near your lunch partner's school:</p>"
-        )
-        for resturant in restaurants2:
-            link = get_yelp_link(resturant)
-
-            html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
-            )
-            address = (
-                    "Address: "
-                    + resturant.building
-                    + " "
-                    + resturant.street
-                    + ", "
-                    + resturant.borough
-                    + " "
-                    + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
-                html_content = (
-                        html_content + "<p> Yelp link for this restaurant is: </p>"
-                )
-                html_content = html_content + "<div>" + link + "</div>"
-
-    # Add image
-    html_content = html_content + '<p><img src="cid:myimage" /></p>'
-    html_content = html_content + "<p>Bon appétit!</p>"
-    html_content = html_content + "<p>Lunch Ninja</p>"
-    return html_content
-
-def send_email(html_content, ical_atch, attendee):
-    img_data = open("homepage/static/img/catcopy.jpg", "rb").read()
-    html_part = MIMEMultipart(_subtype="related")
-    # body = MIMEText('<p>Hello <img src="cid:myimage" /></p>', _subtype='html')
-    body = MIMEText(html_content, _subtype="html")
-    html_part.attach(body)
-    # Now create the MIME container for the image
-    img = MIMEImage(img_data, "jpg")
-    img.add_header("Content-Id", "<myimage>")  # angle brackets are important
-    img.add_header(
-        "Content-Disposition", "inline", filename="myimage"
-    )  # David Hess recommended this edit
-    html_part.attach(img)
-    msg = EmailMessage(
-        "LunchNinja Match found!!", None, "teamstellarse@gmail.com", attendee
-    )
-    msg.attach(
-        html_part
-    )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
-    msg.attach(ical_atch)
-    time.sleep(5)
-    print("sending out email")
-    msg.send()
-
-def send_invitations(userRequest, userMatch):
-    # Send email to matched users
-
-    user1Email = userRequest[0].user.email
-    user2Email = userRequest[1].user.email
-    match_time = userMatch.match_time
-
-    user1Cuisines = userRequest[0].cuisines.all()
-    user2Cuisines = userRequest[1].cuisines.all()
-
-    commonCuisines = list(user1Cuisines & user2Cuisines)
-    cuisine_names = ", ".join(
-        [cuisine.name for cuisine in (user1Cuisines & user2Cuisines)]
-    )
-
-    restaurants1, restaurants2 = recommend_restaurants(
-        userRequest[0].user, userRequest[1].user, commonCuisines
-    )
-
-    CRLF = "\r\n"
-    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
-
-    dur = datetime.timedelta(hours=1)
-
-    dtend = match_time + dur
-    dtstamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%SZ")
-    dtstart = match_time.strftime("%Y%m%dT%H%M%S")
-    dtend = dtend.strftime("%Y%m%dT%H%M%S")
-
-    attendees = [user1Email, user2Email]
-
-    description = ("DESCRIPTION: Lunch meeting with"
-                   + userRequest[1].user.first_name
-                   + " "
-                   + userRequest[1].user.last_name
-                   + "</b>("
-                   + userRequest[1].user.email
-                   + ")"+ CRLF
-                   )
-    attendee = ""
-    for att in attendees:
-        attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-    PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE"
-            + CRLF
-            + " ;CN="
-            + att
-            + ";X-NUM-GUESTS=0:"
-            + CRLF
-            + " mailto:"
-            + att
-            + CRLF
-        )
-    ical = (
-        "BEGIN:VCALENDAR"
-        + CRLF
-        + "PRODID:pyICSParser"
-        + CRLF
-        + "VERSION:2.0"
-        + CRLF
-        + "CALSCALE:GREGORIAN"
-        + CRLF
-    )
-    ical += (
-        "METHOD:REQUEST"
-        + CRLF
-        + "BEGIN:VEVENT"
-        + CRLF
-        + "DTSTART:"
-        + dtstart
-        + CRLF
-        + "DTEND:"
-        + dtend
-        + CRLF
-        + "DTSTAMP:"
-        + dtstamp
-        + CRLF
-        + organizer
-        + CRLF
-    )
-    ical += "UID:FIXMEUID" + dtstamp + CRLF
-    ical += (
-        attendee
-        + "CREATED:"
-        + dtstamp
-        + CRLF
-        + description
-        + "LAST-MODIFIED:"
-        + dtstamp
-        + CRLF
-        + "LOCATION:"
-        + CRLF
-        + "SEQUENCE:0"
-        + CRLF
-        + "STATUS:CONFIRMED"
-        + CRLF
-    )
-    ical += (
-        "SUMMARY:LunchNinja lunch"
-        + CRLF
-        + "TRANSP:OPAQUE"
-        + CRLF
-        + "END:VEVENT"
-        + CRLF
-        + "END:VCALENDAR"
-        + CRLF
-    )
-
-    ical_atch = MIMEBase("application/ics", ' ;name="%s"' % ("invite.ics"))
-    ical_atch.set_payload(ical)
-
-    to1 = [user1Email]
-    to2 = [user2Email]
-    html_content = compose_email(userRequest[0], userRequest[1], restaurants1, restaurants2, cuisine_names)
-    send_email(html_content, ical_atch, to1)
-    html_content = compose_email(userRequest[1], userRequest[0], restaurants1, restaurants2, cuisine_names)
-    send_email(html_content, ical_atch, to2)
-
 
 
 def cuisine_filter(matchpool, req):
@@ -382,16 +116,10 @@ def single_department_filter(matchpool, req):
 def same_department_filter(matchpool, req):
     available_set = set()
     users = LunchNinjaUser.objects.filter(department=req.user.department)
-    # print("users")
-    # print(users)
 
     for each in users:
         ur = UserRequest.objects.filter(user_id=each.id)
-        # print("ur")
-        # print(set(ur))
         available_set = available_set.union(set(ur))
-    # print("available set")
-    # print(available_set)
     available_set = available_set.intersection(matchpool)
     return available_set
 
@@ -414,7 +142,6 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        send_invitations(match, request_match)
 
         # if user_id in matchpool:
         #     #remove selected user
@@ -620,6 +347,5 @@ def match():
         + matched_user_request_3
         + matched_user_request_4
     )
-
 
 match()
