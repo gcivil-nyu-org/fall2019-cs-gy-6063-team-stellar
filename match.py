@@ -13,6 +13,7 @@ import requests
 import json
 import time
 from django.db.models import Q
+
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
@@ -363,6 +364,8 @@ def cuisine_filter(matchpool, req):
     available_set = available_set.intersection(matchpool)
 
     return available_set
+
+
 def interest_filter(matchpool, req):
     # get the preferred cuisine
     interests_list = req.interests.all()
@@ -372,6 +375,7 @@ def interest_filter(matchpool, req):
     available_set = available_set.intersection(matchpool)
 
     return available_set
+
 
 def dual_department_filter(matchpool, req):
     available_set_A = set()
@@ -404,7 +408,7 @@ def same_department_filter(matchpool, req):
     for user in users:
         user_request = UserRequest.objects.filter(user_id=user.id)
         available_set = available_set.union(set(user_request))
-   
+
     available_set = available_set.intersection(matchpool)
     return available_set
 
@@ -446,31 +450,36 @@ def get_matchpool():
         reqlist.append(UserRequest.objects.get(user_id=user.id))
     return matchpool, reqlist
 
+
+# Create match matrix for matching. The value in the matrix indicate the score two of each possible matches
 def creat_match_matrix(matchpool, matchlist, preference_score):
     match_matrix = np.zeros((len(matchpool), len(matchpool)))
     for user_r in matchlist:
 
-        cuisine_score = user_r.cuisines_priority*10
-        same_department_score = user_r.department_priority*10
-        single_department_score = user_r.department_priority*10
+        # calculate the score for each preference
+        cuisine_score = user_r.cuisines_priority * 10
+        same_department_score = user_r.department_priority * 10
+        single_department_score = user_r.department_priority * 10
         dual_department_score = 100
-        interest_score = user_r.interests_priority*10
+        interest_score = user_r.interests_priority * 10
         match_history = UserRequestMatch.objects.filter(
             Q(user1=user_r.user) | Q(user2=user_r.user)
         )
 
         for matched_user in match_history:
+            # users cannot match matched users
             user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
             user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
             match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
             match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
-
+        # find all possible matches base on the users preference
         available_set_cuisine = cuisine_filter(matchpool, user_r)
         available_set_interest = interest_filter(matchpool, user_r)
         available_set_single_department = single_department_filter(matchpool, user_r)
         available_set_same_department = same_department_filter(matchpool, user_r)
         available_set_dual_department = dual_department_filter(matchpool, user_r)
 
+        # calculate scores for each possible matches
         for user_m in matchlist:
             matched_prefer = 0
             if user_m in available_set_cuisine:
@@ -520,15 +529,19 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
             if matched_prefer >= 3:
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] = 1000
-
+        # user cannot match themselves
         match_matrix[matchlist.index(user_r)][matchlist.index(user_r)] = -1000
+        # if the user turn off the service he will not be considered
         if not user_r.service_status:
-            for i in range(0,len(matchlist)):
+            for i in range(0, len(matchlist)):
                 match_matrix[matchlist.index(user_r)][i] = -1000
                 match_matrix[i][matchlist.index(user_r)] = -1000
-    print(match_matrix)
+    # print(match_matrix)
     return match_matrix
 
+
+# match users base on match matrix
+# The matches with highest score will be consider first
 def match():
     matchpool, reqlist = get_matchpool()
     preference_score = {
@@ -553,12 +566,13 @@ def match():
     def take_2(elem):
         return elem[2]
 
-    print(match_score_list)
+    # print(match_score_list)
     random.shuffle(match_score_list)
     match_score_list.sort(key=take_2, reverse=True)
-    print(match_score_list)
+    # print(match_score_list)
     matched_user_request = []
     matched_user = []
+    not_matched_user = []
 
     for user_tuple in match_score_list:
         if user_tuple[2] < 0:
@@ -573,10 +587,9 @@ def match():
 
             matchpool.remove(user1)
             matchpool.remove(user2)
-
-    print(matched_user)
-    print(matched_user_request)
+    for user in matchpool:
+        not_matched_user.append(user)
     save_matches(matched_user_request)
-    print(matchpool)
+
 
 match()

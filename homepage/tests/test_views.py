@@ -1,7 +1,7 @@
 from django.test import TestCase
 from unittest import mock
 from ..models import UserRequest
-from datetime import datetime,timezone,timedelta
+from datetime import datetime, timezone, timedelta
 
 
 class UserserviceViewTest(TestCase):
@@ -18,12 +18,14 @@ class UserserviceViewTest(TestCase):
 
             def add(**kargs):
                 return "Added"
+
         class interest_for_mock:
             def __init__(self):
                 pass
 
             def add(**kargs):
                 return "Added"
+
             def clear(**kargs):
                 return "Cleared"
 
@@ -63,7 +65,7 @@ class UserserviceViewTest(TestCase):
 
         return days_for_mock
 
-    def send_email_mock(self, p2, p3,p4,p5,p6):
+    def send_email_mock(self, p2, p3, p4, p5, p6):
         pass
 
     @mock.patch(
@@ -177,6 +179,8 @@ class LogoutViewTest(TestCase):
     def test_logout_without_user_session(self):
         response = self.client.get("/logout/")
         self.assertEqual(response.status_code, 302)
+
+
 class ToggleViewTest(TestCase):
     def is_authenticated(self):
         return True
@@ -191,12 +195,14 @@ class ToggleViewTest(TestCase):
 
             def add(**kargs):
                 return "Added"
+
         class interest_for_mock:
             def __init__(self):
                 pass
 
             def add(**kargs):
                 return "Added"
+
             def clear(**kargs):
                 return "Cleared"
 
@@ -206,12 +212,13 @@ class ToggleViewTest(TestCase):
                 self.school = "Tandon School of Engineering"
                 self.cuisines = cuisine_for_mock
                 self.interests = interest_for_mock
-                self.service_status=True
+                self.service_status = True
 
             def save(self):
                 return "Saved"
 
         return userObj()
+
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
     def test_authenticate_user(self, mock_authenticated, mock_request):
@@ -220,17 +227,18 @@ class ToggleViewTest(TestCase):
             "school": "Tandon School of Engineering",
             "department": "Computer Science",
             "user": {"first_name": "donald", "last_name": "trump"},
-            "service_status": "true"
+            "service_status": "true",
         }
         response = self.client.post("/toggle-service/", service_type_Obj)
         self.assertEqual(response.status_code, 200)
+
     def test_not_authenticate_user(self):
         service_type_Obj = {
             "service_type": "Monthly",
             "school": "Tandon School of Engineering",
             "department": "Computer Science",
             "user": {"first_name": "donald", "last_name": "trump"},
-            "service_status": "true"
+            "service_status": "true",
         }
         response = self.client.post("/toggle-service/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
@@ -242,14 +250,17 @@ class SettingViewTest(TestCase):
             def __init__(self, name):
                 self.name = name
                 pass
+
         class interest_for_mock:
-            def __init__(self,name):
+            def __init__(self, name):
                 self.name = name
 
             def add(**kargs):
                 return "Added"
+
             def clear(**kargs):
                 return "Cleared"
+
         class cuisines_for_mock:
             def __init__(self, name):
                 pass
@@ -260,6 +271,7 @@ class SettingViewTest(TestCase):
                     cuisine_for_mock("Indian"),
                     cuisine_for_mock("Chinese"),
                 ]
+
         class interests_for_mock:
             def __init__(self, name):
                 pass
@@ -320,10 +332,12 @@ class MatchHistoryTest(TestCase):
                 self.email = "1234@nyu.edu"
                 self.school = "Tandon School of Engineering"
                 self.department = "Electrical Engineering"
+
         class restaurant_for_mock:
-            def __init__(self,name):
-                self.name=name
+            def __init__(self, name):
+                self.name = name
                 pass
+
         class restaurants_for_mock:
             def __init__(self):
                 pass
@@ -334,13 +348,14 @@ class MatchHistoryTest(TestCase):
                     restaurant_for_mock("KFC"),
                     restaurant_for_mock("Burger king"),
                 ]
+
         class match_userObj:
             def __init__(self):
 
                 self.user2 = username()
                 self.user1 = username()
-                self.match_time = datetime.now(timezone.utc)+timedelta(days=1)
-                self.restaurants=restaurants_for_mock
+                self.match_time = datetime.now(timezone.utc) + timedelta(days=1)
+                self.restaurants = restaurants_for_mock
 
         class result:
             def __init__(self):

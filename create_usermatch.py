@@ -4,6 +4,8 @@ import random
 import django
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Q
+import numpy as np
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
@@ -91,6 +93,17 @@ def cuisine_filter(matchpool, req):
     return available_set
 
 
+def interest_filter(matchpool, req):
+    # get the preferred cuisine
+    interests_list = req.interests.all()
+    available_set = set()
+    for i in interests_list:
+        available_set = available_set.union(i.userrequest_set.all())
+    available_set = available_set.intersection(matchpool)
+
+    return available_set
+
+
 def dual_department_filter(matchpool, req):
     available_set_A = set()
     A_users = LunchNinjaUser.objects.filter(department=req.department)
@@ -125,10 +138,12 @@ def same_department_filter(matchpool, req):
     available_set = available_set.intersection(matchpool)
     return available_set
 
+
 def day_before():
-    next_day = timezone.now() - timedelta(days=random.randint(1,10))
+    next_day = timezone.now() - timedelta(days=random.randint(1, 10))
     new_period = next_day.replace(hour=12, minute=00)
     return new_period
+
 
 def save_matches(matches):
     # save matches to user_request_match table
@@ -143,7 +158,10 @@ def save_matches(matches):
 
         commonCuisines = list(user1Cuisines & user2Cuisines)
         restaurants1, restaurants2 = recommend_restaurants(user1, user2, commonCuisines)
-        request_match = UserRequestMatch(user1=user1, user2=user2, match_time=day_before())
+        request_match = UserRequestMatch(
+            user1=user1, user2=user2, match_time=day_before()
+        )
+        print(day_before())
         request_match.save()
         for r in restaurants1:
             request_match.restaurants.add(r)
@@ -173,187 +191,159 @@ def get_matchpool():
     return matchpool, reqlist
 
 
+def creat_match_matrix(matchpool, matchlist, preference_score):
+    match_matrix = np.zeros((len(matchpool), len(matchpool)))
+    for user_r in matchlist:
+
+        cuisine_score = user_r.cuisines_priority * 10
+        same_department_score = user_r.department_priority * 10
+        single_department_score = user_r.department_priority * 10
+        dual_department_score = 100
+        interest_score = user_r.interests_priority * 10
+        match_history = UserRequestMatch.objects.filter(
+            Q(user1=user_r.user) | Q(user2=user_r.user)
+        )
+
+        for matched_user in match_history:
+            user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
+            user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
+            match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
+            match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
+
+        available_set_cuisine = cuisine_filter(matchpool, user_r)
+        available_set_interest = interest_filter(matchpool, user_r)
+        available_set_single_department = single_department_filter(matchpool, user_r)
+        available_set_same_department = same_department_filter(matchpool, user_r)
+        available_set_dual_department = dual_department_filter(matchpool, user_r)
+
+        for user_m in matchlist:
+            matched_prefer = 0
+            if user_m in available_set_cuisine:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += cuisine_score
+                matched_prefer += 1
+            else:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] -= cuisine_score
+            # for user_m in matchlist:
+            if user_m in available_set_interest:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += interest_score
+                matched_prefer += 1
+            else:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] -= interest_score
+            # for user_m in matchlist:
+            if user_m in available_set_single_department:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += single_department_score
+
+            else:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] -= single_department_score
+            # for user_m in matchlist:
+            if user_m in available_set_same_department:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += same_department_score
+
+            else:
+                match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
+            # for user_m in matchlist:
+            if user_m in available_set_dual_department:
+                match_matrix[matchlist.index(user_r)][
+                    matchlist.index(user_m)
+                ] += dual_department_score
+                matched_prefer += 1
+            else:
+                match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] -= 0
+            if matched_prefer >= 3:
+                match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] = 1000
+
+        match_matrix[matchlist.index(user_r)][matchlist.index(user_r)] = -1000
+        if not user_r.service_status:
+            for i in range(0, len(matchlist)):
+                match_matrix[matchlist.index(user_r)][i] = -1000
+                match_matrix[i][matchlist.index(user_r)] = -1000
+    print(match_matrix)
+    return match_matrix
+
+
 def match():
-    match_result1 = []
-    match_result2 = []
-    match_result3 = []
-    match_result4 = []
-
-    matched_user_request_1 = []
-    matched_user_request_2 = []
-    matched_user_request_3 = []
-    matched_user_request_4 = []
     matchpool, reqlist = get_matchpool()
-    print("matchpool is")
-    print(matchpool)
-    # match each user
-    # Round1 dual match
-    Round1 = matchpool
-    unmatched_user = []
-    for req in reqlist:
-        if req in Round1:
-            user_id = req.user_id
-            Round1.remove(req)
+    preference_score = {
+        "cuisine": 10,
+        "interest": 10,
+        "same department": 10,
+        "single department": 10,
+        "dual department": 100,
+    }
+    matchlist = []
+    for user in matchpool:
+        matchlist.append(user)
+    match_matrix = creat_match_matrix(matchpool, matchlist, preference_score)
+    match_score_list = []
 
-            # find available users for this user(filter)
+    for i in range(0, len(matchlist)):
 
-            available_set_cuisine = cuisine_filter(Round1, req)
+        for j in range(0, len(matchlist)):
+            bi_score = match_matrix[i][j] + match_matrix[j][i]
+            match_score_list.append((i, j, bi_score))
 
-            available_set_dual_department = dual_department_filter(Round1, req)
+    def take_2(elem):
+        return elem[2]
 
-            # available_set = available_set_cuisine
-            available_set = available_set_cuisine.intersection(
-                available_set_dual_department
-            )
+    print(match_score_list)
+    random.shuffle(match_score_list)
+    match_score_list.sort(key=take_2, reverse=True)
+    print(match_score_list)
+    matched_user_request = []
+    matched_user = []
+    not_matched_user = []
+    for user_tuple in match_score_list:
+        if user_tuple[2] < 0:
+            continue
+        user_num1 = user_tuple[0]
+        user_num2 = user_tuple[1]
+        user1 = matchlist[user_num1]
+        user2 = matchlist[user_num2]
+        if user1 in matchpool and user2 in matchpool:
+            matched_user.append([user1.user_id, user2.user_id])
+            matched_user_request.append([user1, user2])
 
-            # available_set = matched_user_filter(matchpool, available_set, user)
-
-            # pick a user from the available users
-            try:
-                # find match user in the available set
-                match_request = find_match_user(available_set)
-                Round1.remove(UserRequest.objects.get(user_id=match_request.user_id))
-
-                # for test can be removed
-                result1 = []
-                result1.append(user_id)
-                result1.append(match_request.user_id)
-                match_result1.append(result1)
-
-                # collect match information
-                request_result_1 = []
-                request_result_1.append(req)
-                request_result_1.append(match_request)
-                matched_user_request_1.append(request_result_1)
-            except Exception:
-                unmatched_user.append(req)
-    # Round2 part match
-    Round2 = set(unmatched_user)
-    unmatched_user = []
-    i = 0
-    for req in reqlist:
-        i += 1
-        if req in Round2:
-            user_id = req.user_id
-            Round2.remove(req)
-            # find available users for this user(filter)
-            available_set_cuisine = cuisine_filter(Round2, req)
-            available_set_single_department = single_department_filter(Round2, req)
-            # available_set = available_set_cuisine
-            available_set = available_set_cuisine.intersection(
-                available_set_single_department
-            )
-
-            # available_set = matched_user_filter(matchpool, available_set, user)
-
-            # pick a user from the available users
-            try:
-                # find match user in the available set
-                match_request = find_match_user(available_set)
-                Round2.remove(UserRequest.objects.get(user_id=match_request.user_id))
-
-                # for test can be removed
-                result2 = []
-                result2.append(user_id)
-                result2.append(match_request.user_id)
-                match_result2.append(result2)
-
-                # collect match information
-                request_result_2 = []
-                request_result_2.append(req)
-                request_result_2.append(match_request)
-                matched_user_request_2.append(request_result_2)
-            except Exception:
-                unmatched_user.append(req)
-                Round2.add(req)
-
-    # Round3 part match
-    Round3 = set(unmatched_user)
-    unmatched_user = []
-    for req in reqlist:
-        if req in Round3:
-            user_id = req.user_id
-            Round3.remove(req)
-            # find available users for this user(filter)
-            available_set_cuisine = cuisine_filter(Round3, req)
-
-            available_set_same_department = same_department_filter(Round3, req)
-            # available_set = available_set_cuisine
-            available_set = available_set_cuisine.intersection(
-                available_set_same_department
-            )
-
-            # available_set = matched_user_filter(matchpool, available_set, user)
-
-            # pick a user from the available users
-            try:
-                # find match user in the available set
-                match_request = find_match_user(available_set)
-                Round3.remove(UserRequest.objects.get(user_id=match_request.user_id))
-
-                # for test can be removed
-                result3 = []
-                result3.append(user_id)
-                result3.append(match_request.user_id)
-                match_result3.append(result3)
-
-                # collect match information
-                request_result_3 = []
-                request_result_3.append(req)
-                request_result_3.append(match_request)
-                matched_user_request_3.append(request_result_3)
-            except Exception:
-                unmatched_user.append(req)
-    print(unmatched_user)
-
-    # Round4 cuisine match
-    Round4 = set(unmatched_user)
-    unmatched_user = []
-    for req in reqlist:
-        if req in Round4:
-            user_id = req.user_id
-            Round4.remove(req)
-            # find available users for this user(filter)
-            available_set_cuisine = cuisine_filter(Round4, req)
-            available_set = available_set_cuisine
-
-            # available_set = matched_user_filter(matchpool, available_set, user)
-
-            # pick a user from the available users
-            try:
-                # find match user in the available set
-                match_request = find_match_user(available_set)
-                Round4.remove(UserRequest.objects.get(user_id=match_request.user_id))
-
-                # for test can be removed
-                result4 = []
-                result4.append(user_id)
-                result4.append(match_request.user_id)
-                match_result4.append(result4)
-
-                # collect match information
-                request_result_4 = []
-                request_result_4.append(req)
-                request_result_4.append(match_request)
-                matched_user_request_4.append(request_result_4)
-            except Exception:
-                unmatched_user.append(req)
-    print(unmatched_user)
-
-    print(match_result1)
-    print(matched_user_request_1)
-    print(match_result2)
-    print(matched_user_request_2)
-    print(match_result3)
-    print(matched_user_request_3)
-    print(match_result4)
-    print(matched_user_request_4)
-    save_matches(
-        matched_user_request_1
-        + matched_user_request_2
-        + matched_user_request_3
-        + matched_user_request_4
-    )
+            matchpool.remove(user1)
+            matchpool.remove(user2)
+    for user in matchpool:
+        not_matched_user.append(user)
+    # print(matched_user)
+    # print(matched_user_request)
+    save_matches(matched_user_request)
+    # print(matchpool)
+    # print(not_matched_user)
+    # print(len(not_matched_user))
+    # for u in not_matched_user:
+    #     print("    ")
+    #     # import pdb
+    #     # pdb.set_trace()
+    #     # print(u.__dict__)
+    #     print(u.cuisines.all())
+    #     print(u.department)
+    #     print(u.user.department)
+    #     print(u.interests.all())
+    #     print("department: %d"%u.department_priority)
+    #     print("interest: %d"%u.interests_priority)
+    #     print("cuisine: %d"%u.cuisines_priority)
+    #     match_history = UserRequestMatch.objects.filter(
+    #         Q(user1=u.user) | Q(user2=u.user)
+    #     )
+    #     print(u.user)
+    #     print(match_history)
 
 
 match()

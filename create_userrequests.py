@@ -79,8 +79,8 @@ def save_users(userlist):
             department=user["department"][0].name,
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
-            department_priority =user["department_priority"],
-            interests_priority =user["interests_priority"],
+            department_priority=user["department_priority"],
+            interests_priority=user["interests_priority"],
         )
         r.save()
         for each in user["prefered cuisines"]:
