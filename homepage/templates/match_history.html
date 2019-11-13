@@ -26,8 +26,8 @@
 	<!-- Body -->
 	<div class="container">
 		<br>
+		<h3>Next Lunch</h3>
 		{% if next_lunch_matches%}
-			<h3>Next Lunch</h3>
 			<table class="table">
 				<thead>
 					<tr>
@@ -60,7 +60,8 @@
 			<div class="border-top my-3"></div>
 			<h5>No upcomming lunch</h5>
 		{% endif %}
-		
+		<br>
+		<br>
 		<h3>Lunch History</h3>
 		{% if past_lunch_macthes%}
 			
@@ -92,7 +93,7 @@
 			</table>
 		{% else %}
 			<div class="border-top my-3"></div>
-			<h5>No lunch histroy found</h5>
+			<h5>No lunch history found</h5>
 		{% endif %}
 
 	</div>

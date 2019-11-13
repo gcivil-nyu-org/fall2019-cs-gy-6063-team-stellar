@@ -392,4 +392,3 @@ if __name__ == "__main__":
     )
     user35.set_password("Stellar123!")
     user35.save()
-
