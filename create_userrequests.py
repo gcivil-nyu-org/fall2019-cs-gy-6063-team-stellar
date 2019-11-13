@@ -40,7 +40,6 @@ def generateuser(N):
         # department
         departments = Department.objects.filter(school=school_id)
         departments_count = departments.count()
-        print(departments_count)
         if departments_count == 0:
             continue
         start_id = departments.first().id

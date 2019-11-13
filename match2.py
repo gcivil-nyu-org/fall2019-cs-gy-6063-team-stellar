@@ -347,6 +347,7 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
             Q(user1=user_r.user) | Q(user2=user_r.user)
         )
         # print(match_history)
+
         for matched_user in match_history:
             # print(matched_user.user1.username)
             # print(matched_user.user2.username)
@@ -413,6 +414,10 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
                 match_matrix[matchlist.index(user_r)][matchlist.index(user_m)] = 1000
 
         match_matrix[matchlist.index(user_r)][matchlist.index(user_r)] = -1000
+        if not user_r.service_status:
+            for i in range(0,len(matchlist)):
+                match_matrix[matchlist.index(user_r)][i] = -1000
+                match_matrix[i][matchlist.index(user_r)] = -1000
     print(match_matrix)
     return match_matrix
 
