@@ -53,17 +53,13 @@ def merge():
 
 
 def check_ajax_department(request):
-    if request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_departments_homepage"
-    ):
+    if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
         return True
     return False
 
 
 def check_ajax_school(request):
-    if request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_school_homepage"
-    ):
+    if request.method == "GET" and "/ajax/load_school_homepage" in request.path:
         return True
     return False
 
@@ -157,7 +153,6 @@ def user_service(request):
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
-
                 day = Days_left.objects.get(user_id=logged_user.id)
                 day.days = Service_days[req.service_type]
                 day.save()
@@ -242,13 +237,18 @@ def match_history(request):
             matched_user_cuisines_instance = UserRequest.objects.get(
                 user=matched_user
             ).cuisines.all()
+            matched_user_interests_instances = UserRequest.objects.get(
+                user=matched_user
+            ).interests.all()
             matched_user_cuisines = ", ".join(
                 [cuisine.name for cuisine in matched_user_cuisines_instance]
             )
-            matched_restaurants = ", ".join(
-                [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
+            matched_user_interests = ", ".join(
+                [interest.name for interest in matched_user_interests_instances]
             )
-            print(matched_restaurants)
+            # matched_restaurants = ", ".join(
+            #     [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
+            # )
             match_dict = {
                 "match_time": match.match_time,
                 "matched_user_name": matched_user.first_name
@@ -258,7 +258,7 @@ def match_history(request):
                 "matched_user_school": matched_user.school,
                 "matched_user_department": matched_user.department,
                 "matched_user_cuisines": matched_user_cuisines,
-                "matched_restaurants": matched_restaurants,
+                "matched_user_interests": matched_user_interests,
             }
             if datetime.now(timezone.utc) <= match.match_time:
                 next_lunch_matches.append(match_dict)
@@ -309,6 +309,9 @@ def settings(request):
                 "preferred_interests": ", ".join(
                     [interest.name for interest in preffered_interests_instances]
                 ),
+                "department_priority": user_request_instance.department_priority,
+                "cuisines_priority": user_request_instance.cuisines_priority,
+                "interests_priority": user_request_instance.interests_priority,
             }
         except UserRequest.DoesNotExist:
             user_request = None
