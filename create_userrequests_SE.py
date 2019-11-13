@@ -32,12 +32,12 @@ def generateuser(N):
 
         # cuisine
         cuisines = Cuisine.objects.all()
-        p_cuisine_number = random.randint(1, 10)
+        p_cuisine_number = random.randint(4, 10)
         p_cuisine = random.sample(list(cuisines), p_cuisine_number)
         user["prefered cuisines"] = p_cuisine
 
         interests = Interests.objects.all()
-        p_interest_number = random.randint(1, 10)
+        p_interest_number = random.randint(2, 10)
         p_interests = random.sample(list(interests), p_interest_number)
         user["interests"] = p_interests
 
