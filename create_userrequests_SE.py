@@ -9,14 +9,7 @@ django.setup()
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 from user_account.models import LunchNinjaUser  # noqa: E402
-from homepage.models import (
-    UserRequest,
-    School,
-    Department,
-    Cuisine,
-    Days_left,
-    Interests,
-)  # noqa: E402
+from homepage.models import UserRequest, Cuisine, Days_left, Interests  # noqa: E402
 
 
 # This function generates random user requests
@@ -28,26 +21,14 @@ def generateuser(N):
         i += 1
         user = {}
         user["user"] = user_obj
-
-        # school
-        school_id = random.randint(1, School.objects.all().count())
-        school_id = random.randint(2, 2)
-        user["school"] = School.objects.filter(id=school_id)
+        user["school"] = "Tandon School of Engineering"
 
         # service type
         service_id = random.randint(1, 3)
         user["service_type"] = service[service_id]
 
         # department
-        departments = Department.objects.filter(school=school_id)
-        departments_count = departments.count()
-        if departments_count == 0:
-            continue
-        start_id = departments.first().id
-        department_index = random.randint(1, departments_count)
-        # department_index = random.randint(1, 6)
-        department_id = start_id + department_index - 1
-        user["department"] = Department.objects.filter(id=department_id)
+        user["department"] = "Computer Science"
 
         # cuisine
         cuisines = Cuisine.objects.all()
@@ -76,8 +57,8 @@ def save_users(userlist):
             user=user["user"],
             # service_type=user["service_type"],
             service_type="Daily",
-            school=user["school"][0].name,
-            department=user["department"][0].name,
+            school=user["school"],
+            department=user["department"],
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],
