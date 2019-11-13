@@ -250,9 +250,9 @@ def match_history(request):
             matched_user_interests = ", ".join(
                 [interest.name for interest in matched_user_interests_instances]
             )
-            matched_restaurants = ", ".join(
-                [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
-            )
+            # matched_restaurants = ", ".join(
+            #     [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
+            # )
             match_dict = {
                 "match_time": match.match_time,
                 "matched_user_name": matched_user.first_name
@@ -315,7 +315,7 @@ def settings(request):
                 ),
                 "department_priority": user_request_instance.department_priority,
                 "cuisines_priority": user_request_instance.cuisines_priority,
-                "interests_priority": user_request_instance.interests_priority
+                "interests_priority": user_request_instance.interests_priority,
             }
         except UserRequest.DoesNotExist:
             user_request = None
