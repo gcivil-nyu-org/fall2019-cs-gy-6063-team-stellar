@@ -1,4 +1,5 @@
 var multipleCancelButton = new Choices('#cuisineSelect', {
+    //https://bbbootstrap.com/snippets/multiselect-dropdown-list-83601849
     removeItemButton: true,
     maxItemCount:10,
     // searchResultLimit: 5,
@@ -6,6 +7,7 @@ var multipleCancelButton = new Choices('#cuisineSelect', {
 });
 
 var multipleCancelButton = new Choices('#interestSelect', {
+    //https://bbbootstrap.com/snippets/multiselect-dropdown-list-83601849
     removeItemButton: true,
     maxItemCount: 10,
     // searchResultLimit: 5,

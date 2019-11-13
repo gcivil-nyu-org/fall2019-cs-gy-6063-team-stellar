@@ -113,30 +113,32 @@ def get_yelp_link(restaurant):
     return yelp_link
 
 
-def compose_email(userRequest1, userRequest2, restaurants1, restaurants2, cuisine_names):
+def compose_email(
+    userRequest1, userRequest2, restaurants1, restaurants2, cuisine_names
+):
     html_content = (
-            "<p>Hi "
-            + userRequest1.user.first_name
-            + ",</p>"
-            + "<p>You got it! You have been matched with a NYU member:</p>"
-            + "<p><b>"
-            + userRequest2.user.first_name
-            + " "
-            + userRequest2.user.last_name
-            + "</b>("
-            + userRequest2.user.email
-            + ")"
-            + " from <b>"
-            + userRequest2.user.department
-            + " department </b>at <b>"
-            + userRequest2.user.school
-            + "</b>. "
-            + "</p> <br style=“line-height:2;”>"
-            + "<p>Your match was based on your preferred department and cuisine type(s):</p>"
-            + "<p><b>"
-            + str(cuisine_names)
-            + "</b></p><br style=“line-height:2;”>"
-            + "<p>Here are recommanded restaurants based on both of your locations and cuisines types:</p>"
+        "<p>Hi "
+        + userRequest1.user.first_name
+        + ",</p>"
+        + "<p>You got it! You have been matched with a NYU member:</p>"
+        + "<p><b>"
+        + userRequest2.user.first_name
+        + " "
+        + userRequest2.user.last_name
+        + "</b>("
+        + userRequest2.user.email
+        + ")"
+        + " from <b>"
+        + userRequest2.user.department
+        + " department </b>at <b>"
+        + userRequest2.user.school
+        + "</b>. "
+        + "</p> <br style=“line-height:2;”>"
+        + "<p>Your match was based on your preferred department and cuisine type(s):</p>"
+        + "<p><b>"
+        + str(cuisine_names)
+        + "</b></p><br style=“line-height:2;”>"
+        + "<p>Here are recommanded restaurants based on both of your locations and cuisines types:</p>"
     )
 
     # Add restaurant near school1
@@ -146,22 +148,22 @@ def compose_email(userRequest1, userRequest2, restaurants1, restaurants2, cuisin
             link = get_yelp_link(resturant)
 
             html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
             )
             address = (
-                    "Address: "
-                    + resturant.building
-                    + " "
-                    + resturant.street
-                    + ", "
-                    + resturant.borough
-                    + " "
-                    + str(resturant.zipcode)
+                "Address: "
+                + resturant.building
+                + " "
+                + resturant.street
+                + ", "
+                + resturant.borough
+                + " "
+                + str(resturant.zipcode)
             )
             html_content = html_content + "<p>" + address + "</p>"
             if not link == -1:
                 html_content = (
-                        html_content + "<p> Yelp link for this restaurant is: </p>"
+                    html_content + "<p> Yelp link for this restaurant is: </p>"
                 )
                 # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
                 html_content = html_content + "<div>" + link + "</div>"
@@ -169,29 +171,29 @@ def compose_email(userRequest1, userRequest2, restaurants1, restaurants2, cuisin
     # Add restaurant near school2
     if not len(restaurants2) == 0:
         html_content = (
-                html_content
-                + "<br style=“line-height:2;”><p><b><i>Restaurants near your lunch partner's school:</p>"
+            html_content
+            + "<br style=“line-height:2;”><p><b><i>Restaurants near your lunch partner's school:</p>"
         )
         for resturant in restaurants2:
             link = get_yelp_link(resturant)
 
             html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
             )
             address = (
-                    "Address: "
-                    + resturant.building
-                    + " "
-                    + resturant.street
-                    + ", "
-                    + resturant.borough
-                    + " "
-                    + str(resturant.zipcode)
+                "Address: "
+                + resturant.building
+                + " "
+                + resturant.street
+                + ", "
+                + resturant.borough
+                + " "
+                + str(resturant.zipcode)
             )
             html_content = html_content + "<p>" + address + "</p>"
             if not link == -1:
                 html_content = (
-                        html_content + "<p> Yelp link for this restaurant is: </p>"
+                    html_content + "<p> Yelp link for this restaurant is: </p>"
                 )
                 html_content = html_content + "<div>" + link + "</div>"
 
@@ -200,6 +202,7 @@ def compose_email(userRequest1, userRequest2, restaurants1, restaurants2, cuisin
     html_content = html_content + "<p>Bon appétit!</p>"
     html_content = html_content + "<p>Lunch Ninja</p>"
     return html_content
+
 
 def send_email(html_content, ical_atch, attendee):
     img_data = open("homepage/static/img/catcopy.jpg", "rb").read()
@@ -224,6 +227,7 @@ def send_email(html_content, ical_atch, attendee):
     time.sleep(5)
     print("sending out email")
     msg.send()
+
 
 def send_invitations(userRequest, userMatch):
     # Send email to matched users
@@ -256,14 +260,16 @@ def send_invitations(userRequest, userMatch):
 
     attendees = [user1Email, user2Email]
 
-    description = ("DESCRIPTION: Lunch meeting with"
-                   + userRequest[1].user.first_name
-                   + " "
-                   + userRequest[1].user.last_name
-                   + "</b>("
-                   + userRequest[1].user.email
-                   + ")"+ CRLF
-                   )
+    description = (
+        "DESCRIPTION: Lunch meeting with"
+        + userRequest[1].user.first_name
+        + " "
+        + userRequest[1].user.last_name
+        + "</b>("
+        + userRequest[1].user.email
+        + ")"
+        + CRLF
+    )
     attendee = ""
     for att in attendees:
         attendee += (
@@ -337,11 +343,14 @@ def send_invitations(userRequest, userMatch):
 
     to1 = [user1Email]
     to2 = [user2Email]
-    html_content = compose_email(userRequest[0], userRequest[1], restaurants1, restaurants2, cuisine_names)
+    html_content = compose_email(
+        userRequest[0], userRequest[1], restaurants1, restaurants2, cuisine_names
+    )
     send_email(html_content, ical_atch, to1)
-    html_content = compose_email(userRequest[1], userRequest[0], restaurants1, restaurants2, cuisine_names)
+    html_content = compose_email(
+        userRequest[1], userRequest[0], restaurants1, restaurants2, cuisine_names
+    )
     send_email(html_content, ical_atch, to2)
-
 
 
 def cuisine_filter(matchpool, req):
@@ -414,7 +423,7 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        send_invitations(match, request_match)
+        # send_invitations(match, request_match)
 
         # if user_id in matchpool:
         #     #remove selected user
