@@ -324,7 +324,7 @@ def test(request):
 
 
 def match(request):
-    run(["python", "match2.py"], shell=False, stdout=PIPE)
+    run(["python", "match.py"], shell=False, stdout=PIPE)
     return redirect("/homepage/test")
 
 

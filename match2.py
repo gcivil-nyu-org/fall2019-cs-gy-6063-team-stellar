@@ -474,3 +474,188 @@ def match():
 
 
 match()
+
+
+
+# def match():
+#     match_result1 = []
+#     match_result2 = []
+#     match_result3 = []
+#     match_result4 = []
+#
+#     matched_user_request_1 = []
+#     matched_user_request_2 = []
+#     matched_user_request_3 = []
+#     matched_user_request_4 = []
+#     matchpool, reqlist = get_matchpool()
+#     print("matchpool is")
+#     print(matchpool)
+#     # match each user
+#     # Round1 dual match
+#     Round1 = matchpool
+#     unmatched_user = []
+#     for req in reqlist:
+#         if req in Round1:
+#             user_id = req.user_id
+#             Round1.remove(req)
+#
+#             # find available users for this user(filter)
+#
+#             available_set_cuisine = cuisine_filter(Round1, req)
+#
+#             available_set_dual_department = dual_department_filter(Round1, req)
+#
+#             # available_set = available_set_cuisine
+#             available_set = available_set_cuisine.intersection(
+#                 available_set_dual_department
+#             )
+#
+#             # available_set = matched_user_filter(matchpool, available_set, user)
+#
+#             # pick a user from the available users
+#             try:
+#                 # find match user in the available set
+#                 match_request = find_match_user(available_set)
+#                 Round1.remove(UserRequest.objects.get(user_id=match_request.user_id))
+#
+#                 # for test can be removed
+#                 result1 = []
+#                 result1.append(user_id)
+#                 result1.append(match_request.user_id)
+#                 match_result1.append(result1)
+#
+#                 # collect match information
+#                 request_result_1 = []
+#                 request_result_1.append(req)
+#                 request_result_1.append(match_request)
+#                 matched_user_request_1.append(request_result_1)
+#             except Exception:
+#                 unmatched_user.append(req)
+#     # Round2 part match
+#     Round2 = set(unmatched_user)
+#     unmatched_user = []
+#     i = 0
+#     for req in reqlist:
+#         i += 1
+#         if req in Round2:
+#             user_id = req.user_id
+#             Round2.remove(req)
+#             # find available users for this user(filter)
+#             available_set_cuisine = cuisine_filter(Round2, req)
+#             available_set_single_department = single_department_filter(Round2, req)
+#             # available_set = available_set_cuisine
+#             available_set = available_set_cuisine.intersection(
+#                 available_set_single_department
+#             )
+#
+#             # available_set = matched_user_filter(matchpool, available_set, user)
+#
+#             # pick a user from the available users
+#             try:
+#                 # find match user in the available set
+#                 match_request = find_match_user(available_set)
+#                 Round2.remove(UserRequest.objects.get(user_id=match_request.user_id))
+#
+#                 # for test can be removed
+#                 result2 = []
+#                 result2.append(user_id)
+#                 result2.append(match_request.user_id)
+#                 match_result2.append(result2)
+#
+#                 # collect match information
+#                 request_result_2 = []
+#                 request_result_2.append(req)
+#                 request_result_2.append(match_request)
+#                 matched_user_request_2.append(request_result_2)
+#             except Exception:
+#                 unmatched_user.append(req)
+#                 Round2.add(req)
+#
+#     # Round3 part match
+#     Round3 = set(unmatched_user)
+#     unmatched_user = []
+#     for req in reqlist:
+#         if req in Round3:
+#             user_id = req.user_id
+#             Round3.remove(req)
+#             # find available users for this user(filter)
+#             available_set_cuisine = cuisine_filter(Round3, req)
+#
+#             available_set_same_department = same_department_filter(Round3, req)
+#             # available_set = available_set_cuisine
+#             available_set = available_set_cuisine.intersection(
+#                 available_set_same_department
+#             )
+#
+#             # available_set = matched_user_filter(matchpool, available_set, user)
+#
+#             # pick a user from the available users
+#             try:
+#                 # find match user in the available set
+#                 match_request = find_match_user(available_set)
+#                 Round3.remove(UserRequest.objects.get(user_id=match_request.user_id))
+#
+#                 # for test can be removed
+#                 result3 = []
+#                 result3.append(user_id)
+#                 result3.append(match_request.user_id)
+#                 match_result3.append(result3)
+#
+#                 # collect match information
+#                 request_result_3 = []
+#                 request_result_3.append(req)
+#                 request_result_3.append(match_request)
+#                 matched_user_request_3.append(request_result_3)
+#             except Exception:
+#                 unmatched_user.append(req)
+#     print(unmatched_user)
+#
+#     # Round4 cuisine match
+#     Round4 = set(unmatched_user)
+#     unmatched_user = []
+#     for req in reqlist:
+#         if req in Round4:
+#             user_id = req.user_id
+#             Round4.remove(req)
+#             # find available users for this user(filter)
+#             available_set_cuisine = cuisine_filter(Round4, req)
+#             available_set = available_set_cuisine
+#
+#             # available_set = matched_user_filter(matchpool, available_set, user)
+#
+#             # pick a user from the available users
+#             try:
+#                 # find match user in the available set
+#                 match_request = find_match_user(available_set)
+#                 Round4.remove(UserRequest.objects.get(user_id=match_request.user_id))
+#
+#                 # for test can be removed
+#                 result4 = []
+#                 result4.append(user_id)
+#                 result4.append(match_request.user_id)
+#                 match_result4.append(result4)
+#
+#                 # collect match information
+#                 request_result_4 = []
+#                 request_result_4.append(req)
+#                 request_result_4.append(match_request)
+#                 matched_user_request_4.append(request_result_4)
+#             except Exception:
+#                 unmatched_user.append(req)
+#     print(unmatched_user)
+#
+#     print(match_result1)
+#     print(matched_user_request_1)
+#     print(match_result2)
+#     print(matched_user_request_2)
+#     print(match_result3)
+#     print(matched_user_request_3)
+#     print(match_result4)
+#     print(matched_user_request_4)
+#     save_matches(
+#         matched_user_request_1
+#         + matched_user_request_2
+#         + matched_user_request_3
+#         + matched_user_request_4
+#     )
+
