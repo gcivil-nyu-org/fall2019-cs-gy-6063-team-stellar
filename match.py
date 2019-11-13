@@ -11,7 +11,6 @@ from email.mime.image import MIMEImage
 import datetime
 import requests
 import json
-import time
 from django.db.models import Q
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
@@ -140,51 +139,66 @@ def compose_email(
         + "<h3><b>Your match was based on your preferrences:</b></h3>"
     )
 
-
-
     if not len(cuisine_names) == 0:
-        html_content = html_content + "<p><b> Common cuisines: </b>" + str(cuisine_names) + "</p>"
+        html_content = (
+            html_content + "<p><b> Common cuisines: </b>" + str(cuisine_names) + "</p>"
+        )
     else:
-        html_content = html_content + "<p><b> Common cuisines: </b> You don't have any common cuisine.</p>"
+        html_content = (
+            html_content
+            + "<p><b> Common cuisines: </b> You don't have any common cuisine.</p>"
+        )
 
-    html_content = html_content \
-                   + "<p><b> School & Department: </b>" \
-                   + userRequest1.school \
-                   + ", "\
-                   + userRequest1.department\
-                   + "</p>"
+    html_content = (
+        html_content
+        + "<p><b> School & Department: </b>"
+        + userRequest1.school
+        + ", "
+        + userRequest1.department
+        + "</p>"
+    )
 
     if not len(interests_names) == 0:
-        html_content = html_content + "<p><b> Common conversation interests: </b>" +str(interests_names) + "</p>"
+        html_content = (
+            html_content
+            + "<p><b> Common conversation interests: </b>"
+            + str(interests_names)
+            + "</p>"
+        )
     else:
-        html_content = html_content + "<p><b> Common interests: </b> You don't have any common interests.</p>"
-
+        html_content = (
+            html_content
+            + "<p><b> Common interests: </b> You don't have any common interests.</p>"
+        )
 
     # Add restaurant near school1
     if not len(cuisine_names) == 0:
-        html_content = html_content + "<h3>Here are recommended restaurants based on both of your locations, cuisines types and NYC Health Department inspection score:</h3>"
+        html_content = (
+            html_content
+            + "<h3>Here are recommended restaurants based on both of your locations, cuisines types and NYC Health Department inspection score:</h3>"
+        )
         if not len(restaurants1) == 0:
             html_content = html_content + "<u><i>Restaurants near your school:</i></u>"
             for i, resturant in enumerate(restaurants1):
                 link = get_yelp_link(resturant)
 
                 html_content = (
-                        html_content
-                        + "<p><b>"
-                        + str(i + 1)
-                        + ") "
-                        + resturant.name.capitalize()
-                        + "</b></p>"
+                    html_content
+                    + "<p><b>"
+                    + str(i + 1)
+                    + ") "
+                    + resturant.name.capitalize()
+                    + "</b></p>"
                 )
                 address = (
-                        "Address: "
-                        + resturant.building
-                        + " "
-                        + resturant.street
-                        + ", "
-                        + resturant.borough
-                        + " "
-                        + str(resturant.zipcode)
+                    "Address: "
+                    + resturant.building
+                    + " "
+                    + resturant.street
+                    + ", "
+                    + resturant.borough
+                    + " "
+                    + str(resturant.zipcode)
                 )
                 html_content = html_content + "<p>" + address + "</p>"
                 if not link == -1:
@@ -194,29 +208,29 @@ def compose_email(
         # Add restaurant near school2
         if not len(restaurants2) == 0:
             html_content = (
-                    html_content
-                    + "<br style=“line-height:2;”<u><i>Restaurants near your lunch partner's school:</i></u>"
+                html_content
+                + "<br style=“line-height:2;”<u><i>Restaurants near your lunch partner's school:</i></u>"
             )
             for i, resturant in enumerate(restaurants2):
                 link = get_yelp_link(resturant)
 
                 html_content = (
-                        html_content
-                        + "<p><b>"
-                        + str(i + 1)
-                        + ") "
-                        + resturant.name.capitalize()
-                        + "</b></p>"
+                    html_content
+                    + "<p><b>"
+                    + str(i + 1)
+                    + ") "
+                    + resturant.name.capitalize()
+                    + "</b></p>"
                 )
                 address = (
-                        "Address: "
-                        + resturant.building
-                        + " "
-                        + resturant.street
-                        + ", "
-                        + resturant.borough
-                        + " "
-                        + str(resturant.zipcode)
+                    "Address: "
+                    + resturant.building
+                    + " "
+                    + resturant.street
+                    + ", "
+                    + resturant.borough
+                    + " "
+                    + str(resturant.zipcode)
                 )
                 html_content = html_content + "<p>" + address + "</p>"
                 if not link == -1:
