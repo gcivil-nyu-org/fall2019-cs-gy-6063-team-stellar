@@ -30,19 +30,17 @@
 						Login to lunch ninja
 					</span>
                     {% if message %}
-                    <div class="alert alert-warning">{{ message }}</div>
+                    	<div class="alert alert-warning">{{ message }}</div>
                     {% endif %}
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Invalid username">
-
-{#                        <input class="input100" type="text" name="username" placeholder="Username">#}
                         {{ login_form.username}}
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<span class="lnr lnr-user"></span>
 						</span>
 					</div>
+
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Password is required">
-{#						<input class="input100" type="password" name="pass" placeholder="Password">#}
                         {{ login_form.password }}
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
@@ -50,29 +48,11 @@
 						</span>
 					</div>
 
-
-					<div class="contact100-form-checkbox m-l-4">
-						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-						<label class="label-checkbox100" for="ckb1">
-							Remember me
-						</label>
-					</div>
-
 					<div class="container-login100-form-btn p-t-25">
 						<button type='submit' class="login100-form-btn">
 							Login
 						</button>
 					</div>
-
-{#					<a href="#" class="btn-face m-b-10">#}
-{#						<i class="fa fa-facebook-official"></i>#}
-{#						Facebook#}
-{#					</a>#}
-{##}
-{#					<a href="#" class="btn-google m-b-10">#}
-{#						<img src="{% static 'Signup_Signin/Signup_Signin/images/icons/icon-google.png'%}" alt="GOOGLE">#}
-{#						Google#}
-{#					</a>#}
 
 					<div class="text-center w-full p-t-115">
 						<span class="txt1">
