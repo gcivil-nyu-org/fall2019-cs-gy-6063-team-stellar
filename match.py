@@ -466,11 +466,11 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
     # print(matchlist)
     for user_r in matchlist:
 
-        cuisine_score = preference_score["cuisine"]
-        same_department_score = preference_score["same department"]
-        single_department_score = preference_score["single department"]
-        dual_department_score = preference_score["dual department"]
-        interest_score = preference_score["interest"]
+        cuisine_score = user_r.cuisines_priority*10
+        same_department_score = user_r.department_priority*10
+        single_department_score = user_r.department_priority*10
+        dual_department_score = 100
+        interest_score = user_r.interests_priority*10
         # print(user_r.user.username)
         match_history = UserRequestMatch.objects.filter(
             Q(user1=user_r.user) | Q(user2=user_r.user)
