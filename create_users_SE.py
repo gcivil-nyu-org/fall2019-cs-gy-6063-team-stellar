@@ -214,12 +214,6 @@ software_engineering = [
         "first_name": "Yonguk",
         "last_name": "Jeong",
     },
-    {
-        "username": "123@nyu.edu",
-        "email": "123@nyu.edu",
-        "first_name": "first",
-        "last_name": "last",
-    },
 ]
 
 
@@ -248,4 +242,4 @@ def generateuser(user_info):
 
 
 if __name__ == "__main__":
-    generateuser(team_stellar)
+    generateuser(team_stellar + software_engineering)
