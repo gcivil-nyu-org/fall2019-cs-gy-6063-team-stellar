@@ -5,3 +5,4 @@ python datasource/dataprocess/database.py
 python manage.py makemigrations homepage
 python manage.py makemigrations user_account
 python manage.py migrate
+#python add_data.py

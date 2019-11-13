@@ -29,6 +29,8 @@ def creat_department_tuple():
 class UserSignUpForm(UserCreationForm):
     SchoolChoice = creat_school_tuple()
     DepartmentChoice = creat_department_tuple()
+    # SchoolChoice =((),())
+    # DepartmentChoice = ((),())
     username = forms.CharField(
         label="username",
         max_length=128,

@@ -1,16 +1,20 @@
 from django.shortcuts import render, redirect
 from subprocess import run, PIPE
-
-# Days_left,
-
-
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserRequest, School, Cuisine, UserRequestMatch
-from .models import Department
+from .models import (
+    UserRequest,
+    School,
+    Cuisine,
+    UserRequestMatch,
+    Days_left,
+    Interests,
+    Department,
+)
+from datetime import datetime, timezone
 
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
@@ -26,7 +30,7 @@ def merge():
         school_list.append((s.name, s.id))
 
     for d in department:
-        department_list.append((d.name, d.school))
+        department_list.append((d.name, d.school.id))
 
     school_department = {}
     id_school = {}
@@ -78,7 +82,9 @@ def check_user_authenticated(request):
         return False
 
 
-def User_service_send_email_authenticated(request, service_type, cuisine_names):
+def User_service_send_email_authenticated(
+    request, service_type, cuisine_names, interests_names, school, department
+):
     email_subject = "Service Confirmation"
     message = render_to_string(
         "service_confirmation.html",
@@ -86,6 +92,9 @@ def User_service_send_email_authenticated(request, service_type, cuisine_names):
             "user": request.user.first_name,
             "service_type": service_type,
             "cuisines_selected": cuisine_names,
+            "selected_interests": interests_names,
+            "school": school,
+            "department": department,
         },
     )
     to_email = request.user.email
@@ -98,51 +107,86 @@ def index(request):
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
-
+        interests = Interests.objects.all()
         return render(
             request,
             "homepage.html",
-            {"cuisines": cuisine, "schools": school, "departments": department},
+            {
+                "cuisines": cuisine,
+                "schools": school,
+                "departments": department,
+                "interests": interests,
+            },
         )
     return redirect("/login/")
 
 
 def user_service(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
-
     if request.method == "POST":
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
             department = request.POST["department"]
+            cuisines_priority = request.POST.get("cuisines_priority")
+            department_priority = request.POST.get("department_priority")
+            interests_priority = request.POST.get("interests_priority")
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
 
-            logged_user = request.user
+            interests_ids = request.POST.getlist("interests[]")
+            interests_objects = Interests.objects.filter(id__in=interests_ids)
+            interests_names = ", ".join(
+                [interest.name for interest in interests_objects]
+            )
 
+            logged_user = request.user
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
                 req.school = school
                 req.department = department
+                req.cuisines_priority = cuisines_priority
+                req.department_priority = department_priority
+                req.interests_priority = interests_priority
                 req.cuisines.clear()
+                req.interests.clear()
+                req.time_stamp = datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
+                req.interests.add(*interests_objects)
+
+                day = Days_left.objects.get(user_id=logged_user.id)
+                day.days = Service_days[req.service_type]
+                day.save()
             except ObjectDoesNotExist:
                 req = UserRequest(
                     user=logged_user,
                     service_type=service_type,
                     school=school,
                     department=department,
+                    cuisines_priority=cuisines_priority,
+                    department_priority=department_priority,
+                    interests_priority=interests_priority,
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)
+                req.interests.add(*interests_objects)
+                days = Days_left(user=logged_user, days=Service_days[req.service_type])
+                days.save()
 
             # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
             # daysleft.save()
-            User_service_send_email_authenticated(request, service_type, cuisine_names)
+            User_service_send_email_authenticated(
+                request,
+                service_type,
+                cuisine_names,
+                interests_names,
+                school,
+                department,
+            )
         else:
             email_subject = "Service Confirmation"
             message = "Service selected"
@@ -169,6 +213,20 @@ def user_service(request):
         return redirect("/login/")
 
 
+def toggle_user_service(request):
+    if request.method == "POST":
+        if check_user_authenticated(request):
+            logged_user = request.user
+            req = UserRequest.objects.get(pk=logged_user)
+            req.service_status = (
+                True if request.POST["service_status"] == "true" else False
+            )
+            req.save()
+            return JsonResponse({"service_status": req.service_status}, safe=False)
+        else:
+            return redirect("/login/")
+
+
 def match_history(request):
     if check_login(request):
         # request.user
@@ -176,7 +234,8 @@ def match_history(request):
             Q(user1=request.user) | Q(user2=request.user)
         ).order_by("-match_time")
 
-        all_matches = []
+        next_lunch_matches = []
+        past_lunch_macthes = []
 
         for match in user_matches:
             matched_user = match.user2 if match.user1 == request.user else match.user1
@@ -186,6 +245,10 @@ def match_history(request):
             matched_user_cuisines = ", ".join(
                 [cuisine.name for cuisine in matched_user_cuisines_instance]
             )
+            matched_restaurants = ", ".join(
+                [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
+            )
+            print(matched_restaurants)
             match_dict = {
                 "match_time": match.match_time,
                 "matched_user_name": matched_user.first_name
@@ -195,21 +258,28 @@ def match_history(request):
                 "matched_user_school": matched_user.school,
                 "matched_user_department": matched_user.department,
                 "matched_user_cuisines": matched_user_cuisines,
+                "matched_restaurants": matched_restaurants,
             }
-            all_matches.append(match_dict)
+            if datetime.now(timezone.utc) <= match.match_time:
+                next_lunch_matches.append(match_dict)
+            else:
+                past_lunch_macthes.append(match_dict)
 
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
+        interests = Interests.objects.all()
 
         return render(
             request,
             "match_history.html",
             {
-                "matches": all_matches,
+                "next_lunch_matches": next_lunch_matches,
+                "past_lunch_macthes": past_lunch_macthes,
                 "cuisines": cuisine,
                 "schools": school,
                 "departments": department,
+                "interests": interests,
             },
         )
 
@@ -221,10 +291,12 @@ def settings(request):
         department = Department.objects.all()
         school = School.objects.all()
         cuisine = Cuisine.objects.all()
+        interests = Interests.objects.all()
 
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
             preffered_cuisines_instances = user_request_instance.cuisines.all()
+            preffered_interests_instances = user_request_instance.interests.all()
             user_request = {
                 "service_type": user_request_instance.service_type,
                 "service_start_date": user_request_instance.time_stamp,
@@ -233,6 +305,9 @@ def settings(request):
                 "service_status": user_request_instance.service_status,
                 "preferred_cuisines": ", ".join(
                     [cuisine.name for cuisine in preffered_cuisines_instances]
+                ),
+                "preferred_interests": ", ".join(
+                    [interest.name for interest in preffered_interests_instances]
                 ),
             }
         except UserRequest.DoesNotExist:
@@ -246,6 +321,7 @@ def settings(request):
                 "schools": school,
                 "departments": department,
                 "user_request": user_request,
+                "interests": interests,
             },
         )
     return redirect("/login/")

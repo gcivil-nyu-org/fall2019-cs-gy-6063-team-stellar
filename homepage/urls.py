@@ -7,6 +7,7 @@ urlpatterns = [
     path("matchHistory/", views.match_history),
     path("homepage/test/", views.test),
     path("settings/", views.settings),
+    path("toggle-service/", views.toggle_user_service),
     path("homepage/test/match", views.match),
     path("homepage/test/create_users", views.create_users),
     path("homepage/test/create_ur", views.create_ur),

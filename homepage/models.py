@@ -6,20 +6,10 @@ from django.utils import timezone
 m_state = False
 
 
-class Department(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
-    school = models.IntegerField(blank=True, null=True)
-    description = models.CharField(max_length=100, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        managed = m_state
-
-
 class School(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
     def __str__(self):
         return self.name
@@ -28,17 +18,10 @@ class School(models.Model):
         managed = m_state
 
 
-class Restaurant(models.Model):
+class Department(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
-    cuisine = models.CharField(max_length=100, blank=True, null=True)
-    score = models.IntegerField(blank=True, null=True)
-    borough = models.CharField(max_length=100, blank=True, null=True)
-    building = models.CharField(max_length=100, blank=True, null=True)
-    street = models.CharField(max_length=100, blank=True, null=True)
-    zipcode = models.CharField(max_length=100, blank=True, null=True)
-    phone = models.CharField(max_length=100, blank=True, null=True)
-    latitude = models.CharField(max_length=100, blank=True, null=True)
-    longitude = models.CharField(max_length=100, blank=True, null=True)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    description = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -49,6 +32,36 @@ class Restaurant(models.Model):
 
 class Cuisine(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        managed = m_state
+
+
+class Interests(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        managed = m_state
+
+
+class Restaurant(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    cuisine = models.CharField(max_length=100, blank=True, null=True)
+    score = models.IntegerField(blank=True, null=True)
+    borough = models.CharField(max_length=100, blank=True, null=True)
+    building = models.CharField(max_length=100, blank=True, null=True)
+    street = models.CharField(max_length=100, blank=True, null=True)
+    zipcode = models.CharField(max_length=100, blank=True, null=True)
+    phone = models.CharField(max_length=100, blank=True, null=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
     def __str__(self):
         return self.name
@@ -77,10 +90,14 @@ class UserRequest(models.Model):
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     cuisines = models.ManyToManyField(Cuisine, blank=True)
+    interests = models.ManyToManyField(Interests, blank=True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
     service_status = models.BooleanField(default=True)
     match_status = models.BooleanField(default=False)
+    cuisines_priority = models.IntegerField(default=10)
+    department_priority = models.IntegerField(default=10)
+    interests_priority = models.IntegerField(default=10)
 
     def __str__(self):
         return self.service_type
@@ -91,7 +108,7 @@ class UserRequest(models.Model):
 
 def in_one_day():
     next_day = timezone.now() + timedelta(days=1)
-    new_period = next_day.replace(hour=23, minute=30)
+    new_period = next_day.replace(hour=12, minute=00)
     return new_period
 
 
@@ -107,6 +124,10 @@ class UserRequestMatch(models.Model):
         related_name="%(class)s_user2",
     )
     match_time = models.DateTimeField(default=in_one_day)
+    restaurants = models.ManyToManyField(Restaurant, blank=True)
 
     def __str__(self):
         return "Match for " + self.user1.username + " and " + self.user2.username
+
+
+# UserRequestMatch.objects.

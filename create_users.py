@@ -18,19 +18,23 @@ def generateuser(N):
     for user_id in range(count_start, count_end):
         un = "ut" + str(user_id)
         useremail = un + "@nyu.edu"
+        print(useremail)
         password = "Stellar123!"
 
         # school
-        school_id = random.randint(1, School.objects.all().count() - 1)
+        school_id = random.randint(1, School.objects.all().count())
+        # school_id = random.randint(2, 2)
         school = School.objects.filter(id=school_id)[0].name
 
         # department
         departments = Department.objects.filter(school=school_id)
         departments_count = departments.count()
         if departments_count == 0:
+
             continue
         start_id = departments.first().id
         department_index = random.randint(1, departments_count)
+        # department_index = random.randint(1, 6)
         department_id = start_id + department_index - 1
         department = Department.objects.filter(id=department_id)[0].name
 
@@ -51,4 +55,26 @@ def generateuser(N):
 
 
 if __name__ == "__main__":
+    user = LunchNinjaUser(
+        username="yixin",
+        email="yh3244@nyu.edu",
+        school="Tandon School of Engineering",
+        department="Computer Science",
+        first_name="yx",
+        last_name="h",
+        is_active=True,
+    )
+    user.set_password("1234mnbv")
+    user.save()
+    # user2 = LunchNinjaUser(
+    #     username="up",
+    #     email="up293@nyu.edu",
+    #     school="Tandon School of Engineering",
+    #     department="Computer Science",
+    #     first_name="Utkarsh",
+    #     last_name="P",
+    #     is_active=True,
+    # )
+    # user2.set_password("Stellar")
+    # user2.save()
     generateuser(20)

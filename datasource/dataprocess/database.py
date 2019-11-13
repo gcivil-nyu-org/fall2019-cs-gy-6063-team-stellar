@@ -24,11 +24,13 @@ def deg2rad(deg):
     return deg * (math.pi / 180)
 
 
-def importschool():
+def importSchool():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_school")
-    cur.execute("CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY)")
+    cur.execute(
+        "CREATE TABLE homepage_school (name VARCHAR, id INTEGER PRIMARY KEY, latitude DECIMAL , longitude DECIMAL )"
+    )
 
     filepath = directory_path + "/../School.csv"
     with open(
@@ -36,20 +38,26 @@ def importschool():
     ) as fin:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr = csv.DictReader(fin)  # comma is default delimiter
-        to_db = [(i["schoolname"], i["id"]) for i in dr]
-    cur.executemany("INSERT INTO homepage_school (name, id) VALUES (?, ?);", to_db)
+        to_db = [
+            (i["schoolname"], i["id"], float(i["latitude"]), float(i["longitude"]))
+            for i in dr
+        ]
+    cur.executemany(
+        "INSERT INTO homepage_school (name, id, latitude, longitude) VALUES (?, ?, ?, ?);",
+        to_db,
+    )
     conn.commit()
     conn.close()
     print("imported school data")
 
 
-def importdepartment():
+def importDepartment():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_department")
     cur.execute("DROP TABLE IF EXISTS department")
     cur.execute(
-        "CREATE TABLE homepage_department (name VARCHAR, school INTEGER, id INTEGER PRIMARY KEY, description VARCHAR)"
+        "CREATE TABLE homepage_department (name VARCHAR, school_id INTEGER, id INTEGER PRIMARY KEY, description VARCHAR, FOREIGN KEY(school_id) REFERENCES homepage_school(id))"  # noqa: E501
     )
     filepath2 = directory_path + "/../Department.csv"
     with open(
@@ -60,7 +68,7 @@ def importdepartment():
             (i["departmentname"], i["School"], i["id"], i["Description"]) for i in dr2
         ]
     cur.executemany(
-        "INSERT INTO homepage_department (name, school, id, description) VALUES (?, ?, ?, ?);",
+        "INSERT INTO homepage_department (name, school_id, id, description) VALUES (?, ?, ?, ?);",
         to_db2,
     )
     conn.commit()
@@ -68,12 +76,12 @@ def importdepartment():
     print("imported department data")
 
 
-def importrestaurant():
+def importRestaurant():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_restaurant")
     cur.execute(
-        "CREATE TABLE homepage_restaurant (id INTEGER PRIMNARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude float, longitude float)"  # noqa: E501
+        "CREATE TABLE homepage_restaurant (id INTEGER PRIMARY KEY, name VARCHAR, cuisine VARCHAR, score INTEGER, borough VARCHAR, building VARCHAR, street VARCHAR, zipcode INTEGER, phone INTEGER, latitude DECIMAL , longitude DECIMAL)"  # noqa: E501
     )
     filepath3 = (
         directory_path + "/../DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
@@ -84,8 +92,11 @@ def importrestaurant():
     ) as fin3:  # `with` statement available in 2.5+
         # csv.DictReader uses first line in file for column headings by default
         dr3 = csv.DictReader(fin3)  # comma is default delimiter
-        lat = [40.694340, 40.729010, 40.737570]
-        log = [-73.986110, -73.996470, -73.978070]
+        # Latitude and longitude for tandon: 40.6942, -73.9866
+        # college of art and science: 40.7247, -73.9903
+        # college of dentistry: 40.7380, -73.9781
+        lat = [40.6942, 40.7247, 40.7380]
+        log = [-73.9866, -73.9903, -73.9781]
         for i in dr3:
             if (
                 i["Latitude"] in ("", None)
@@ -123,8 +134,8 @@ def importrestaurant():
                                 i["STREET"],
                                 i["ZIPCODE"],
                                 i["PHONE"],
-                                i["Latitude"],
-                                i["Longitude"],
+                                float(i["Latitude"]),
+                                float(i["Longitude"]),
                             ),
                         )
                     else:
@@ -145,10 +156,9 @@ def importrestaurant():
     print("imported restaurant data")
 
 
-def importcuisine():
+def importCuisine():
     conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS cuisine")
     cur.execute("DROP TABLE IF EXISTS homepage_cuisine")
     cur.execute("CREATE TABLE homepage_cuisine (name VARCHAR, id INTEGER PRIMARY KEY)")
     cur.execute("SELECT DISTINCT cuisine FROM homepage_restaurant")
@@ -165,11 +175,44 @@ def importcuisine():
     print("imported cuisine data")
 
 
+def importInterests():
+    conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS homepage_interests")
+    cur.execute(
+        "CREATE TABLE homepage_interests (name VARCHAR, id INTEGER PRIMARY KEY)"
+    )
+
+    interests = [
+        "casual_conversation",
+        "homework",
+        "exam-prep",
+        "networking",
+        "politics",
+        "sports",
+        "entertainment",
+        "theatre ",
+        "nyu-events",
+        "parties",
+    ]
+    id = 0
+    for interest in interests:
+        cur.execute(
+            "INSERT INTO homepage_interests (name, id) VALUES (?, ?)", (interest, id)
+        )
+        id = id + 1
+
+    conn.commit()
+    conn.close()
+    print("imported interested data")
+
+
 def main():
-    importschool()
-    importdepartment()
-    importrestaurant()
-    importcuisine()
+    importSchool()
+    importDepartment()
+    importRestaurant()
+    importCuisine()
+    importInterests()
     return ()
 
 
