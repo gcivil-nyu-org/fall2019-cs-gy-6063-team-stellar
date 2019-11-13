@@ -128,6 +128,9 @@ def user_service(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
             department = request.POST["department"]
+            cuisines_priority = request.POST.get("cuisines_priority")
+            department_priority = request.POST.get("department_priority")
+            interests_priority = request.POST.get("interests_priority")
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
@@ -139,13 +142,15 @@ def user_service(request):
             )
 
             logged_user = request.user
-
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
                 req.school = school
                 req.department = department
+                req.cuisines_priority = cuisines_priority
+                req.department_priority = department_priority
+                req.interests_priority = interests_priority
                 req.cuisines.clear()
                 req.interests.clear()
                 req.time_stamp = datetime.now()
@@ -162,6 +167,9 @@ def user_service(request):
                     service_type=service_type,
                     school=school,
                     department=department,
+                    cuisines_priority=cuisines_priority,
+                    department_priority=department_priority,
+                    interests_priority=interests_priority,
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)

@@ -12,7 +12,7 @@
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h4>Step 1 of 4</h4>
+                        <h4>Step 1 of 5</h4>
                         Select preferred type of service:
                         <div class="dropdown" class="col-md-12">
                            <select class="form-control" type="text" id="serviceSelect" name="serviceSelect">
@@ -49,7 +49,7 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h4>Step 2 of 4</h4>
+                        <h4>Step 2 of 5</h4>
                         <div class="dropdown row">
                             <div class="col-md-6">
                                  Select preferred school:
@@ -100,7 +100,7 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h4>Step 3 of 4</h4>
+                        <h4>Step 3 of 5</h4>
                         <p>Select preferred Cuisine:</p>
                         <div class="col-md-12"> 
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
@@ -129,7 +129,7 @@
 </div>
 
 <!-- Interest select Modal -->
-<div class="modal fade" data-backdrop="static" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade"  id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
@@ -142,7 +142,7 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h4>Step 4 of 4</h4>
+                        <h4>Step 4 of 5</h4>
                         <p>Select preferred conversation type:</p>
                         
                         <div class="col-md-12"> 
@@ -151,6 +151,64 @@
                                     <option value="{{ interest.id }}" name="{{ interest.name }}">{{ interest.name }}</option>
                               {% endfor %}
                            </select> 
+                        </div>
+                        <br>
+
+                     </div>
+                     <div class="form-top-right">
+                        <i class="fa fa-twitter"></i>
+                     </div>
+                  </div>
+                   <div class="modal-footer">
+                     <button type="button" class="btn btn-warning btn-prev">Prev</button>
+                     <button type="submit" class="btn btn-warning btn-next">Next</button>
+
+                     {% comment %} <button type="submit" class="btn btn-warning">Submit</button> {% endcomment %}
+                     <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                  </div>
+               </fieldset>
+            </form>
+             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Preference priority modal -->
+<div class="modal fade" data-backdrop="static" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h3 class="modal-title" id="myModalLabel">Select preference priority</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         </div>
+         <div class="modal-body">
+            <form id="priority_select_form">
+               {% csrf_token %}
+               <fieldset>
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <h4>Step 5 of 5</h4>
+                        <p>Select preferred priority of each preference selected:</p>
+                        <div class="col-md-8"> 
+                           
+                           <div class="range-slider" id="department_slider" >
+                              Select priority for department:
+                              <input class="range-slider__range" id="department_slider_range" type="range" value="10" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="department_slider_value">10</span>
+                           </div>
+                           <br>
+                           <div class="range-slider" id="cuisine_slider" >
+                              Select priority for cuisines:
+                              <input class="range-slider__range" id="cuisine_slider_range" type="range" value="10" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="cuisine_slider_value">10</span>
+                           </div>
+                           <br>
+                           <div class="range-slider" id="interest_slider" >
+                              Select priority for conversation interests:
+                              <input class="range-slider__range" id="interest_slider_range" type="range" value="10" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="interest_slider_value">10</span>
+                           </div>
                         </div>
                         <br>
 

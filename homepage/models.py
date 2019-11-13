@@ -95,6 +95,9 @@ class UserRequest(models.Model):
     department = models.CharField(max_length=200, blank=True, null=True)
     service_status = models.BooleanField(default=True)
     match_status = models.BooleanField(default=False)
+    cuisines_priority = models.IntegerField(default=10)
+    department_priority = models.IntegerField(default=10)
+    interests_priority = models.IntegerField(default=10)
 
     def __str__(self):
         return self.service_type
