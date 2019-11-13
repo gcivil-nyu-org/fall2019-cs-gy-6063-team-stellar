@@ -53,17 +53,13 @@ def merge():
 
 
 def check_ajax_department(request):
-    if request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_departments_homepage"
-    ):
+    if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
         return True
     return False
 
 
 def check_ajax_school(request):
-    if request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_school_homepage"
-    ):
+    if request.method == "GET" and "/ajax/load_school_homepage" in request.path:
         return True
     return False
 
