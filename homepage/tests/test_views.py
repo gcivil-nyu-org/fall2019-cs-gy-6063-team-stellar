@@ -390,7 +390,7 @@ class MatchHistoryTest(TestCase):
                     interest_for_mock("networking"),
                     interest_for_mock("homework"),
                 ]
-                
+
         class cuisine_for_mock:
             def __init__(self, name):
                 self.name = name
