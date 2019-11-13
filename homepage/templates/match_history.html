@@ -34,11 +34,10 @@
 					<th scope="col">#</th>
 					<th scope="col">Name</th>
 					<th scope="col">Email Id</th>
-					<th scope="col">NYU School</th>
-					<th scope="col">NYU Department</th>
+					<th scope="col">NYU School & Department</th>
+					<th scope="col">Preffered conversation interests</th>
 					<th scope="col">Preffered cuisines</th>
-					<th scope="col">Meeting Day</th>
-                        <th scope="col">Recommended restaurants</th>
+					<th scope="col">Lunch Day</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -47,11 +46,10 @@
 							<th scope="row" data-id=forloop.counter data-match=match data-toggle="modal" data-target="#MatchhistoryModal" href="#MatchhistoryModal">{{forloop.counter}}</th>
 							<td>{{match.matched_user_name}}</td>
 							<td>{{match.matched_email}}</td>
-							<td>{{match.matched_user_school}}</td>
-							<td>{{match.matched_user_department}}</td>
+							<td>{{match.matched_user_school}}: {{match.matched_user_department}}</td>
+							<td>{{match.matched_user_interests}}</td>
 							<td>{{match.matched_user_cuisines}}</td>
 							<td>{{match.match_time | date:"jS F Y"}}</td>
-                            <td>{{match.matched_restaurants}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -71,10 +69,10 @@
 					<th scope="col">#</th>
 					<th scope="col">Name</th>
 					<th scope="col">Email Id</th>
-					<th scope="col">NYU School</th>
-					<th scope="col">NYU Department</th>
+					<th scope="col">NYU School & Department</th>
+					<th scope="col">Preffered conversation interests</th>
 					<th scope="col">Preffered cuisines</th>
-					<th scope="col">Meeting Day</th>
+					<th scope="col">Lunch Day</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -83,8 +81,8 @@
 							<th scope="row">{{forloop.counter}}</th>
 							<td>{{match.matched_user_name}}</td>
 							<td>{{match.matched_email}}</td>
-							<td>{{match.matched_user_school}}</td>
-							<td>{{match.matched_user_department}}</td>
+							<td>{{match.matched_user_school}}: {{match.matched_user_department}}</td>
+							<td>{{match.matched_user_interests}}</td>
 							<td>{{match.matched_user_cuisines}}</td>
 							<td>{{match.match_time | date:"jS F Y"}}</td>
 						</tr>
@@ -98,36 +96,20 @@
 
 	</div>
 
-
-    <div class="modal fade" id="MatchhistoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Service</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         </div>
-         <div class="modal-body">
-{#            <table class="table">#}
-{#				<thead>#}
-{#					<tr>#}
-{#					    <th scope="col">#</th>#}
-{#                        <th scope="col">Restaurant</th>#}
-{#					</tr>#}
-{#				</thead>#}
-{#				<tbody>#}
-{#                {% for r in restaurant %}#}
-{##}
-{#                    <tr>#}
-{#                        <th scope="row">{{forloop.counter}}</th>#}
-{#                        <td>{{matched_restaurants}}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#				</tbody>#}
-			</table>
-         </div>
-      </div>
-   </div>
-</div>
+{% comment %} 
+	<div class="modal fade" id="MatchhistoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="myModalLabel">Service</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				</table>
+			</div>
+		</div>
+	</div>
+	</div>
 
 
     <script>
@@ -137,7 +119,8 @@
             window.alert(matches)
             $(".modal-body #restaurant").val( matches.restaurants );
         });
-    </script>
+    </script> {% endcomment %}
+
 	<!-- Footer -->
 	{% comment %} {% include "footer.html" %} {% endcomment %}
 </body>

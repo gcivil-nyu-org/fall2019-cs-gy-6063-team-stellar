@@ -45,10 +45,22 @@
 						<tr>
 							<td>{{user_request.service_type}}</td>
 							<td>{{user_request.service_start_date  | date:"jS F Y"}}</td>
-							<td>{{user_request.preffered_school}}</td>
-							<td>{{user_request.preffered_department}}</td>
-							<td>{{user_request.preferred_interests}}</td>
-							<td>{{user_request.preferred_cuisines}}</td>
+							<td>
+								<i><p class="preferrence_priority">Priority: {{user_request.department_priority}}/10</p></i>
+								{{user_request.preffered_school}}
+							</td>
+							<td>
+								<i><p class="preferrence_priority" >Priority: {{user_request.department_priority}}/10</p></i>
+								{{user_request.preffered_department}} 
+							</td>
+							<td>
+								<i><p class="preferrence_priority" >Priority: {{user_request.interests_priority}}/10</p></i>
+								{{user_request.preferred_interests}}
+							</td>
+							<td>
+								<i><p class="preferrence_priority" >Priority: {{user_request.cuisines_priority}}/10</p></i>
+								{{user_request.preferred_cuisines}}
+							</td>
 							<td>
 								<label class="switch">
 									<input id="serviceToggle" type="checkbox">
