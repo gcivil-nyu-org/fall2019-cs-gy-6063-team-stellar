@@ -46,7 +46,7 @@ var rangeSlider = function () {
         });
 
         cuisineRange.on('input', function () {
-            service_request["cuisine_priority"] = this.value;
+            service_request["cuisines_priority"] = this.value;
             $(this).next(cuisineValue).html(this.value);
         });
     });
@@ -63,7 +63,7 @@ var rangeSlider = function () {
         });
 
         interestRange.on('input', function () {
-            service_request["interest_priority"] = this.value
+            service_request["interests_priority"] = this.value
             $(this).next(interestValue).html(this.value);
         });
     });
