@@ -292,6 +292,9 @@ class SettingViewTest(TestCase):
                 self.service_status = True
                 self.cuisines = cuisines_for_mock
                 self.interests = interests_for_mock
+                self.department_priority = 9
+                self.cuisines_priority = 4
+                self.interests_priority = 8
 
         return userObj()
 
@@ -367,6 +370,27 @@ class MatchHistoryTest(TestCase):
         return result()
 
     def User_request_Obj(**kargs):
+        class interest_for_mock:
+            def __init__(self, name):
+                self.name = name
+
+            def add(**kargs):
+                return "Added"
+
+            def clear(**kargs):
+                return "Cleared"
+
+        class interests_for_mock:
+            def __init__(self, name):
+                pass
+
+            def all(**kargs):
+                return [
+                    interest_for_mock("parties"),
+                    interest_for_mock("networking"),
+                    interest_for_mock("homework"),
+                ]
+                
         class cuisine_for_mock:
             def __init__(self, name):
                 self.name = name
@@ -391,6 +415,7 @@ class MatchHistoryTest(TestCase):
                 self.department = "Computer Science"
                 self.service_status = True
                 self.cuisines = cuisines_for_mock
+                self.interests = interests_for_mock
 
         return userObj()
 
