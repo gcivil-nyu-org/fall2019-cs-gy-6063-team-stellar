@@ -2,6 +2,8 @@ import os
 import math
 import random
 import django
+from django.utils import timezone
+from datetime import timedelta
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
@@ -123,6 +125,10 @@ def same_department_filter(matchpool, req):
     available_set = available_set.intersection(matchpool)
     return available_set
 
+def day_before():
+    next_day = timezone.now() - timedelta(days=random.randint(1,10))
+    new_period = next_day.replace(hour=12, minute=00)
+    return new_period
 
 def save_matches(matches):
     # save matches to user_request_match table
@@ -134,9 +140,10 @@ def save_matches(matches):
 
         user1Cuisines = ur1.cuisines.all()
         user2Cuisines = ur2.cuisines.all()
+
         commonCuisines = list(user1Cuisines & user2Cuisines)
         restaurants1, restaurants2 = recommend_restaurants(user1, user2, commonCuisines)
-        request_match = UserRequestMatch(user1=user1, user2=user2)
+        request_match = UserRequestMatch(user1=user1, user2=user2, match_time=day_before())
         request_match.save()
         for r in restaurants1:
             request_match.restaurants.add(r)
