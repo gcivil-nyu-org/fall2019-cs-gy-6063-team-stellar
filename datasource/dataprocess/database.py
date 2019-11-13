@@ -184,16 +184,20 @@ def importInterests():
     )
 
     interests = [
-        "casual_conversation",
-        "homework",
-        "exam-prep",
-        "networking",
-        "politics",
-        "sports",
-        "entertainment",
-        "theatre ",
-        "nyu-events",
-        "parties",
+        "Casual Conversation",
+        "Exam Preparation",
+        "Politics",
+        "College football",
+        "Arts",
+        "NYU Clubs",
+        "Course tutor",
+        "Job Search",
+        "Entrepreneurship",
+        "City Tour",
+        "Music",
+        "Technology",
+        "Outdoor Events",
+        "Food",
     ]
     id = 0
     for interest in interests:
