@@ -1,12 +1,17 @@
-
-$(document).ready(function () {
-    $('select[multiple]').multiselect();
+var multipleCancelButton = new Choices('#cuisineSelect', {
+    removeItemButton: true,
+    maxItemCount:10,
+    // searchResultLimit: 5,
+    // renderChoiceLimit: 20
 });
 
-$('#cuisineSelect').multiselect({
-    columns: 1,
-    placeholder: 'Select Cuisines'
+var multipleCancelButton = new Choices('#interestSelect', {
+    removeItemButton: true,
+    maxItemCount: 10,
+    // searchResultLimit: 5,
+    // renderChoiceLimit: 20
 });
+
 
 $("div[id^='myModal']").each(function () {
     var currentModal = $(this);
@@ -16,10 +21,23 @@ $("div[id^='myModal']").each(function () {
         cuisines: []
     };
 
-    //click next
-    currentModal.find('.btn-next').click(function () {
+    function showNextModal(){
         currentModal.modal('hide');
         currentModal.closest("div[id^='myModal']").nextAll("div[id^='myModal']").first().modal('show');
+    }
+
+    //click next
+    currentModal.find('.btn-next').click(function () {
+        if (currentModal[0].id == "myModal3"){
+            if(! $("#cuisineSelect").val().length){
+                alert("Please select atleast 1 cuisine");
+            }else{
+                showNextModal();
+            }
+        }else{
+            showNextModal();
+        }
+        
     });
 
     //click prev
@@ -95,13 +113,17 @@ $(document).on('submit', '#interest_select_form', function (e) {
     e.preventDefault();
     service_request['interests'] = $("#interestSelect").val();
     service_request['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-    $.ajax({
-        type: 'POST',
-        url: '/serviceRequest/',
-        data: service_request,
-        success: function () {
-            window.location.href = "/settings/";
-            alert("Thank you for using Lunch Ninja! We'll send you a follow-up email when your matching is ready.");
-        }
-    })
+    if (!$("#interestSelect").val().length) {
+        alert("Please select atleast 1 interest");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: '/serviceRequest/',
+            data: service_request,
+            success: function () {
+                window.location.href = "/settings/";
+                alert("Thank you for using Lunch Ninja! We'll send you a follow-up email when your matching is ready.");
+            }
+        })
+    }
 })

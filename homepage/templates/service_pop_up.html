@@ -3,7 +3,7 @@
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Service</h4>
+            <h3 class="modal-title" id="myModalLabel">Service</h3>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body">
@@ -12,16 +12,17 @@
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h3>Step 1 of 4</h3>
+                        <h4>Step 1 of 4</h4>
                         Select preferred type of service:
-                        <div class="dropdown">
-                           <select type="text" id="serviceSelect" name="serviceSelect">
+                        <div class="dropdown" class="col-md-12">
+                           <select class="form-control" type="text" id="serviceSelect" name="serviceSelect">
                               <option selected>Daily</option>
                               <option>Weekly</option>
                               <option>Monthly</option>
                            </select> 
                         </div>
                      </div>
+                     <br>
                   </div>
                </fieldset>
                <div class="modal-footer">
@@ -39,7 +40,7 @@
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">School and Department</h4>
+            <h3 class="modal-title" id="myModalLabel">School and Department</h3>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body">
@@ -48,21 +49,27 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h3>Step 2 of 4</h3>
-                        <p>Select preferred school and department</p>
-                        <div class="dropdown">
-                            <select size = "1" type="text" id="schoolSelect" name="schoolSelect" width="300" style="width: 300px">
-                              {% for school in schools %}
-                                    <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
-                              {% endfor %}
-                           </select> 
-                           <select type="text" id="departmentSelect" name="departmentSelect" width="300" style="width: 300px">
-                              {% for department in departments %}
-                                    <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
-                              {% endfor %}
-                           </select> 
+                        <h4>Step 2 of 4</h4>
+                        <div class="dropdown row">
+                            <div class="col-md-6">
+                                 Select preferred school:
+                                 <select class="form-control" type="text" id="schoolSelect" name="schoolSelect">
+                                    {% for school in schools %}
+                                          <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
+                                    {% endfor %}
+                                 </select> 
+                            </div>
+                            <div class="col-md-6">
+                                 Select preferred department:
+                                 <select class="form-control" type="text" id="departmentSelect" name="departmentSelect">
+                                    {% for department in departments %}
+                                          <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
+                                    {% endfor %}
+                                 </select> 
+                            </div>
                         </div>
                      </div>
+                     <br>
                      <div class="form-top-right">
                         <i class="fa fa-key"></i>
                      </div>
@@ -84,7 +91,7 @@
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Cuisine</h4>
+            <h3 class="modal-title" id="myModalLabel">Cuisine</h3>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body">
@@ -93,15 +100,16 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h3>Step 3 of 4</h3>
+                        <h4>Step 3 of 4</h4>
                         <p>Select preferred Cuisine:</p>
-                        <div class="dropdown">
-                            <select size = "4" type="text" multiple id="cuisineSelect" name="cuisineSelect" width="300" style="width: 300px" >
+                        <div class="col-md-12"> 
+                           <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
                               {% for cuisine in cuisines %}
-                                    <option value="{{ cuisine.id }}" name="{{ cuisine.name }}" selected>{{ cuisine.name }}</option>
+                                 <option value="{{ cuisine.id }}" name="{{ cuisine.name }}">{{ cuisine.name }}</option>
                               {% endfor %}
                            </select> 
                         </div>
+                        <br>
                      </div>
                      <div class="form-top-right">
                         <i class="fa fa-twitter"></i>
@@ -121,11 +129,11 @@
 </div>
 
 <!-- Interest select Modal -->
-<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="static" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Conversation Interest</h4>
+            <h3 class="modal-title" id="myModalLabel">Conversation Interest</h3>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body">
@@ -134,15 +142,18 @@
                <fieldset>
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h3>Step 4 of 4</h3>
+                        <h4>Step 4 of 4</h4>
                         <p>Select preferred conversation type:</p>
-                        <div class="dropdown">
-                            <select size = "4" type="text" multiple id="interestSelect" name="interestSelect" width="300" style="width: 300px" >
+                        
+                        <div class="col-md-12"> 
+                           <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
                               {% for interest in interests %}
-                                    <option value="{{ interest.id }}" name="{{ interest.name }}" selected>{{ interest.name }}</option>
+                                    <option value="{{ interest.id }}" name="{{ interest.name }}">{{ interest.name }}</option>
                               {% endfor %}
                            </select> 
                         </div>
+                        <br>
+
                      </div>
                      <div class="form-top-right">
                         <i class="fa fa-twitter"></i>
@@ -150,7 +161,7 @@
                   </div>
                    <div class="modal-footer">
                      <button type="button" class="btn btn-warning btn-prev">Prev</button>
-                     <button type="submit" class="btn btn-warning btn-next">Submit</button>
+                     <button type="submit" class="btn btn-warning">Submit</button>
                      <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                   </div>
                </fieldset>
@@ -160,3 +171,6 @@
       </div>
    </div>
 </div>
+
+<link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006288/BBBootstrap/choices.min.css?version=7.0.0">
+<script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
