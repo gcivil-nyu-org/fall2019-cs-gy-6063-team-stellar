@@ -40,7 +40,18 @@ class Cuisine(models.Model):
         managed = m_state
 
 
+class Interests(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        managed = m_state
+
+
 class Restaurant(models.Model):
+    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     cuisine = models.CharField(max_length=100, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True)
@@ -79,10 +90,14 @@ class UserRequest(models.Model):
     service_type = models.CharField(max_length=100)
     time_stamp = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     cuisines = models.ManyToManyField(Cuisine, blank=True)
+    interests = models.ManyToManyField(Interests, blank=True)
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=200, blank=True, null=True)
     service_status = models.BooleanField(default=True)
     match_status = models.BooleanField(default=False)
+    cuisines_priority = models.IntegerField(default=10)
+    department_priority = models.IntegerField(default=10)
+    interests_priority = models.IntegerField(default=10)
 
     def __str__(self):
         return self.service_type
@@ -109,6 +124,10 @@ class UserRequestMatch(models.Model):
         related_name="%(class)s_user2",
     )
     match_time = models.DateTimeField(default=in_one_day)
+    restaurants = models.ManyToManyField(Restaurant, blank=True)
 
     def __str__(self):
         return "Match for " + self.user1.username + " and " + self.user2.username
+
+
+# UserRequestMatch.objects.

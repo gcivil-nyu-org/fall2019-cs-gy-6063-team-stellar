@@ -15,6 +15,7 @@ from homepage.models import (
     Department,
     Cuisine,
     Days_left,
+    Interests,
 )  # noqa: E402
 
 
@@ -39,7 +40,6 @@ def generateuser(N):
         # department
         departments = Department.objects.filter(school=school_id)
         departments_count = departments.count()
-        print(departments_count)
         if departments_count == 0:
             continue
         start_id = departments.first().id
@@ -50,16 +50,21 @@ def generateuser(N):
 
         # cuisine
         cuisines = Cuisine.objects.all()
-        p_cuisine_number = random.randint(1, Cuisine.objects.all().count() - 1)
+        p_cuisine_number = random.randint(1, 10)
         p_cuisine = random.sample(list(cuisines), p_cuisine_number)
         user["prefered cuisines"] = p_cuisine
 
+        interests = Interests.objects.all()
+        p_interest_number = random.randint(1, 10)
+        p_interests = random.sample(list(interests), p_interest_number)
+        user["interests"] = p_interests
+
         user["meet history"] = []
+        user["cuisines_priority"] = random.randint(1, 10)
+        user["department_priority"] = random.randint(1, 10)
+        user["interests_priority"] = random.randint(1, 10)
         userlist.append(user)
 
-        print(i)
-        print(user)
-    print(len(userlist))
     return userlist
 
 
@@ -73,12 +78,17 @@ def save_users(userlist):
             school=user["school"][0].name,
             department=user["department"][0].name,
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
+            cuisines_priority=user["cuisines_priority"],
+            department_priority=user["department_priority"],
+            interests_priority=user["interests_priority"],
         )
         r.save()
-        days = Days_left(user=user["user"], days=Service_days[r.service_type])
-        days.save()
         for each in user["prefered cuisines"]:
             r.cuisines.add(each)
+        for each in user["interests"]:
+            r.interests.add(each)
+        days = Days_left(user=user["user"], days=Service_days[r.service_type])
+        days.save()
 
 
 if __name__ == "__main__":
