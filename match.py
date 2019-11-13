@@ -75,17 +75,15 @@ def recommend_restaurants(user1, user2, cuisinelist):
 
     restautants_1 = {}
     restautants_2 = {}
-    if len(close_to_1) != 0:
-        try:
-            restautants_1 = random.sample(close_to_1, 5)
-        except Exception:
-            restautants_1 = random.sample(close_to_1, 1)
+    if len(close_to_1) > 5:
+        restautants_1 = random.sample(close_to_1, 5)
+    else:
+        restautants_1 = random.sample(close_to_1, len(close_to_1))
         # restautants_1 = random.sample(list(close_to_1), 1)
-    if len(close_to_2) != 0:
-        try:
-            restautants_2 = random.sample(close_to_2, 5)
-        except Exception:
-            restautants_2 = random.sample(close_to_2, 1)
+    if len(close_to_2) > 5:
+        restautants_2 = random.sample(close_to_2, 5)
+    else:
+        restautants_2 = random.sample(close_to_2, len(close_to_2))
     # print("In restaurant, restaurant1 is")
     # print(restautants_1)
     return restautants_1, restautants_2
@@ -139,81 +137,91 @@ def compose_email(
         + " department at "
         + userRequest2.user.school
         + ". "
-        + "<h3><b>Your match was based on your preferrences:-</b></h3>"
-        + "<p><b> School & Department: </b>"
-        + userRequest1.school
-        + ", "
-        + userRequest1.department
-        + "</p>"
-        + "<p><b> Common cuisines: </b>"
-        + str(cuisine_names)
-        + "</p>"
-        + "<p><b> Common conversation interests: </b>"
-        + str(interests_names)
-        + "</p>"
-        + "<h3>Here are recommended restaurants based on both of your locations, cuisines types and NYC Health Department inspection score:-</h3>"
+        + "<h3><b>Your match was based on your preferrences:</b></h3>"
     )
 
+
+
+    if not len(cuisine_names) == 0:
+        html_content = html_content + "<p><b> Common cuisines: </b>" + str(cuisine_names) + "</p>"
+    else:
+        html_content = html_content + "<p><b> Common cuisines: </b> You don't have any common cuisine.</p>"
+
+    html_content = html_content \
+                   + "<p><b> School & Department: </b>" \
+                   + userRequest1.school \
+                   + ", "\
+                   + userRequest1.department\
+                   + "</p>"
+
+    if not len(interests_names) == 0:
+        html_content = html_content + "<p><b> Common conversation interests: </b>" +str(interests_names) + "</p>"
+    else:
+        html_content = html_content + "<p><b> Common interests: </b> You don't have any common interests.</p>"
+
+
     # Add restaurant near school1
-    if not len(restaurants1) == 0:
-        html_content = html_content + "<u><i>Restaurants near your school:</i></u>"
-        for i, resturant in enumerate(restaurants1):
-            link = get_yelp_link(resturant)
+    if not len(cuisine_names) == 0:
+        html_content = html_content + "<h3>Here are recommended restaurants based on both of your locations, cuisines types and NYC Health Department inspection score:</h3>"
+        if not len(restaurants1) == 0:
+            html_content = html_content + "<u><i>Restaurants near your school:</i></u>"
+            for i, resturant in enumerate(restaurants1):
+                link = get_yelp_link(resturant)
 
+                html_content = (
+                        html_content
+                        + "<p><b>"
+                        + str(i + 1)
+                        + ") "
+                        + resturant.name.capitalize()
+                        + "</b></p>"
+                )
+                address = (
+                        "Address: "
+                        + resturant.building
+                        + " "
+                        + resturant.street
+                        + ", "
+                        + resturant.borough
+                        + " "
+                        + str(resturant.zipcode)
+                )
+                html_content = html_content + "<p>" + address + "</p>"
+                if not link == -1:
+                    html_content = html_content + "Yelp link: "
+                    html_content = html_content + "<div>" + link + "</div>"
+
+        # Add restaurant near school2
+        if not len(restaurants2) == 0:
             html_content = (
-                html_content
-                + "<p><b>"
-                + str(i + 1)
-                + ") "
-                + resturant.name.capitalize()
-                + "</b></p>"
+                    html_content
+                    + "<br style=“line-height:2;”<u><i>Restaurants near your lunch partner's school:</i></u>"
             )
-            address = (
-                "Address: "
-                + resturant.building
-                + " "
-                + resturant.street
-                + ", "
-                + resturant.borough
-                + " "
-                + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
-                html_content = html_content + "Yelp link: "
-                html_content = html_content + "<div>" + link + "</div>"
+            for i, resturant in enumerate(restaurants2):
+                link = get_yelp_link(resturant)
 
-    # Add restaurant near school2
-    if not len(restaurants2) == 0:
-        html_content = (
-            html_content
-            + "<br style=“line-height:2;”<u><i>Restaurants near your lunch partner's school:</i></u>"
-        )
-        for i, resturant in enumerate(restaurants2):
-            link = get_yelp_link(resturant)
-
-            html_content = (
-                html_content
-                + "<p><b>"
-                + str(i + 1)
-                + ") "
-                + resturant.name.capitalize()
-                + "</b></p>"
-            )
-            address = (
-                "Address: "
-                + resturant.building
-                + " "
-                + resturant.street
-                + ", "
-                + resturant.borough
-                + " "
-                + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
-                html_content = html_content + "Yelp link: "
-                html_content = html_content + "<div>" + link + "</div>"
+                html_content = (
+                        html_content
+                        + "<p><b>"
+                        + str(i + 1)
+                        + ") "
+                        + resturant.name.capitalize()
+                        + "</b></p>"
+                )
+                address = (
+                        "Address: "
+                        + resturant.building
+                        + " "
+                        + resturant.street
+                        + ", "
+                        + resturant.borough
+                        + " "
+                        + str(resturant.zipcode)
+                )
+                html_content = html_content + "<p>" + address + "</p>"
+                if not link == -1:
+                    html_content = html_content + "Yelp link: "
+                    html_content = html_content + "<div>" + link + "</div>"
 
     # Add image
     html_content = html_content + '<p><img src="cid:myimage" /></p>'
@@ -240,7 +248,6 @@ def send_email(html_content, ical_atch, attendee):
         html_part
     )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
     msg.attach(ical_atch)
-    time.sleep(5)
     print("sending out email")
     msg.send()
 
@@ -259,6 +266,8 @@ def send_invitations(userRequest, userMatch):
     cuisine_names = ", ".join(
         [cuisine.name for cuisine in (user1Cuisines & user2Cuisines)]
     )
+    print("cuisine_names is")
+    print(cuisine_names)
 
     user1Interests = userRequest[0].interests.all()
     user2Interests = userRequest[0].interests.all()
@@ -270,6 +279,8 @@ def send_invitations(userRequest, userMatch):
     restaurants1, restaurants2 = recommend_restaurants(
         userRequest[0].user, userRequest[1].user, commonCuisines
     )
+    print("restaurants1 is")
+    print(restaurants1)
 
     CRLF = "\r\n"
     organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
