@@ -38,7 +38,7 @@ a:focus {
 
 a:hover {
 	text-decoration: none;
-  color: #d33f8d;
+  color: #fed136;
 }
 
 /*---------------------------------------------*/
@@ -126,7 +126,7 @@ iframe {
 }
 
 .hov1:hover {
-  border-color: #d33f8d;
+  border-color: #fed136;
 }
 
 
@@ -151,11 +151,11 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: #0250c5;
-  background: -webkit-linear-gradient(bottom, #0250c5, #d43f8d);
-  background: -o-linear-gradient(bottom, #0250c5, #d43f8d);
-  background: -moz-linear-gradient(bottom, #0250c5, #d43f8d);
-  background: linear-gradient(bottom, #0250c5, #d43f8d);
+  background: #fed136;
+  background: -webkit-linear-gradient(bottom, #fed136, #0250c5);
+  background: -o-linear-gradient(bottom, #fed136, #0250c5);
+  background: -moz-linear-gradient(bottom, #fed136, #0250c5);
+  background: linear-gradient(bottom, #fed136, #0250c5);
   position: relative;
   z-index: 1;
 }
@@ -293,7 +293,7 @@ iframe {
 }
 
 .input100:focus + .focus-input100 + .symbol-input100 {
-  color: #d33f8d;
+  color: #fed136;
   padding-left: 18px;
 }
 
@@ -372,7 +372,7 @@ iframe {
   width: 100%;
   height: 62px;
   border-radius: 3px;
-  background: #d33f8d;
+  background: #fed136;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
