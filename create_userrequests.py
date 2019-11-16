@@ -72,13 +72,12 @@ def generateuser(N):
 # This function saves the generated user requests to database
 def save_users(userlist):
     for user in userlist:
-        print(date.today() + timedelta(days=1))
         r = UserRequest(
             user=user["user"],
             # service_type=user["service_type"],
             service_type="Daily",
-            school=user["school"][0].name,
-            department=user["department"][0].name,
+            school=user["school"][0],
+            department=user["department"][0],
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],

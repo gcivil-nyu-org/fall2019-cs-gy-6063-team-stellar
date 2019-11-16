@@ -11,7 +11,6 @@ from email.mime.image import MIMEImage
 import datetime
 import requests
 import json
-import time
 from django.db.models import Q
 
 from dateutil.relativedelta import relativedelta
@@ -25,7 +24,7 @@ from homepage.models import (
     UserRequestMatch,
     Restaurant,
     School,
-    Days_left,
+    Department,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -82,14 +81,11 @@ def recommend_restaurants(user1, user2, cuisinelist):
             restautants_1 = random.sample(close_to_1, 5)
         except Exception:
             restautants_1 = random.sample(close_to_1, 1)
-        # restautants_1 = random.sample(list(close_to_1), 1)
     if len(close_to_2) != 0:
         try:
             restautants_2 = random.sample(close_to_2, 5)
         except Exception:
             restautants_2 = random.sample(close_to_2, 1)
-    # print("In restaurant, restaurant1 is")
-    # print(restautants_1)
     return restautants_1, restautants_2
 
 
@@ -228,7 +224,6 @@ def send_email(html_content, ical_atch, attendee):
         html_part
     )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
     msg.attach(ical_atch)
-    time.sleep(5)
     print("sending out email")
     msg.send()
 
@@ -265,13 +260,14 @@ def send_invitations(userRequest, userMatch):
     attendees = [user1Email, user2Email]
 
     description = (
-        "DESCRIPTION: Lunch meeting with"
+        "DESCRIPTION: Lunch meeting "
         + userRequest[1].user.first_name
         + " "
         + userRequest[1].user.last_name
-        + "</b>("
-        + userRequest[1].user.email
-        + ")"
+        + "and "
+        + userRequest[0].user.first_name
+        + " "
+        + userRequest[0].user.last_name
         + CRLF
     )
     attendee = ""
@@ -328,7 +324,8 @@ def send_invitations(userRequest, userMatch):
         + CRLF
         + "SEQUENCE:0"
         + CRLF
-        + "STATUS:CONFIRMED"
+        + "STATUS:"
+        + "tentative"
         + CRLF
     )
     ical += (
@@ -381,12 +378,14 @@ def interest_filter(matchpool, req):
 
 def dual_department_filter(matchpool, req):
     available_set_A = set()
-    A_users = LunchNinjaUser.objects.filter(department=req.department)
+
+    A_users = LunchNinjaUser.objects.filter(department=req.department.name)
     for each in A_users:
         ur = UserRequest.objects.filter(user_id=each.id)
         available_set_A = available_set_A.union(set(ur))
 
-    B = UserRequest.objects.filter(department=req.user.department)
+    d = Department.objects.filter(name=req.user.department)
+    B = UserRequest.objects.filter(department=d[0])
     M_A_B = available_set_A.intersection(set(B))
     available_set = M_A_B
     available_set = available_set.intersection(matchpool)
@@ -395,7 +394,7 @@ def dual_department_filter(matchpool, req):
 
 def single_department_filter(matchpool, req):
     available_set = set()
-    users = LunchNinjaUser.objects.filter(department=req.department)
+    users = LunchNinjaUser.objects.filter(department=req.department.name)
     for each in users:
         ur = UserRequest.objects.filter(user_id=each.id)
         available_set = available_set.union(set(ur))
@@ -427,12 +426,12 @@ def save_matches(matches):
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
 
-        if ur1.service_type=="monthly":
-            ur1.available_date=datetime.date.today()+month
-        elif ur1.service_type=="weekly":
-            ur1.available_date=datetime.date.today()+week
-        elif ur1.service_type=="daily":
-            ur1.available_date=datetime.date.today()+day
+        if ur1.service_type == "monthly":
+            ur1.available_date = datetime.date.today() + month
+        elif ur1.service_type == "weekly":
+            ur1.available_date = datetime.date.today() + week
+        elif ur1.service_type == "daily":
+            ur1.available_date = datetime.date.today() + day
         if ur2.service_type == "Monthly":
             ur2.available_date = datetime.date.today() + month
         elif ur2.service_type == "Weekly":
@@ -451,7 +450,8 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        # send_invitations(match, request_match)
+        if user1.id == 1 or user2.id == 1:
+            send_invitations(match, request_match)
 
 
 def find_match_user(available_set):
@@ -466,7 +466,7 @@ def get_matchpool():
     # today=datetime.date.today()+datetime.timedelta(days=1)
     today = datetime.date.today()
     print(today)
-    available_day_entry=UserRequest.objects.filter(available_date=today)
+    available_day_entry = UserRequest.objects.filter(available_date=today)
     print(available_day_entry)
     # days_entry = Days_left.objects.filter(days=1)
     # for day in days_entry:
@@ -496,8 +496,10 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
 
         for matched_user in match_history:
             # users cannot match matched users
+            print(matched_user.user1_id)
+            print(matched_user.user2_id)
             user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
-            user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
+            user2 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
             match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
             match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
         # find all possible matches base on the users preference

@@ -141,7 +141,7 @@ AUTH_USER_MODEL = "user_account.LunchNinjaUser"
 
 STATIC_URL = "/static/"
 
-# SMTP Settings
+# # SMTP Settings
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.mailtrap.io"
 EMAIL_HOST_USER = "c3ad93d6737c1e"
