@@ -14,6 +14,8 @@ import json
 import time
 from django.db.models import Q
 
+from dateutil.relativedelta import relativedelta
+
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
@@ -415,12 +417,30 @@ def same_department_filter(matchpool, req):
 
 def save_matches(matches):
     # save matches to user_request_match table
+    month = relativedelta(months=1)
+    week = datetime.timedelta(weeks=1)
+    day = datetime.timedelta(days=1)
+
     for match in matches:
         user1 = match[0].user
         user2 = match[1].user
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
 
+        if ur1.service_type=="monthly":
+            ur1.available_date=datetime.date.today()+month
+        elif ur1.service_type=="weekly":
+            ur1.available_date=datetime.date.today()+week
+        elif ur1.service_type=="daily":
+            ur1.available_date=datetime.date.today()+day
+        if ur2.service_type == "Monthly":
+            ur2.available_date = datetime.date.today() + month
+        elif ur2.service_type == "Weekly":
+            ur2.available_date = datetime.date.today() + week
+        elif ur2.service_type == "Daily":
+            ur2.available_date = datetime.date.today() + day
+        ur1.save()
+        ur2.save()
         user1Cuisines = ur1.cuisines.all()
         user2Cuisines = ur2.cuisines.all()
         commonCuisines = list(user1Cuisines & user2Cuisines)
@@ -443,11 +463,19 @@ def find_match_user(available_set):
 def get_matchpool():
     matchpool = set()
     reqlist = []
-    days_entry = Days_left.objects.filter(days=1)
-    for day in days_entry:
-        user = day.user
-        matchpool.add(UserRequest.objects.get(user_id=user.id))
-        reqlist.append(UserRequest.objects.get(user_id=user.id))
+    # today=datetime.date.today()+datetime.timedelta(days=1)
+    today = datetime.date.today()
+    print(today)
+    available_day_entry=UserRequest.objects.filter(available_date=today)
+    print(available_day_entry)
+    # days_entry = Days_left.objects.filter(days=1)
+    # for day in days_entry:
+    #     user = day.user
+    #     matchpool.add(UserRequest.objects.get(user_id=user.id))
+    #     reqlist.append(UserRequest.objects.get(user_id=user.id))
+    for user in available_day_entry:
+        matchpool.add(user)
+        reqlist.append(user)
     return matchpool, reqlist
 
 

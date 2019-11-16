@@ -98,6 +98,7 @@ class UserRequest(models.Model):
     cuisines_priority = models.IntegerField(default=10)
     department_priority = models.IntegerField(default=10)
     interests_priority = models.IntegerField(default=10)
+    available_date = models.DateField(null=False, blank=False, auto_now_add=False)
 
     def __str__(self):
         return self.service_type

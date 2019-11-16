@@ -13,8 +13,10 @@ from .models import (
     Days_left,
     Interests,
     Department,
+
 )
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta, date
+
 
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
@@ -153,10 +155,17 @@ def user_service(request):
                 req.interests_priority = interests_priority
                 req.cuisines.clear()
                 req.interests.clear()
+
+                # match_his = UserRequestMatch.objects.filter(Q(user1=req.user) | Q(user2=req.user)).order_by(
+                #     "-match_time")
+                # print(match_his[0])
+
+                req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
+
 
                 day = Days_left.objects.get(user_id=logged_user.id)
                 day.days = Service_days[req.service_type]
@@ -170,6 +179,7 @@ def user_service(request):
                     cuisines_priority=cuisines_priority,
                     department_priority=department_priority,
                     interests_priority=interests_priority,
+                    available_date=date.today()+timedelta(days=1)
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)
@@ -221,6 +231,7 @@ def toggle_user_service(request):
             req.service_status = (
                 True if request.POST["service_status"] == "true" else False
             )
+            req.available_date = date.today() + timedelta(days=1)
             req.save()
             return JsonResponse({"service_status": req.service_status}, safe=False)
         else:
