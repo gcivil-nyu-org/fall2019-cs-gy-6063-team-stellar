@@ -83,7 +83,7 @@ def save_users(userlist):
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],
             interests_priority=user["interests_priority"],
-            available_date=date.today() + timedelta(days=1)
+            available_date=date.today() + timedelta(days=1),
         )
         r.save()
         for each in user["prefered cuisines"]:

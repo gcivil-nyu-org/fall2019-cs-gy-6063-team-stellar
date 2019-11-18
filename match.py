@@ -25,7 +25,7 @@ from homepage.models import (
     UserRequestMatch,
     Restaurant,
     School,
-    Days_left,
+    # Days_left,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -427,12 +427,12 @@ def save_matches(matches):
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
 
-        if ur1.service_type=="monthly":
-            ur1.available_date=datetime.date.today()+month
-        elif ur1.service_type=="weekly":
-            ur1.available_date=datetime.date.today()+week
-        elif ur1.service_type=="daily":
-            ur1.available_date=datetime.date.today()+day
+        if ur1.service_type == "monthly":
+            ur1.available_date = datetime.date.today() + month
+        elif ur1.service_type == "weekly":
+            ur1.available_date = datetime.date.today() + week
+        elif ur1.service_type == "daily":
+            ur1.available_date = datetime.date.today() + day
         if ur2.service_type == "Monthly":
             ur2.available_date = datetime.date.today() + month
         elif ur2.service_type == "Weekly":
@@ -466,7 +466,7 @@ def get_matchpool():
     # today=datetime.date.today()+datetime.timedelta(days=1)
     today = datetime.date.today()
     print(today)
-    available_day_entry=UserRequest.objects.filter(available_date=today)
+    available_day_entry = UserRequest.objects.filter(available_date=today)
     print(available_day_entry)
     # days_entry = Days_left.objects.filter(days=1)
     # for day in days_entry:

@@ -184,16 +184,20 @@ def importInterests():
     )
 
     interests = [
-        "casual_conversation",
-        "homework",
-        "exam-prep",
-        "networking",
-        "politics",
-        "sports",
-        "entertainment",
-        "theatre ",
-        "nyu-events",
-        "parties",
+        "Casual Conversation",
+        "Exam Preparation",
+        "Politics",
+        "College football",
+        "Arts",
+        "NYU Clubs",
+        "Course tutor",
+        "Job Search",
+        "Entrepreneurship",
+        "City Tour",
+        "Music",
+        "Technology",
+        "Outdoor Events",
+        "Food",
     ]
     id = 0
     for interest in interests:
@@ -207,12 +211,40 @@ def importInterests():
     print("imported interested data")
 
 
+def importDays():
+    conn = sqlite3.connect(directory_path + "/../../db.sqlite3")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS homepage_days")
+    cur.execute("CREATE TABLE homepage_days (day VARCHAR, id INTEGER PRIMARY KEY)")
+    
+    week_days = [
+        (0, "Monday"),
+        (1, "Tuesday"),
+        (2, "Wednesday"),
+        (3, "Thursday"),
+        (4, "Friday"),
+        (5, "Saturday"),
+        (6, "Sunday"),
+    ]
+
+    for day in week_days:
+        print(day[1])
+        print(day[0])
+        cur.execute(
+            "INSERT INTO homepage_days (day, id) VALUES (?, ?)", (day[1], day[0])
+        )
+    conn.commit()
+    conn.close()
+    print("imported weekdays data")
+
+
 def main():
     importSchool()
     importDepartment()
     importRestaurant()
     importCuisine()
     importInterests()
+    importDays()
     return ()
 
 
