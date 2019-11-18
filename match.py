@@ -152,9 +152,9 @@ def compose_email(
     html_content = (
         html_content
         + "<p><b> School & Department: </b>"
-        + userRequest1.school
+        + userRequest1.school.name
         + ", "
-        + userRequest1.department
+        + userRequest1.department.name
         + "</p>"
     )
 
@@ -253,7 +253,7 @@ def send_email(html_content, ical_atch, attendee):
     )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
     msg.attach(ical_atch)
     print("sending out email")
-    # msg.send()
+    msg.send()
 
 
 def send_invitations(userRequest, userMatch):
@@ -313,7 +313,7 @@ def send_invitations(userRequest, userMatch):
     attendee = ""
     for att in attendees:
         attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-    PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE"
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-    PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE"
             + CRLF
             + " ;CN="
             + att
@@ -499,7 +499,8 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        send_invitations(match, request_match)
+        if user1.id == 1 or user1.id == 3 or user2.id == 1 or user2.id == 3:
+            send_invitations(match, request_match)
 
 
 def find_match_user(available_set):

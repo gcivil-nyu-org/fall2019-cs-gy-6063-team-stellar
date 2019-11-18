@@ -66,4 +66,26 @@ if __name__ == "__main__":
     )
     user.set_password("1234mnbv")
     user.save()
+    user1 = LunchNinjaUser(
+        username="Utkarsh",
+        email="up293@nyu.edu",
+        school="Tandon School of Engineering",
+        department="Computer Science",
+        first_name="utkarsh",
+        last_name="P",
+        is_active=True,
+    )
+    user1.set_password("Stellar123!")
+    user1.save()
+    user2 = LunchNinjaUser(
+        username="bv",
+        email="bv640@nyu.edu",
+        school="Tandon School of Engineering",
+        department="Computer Science",
+        first_name="Bhaskar",
+        last_name="V",
+        is_active=True,
+    )
+    user2.set_password("Stellar123!")
+    user2.save()
     generateuser(20)
