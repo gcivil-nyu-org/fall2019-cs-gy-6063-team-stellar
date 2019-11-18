@@ -3,6 +3,9 @@ import random
 import django
 import datetime
 from django.utils import timezone
+from datetime import date
+
+# from datetime import timedelta
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
@@ -76,12 +79,14 @@ def save_users(userlist):
             user=user["user"],
             # service_type=user["service_type"],
             service_type="Daily",
-            school=user["school"][0].name,
-            department=user["department"][0].name,
+            school=user["school"][0],
+            department=user["department"][0],
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],
             interests_priority=user["interests_priority"],
+            available_date=date.today()
+            # + timedelta(days=1)
         )
         r.save()
         for each in user["prefered cuisines"]:

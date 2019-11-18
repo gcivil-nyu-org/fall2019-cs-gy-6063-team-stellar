@@ -14,7 +14,8 @@ from .models import (
     Interests,
     Department,
 )
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta, date
+
 
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
@@ -123,7 +124,9 @@ def user_service(request):
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
+            school_object = School.objects.filter(name=school)
             department = request.POST["department"]
+            department_object = Department.objects.filter(name=department)
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
@@ -142,13 +145,19 @@ def user_service(request):
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
-                req.school = school
-                req.department = department
+                req.school = school_object
+                req.department = department_object
                 req.cuisines_priority = cuisines_priority
                 req.department_priority = department_priority
                 req.interests_priority = interests_priority
                 req.cuisines.clear()
                 req.interests.clear()
+
+                # match_his = UserRequestMatch.objects.filter(Q(user1=req.user) | Q(user2=req.user)).order_by(
+                #     "-match_time")
+                # print(match_his[0])
+
+                req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
@@ -160,11 +169,12 @@ def user_service(request):
                 req = UserRequest(
                     user=logged_user,
                     service_type=service_type,
-                    school=school,
-                    department=department,
+                    school=school_object,
+                    department=department_object,
                     cuisines_priority=cuisines_priority,
                     department_priority=department_priority,
                     interests_priority=interests_priority,
+                    available_date=date.today() + timedelta(days=1),
                 )
                 req.save()
                 req.cuisines.add(*cuisine_objects)
@@ -185,7 +195,7 @@ def user_service(request):
         else:
             email_subject = "Service Confirmation"
             message = "Service selected"
-            to_email = "up@nyu.edu"
+            to_email = request.user.email
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
         return redirect("/")
@@ -216,6 +226,7 @@ def toggle_user_service(request):
             req.service_status = (
                 True if request.POST["service_status"] == "true" else False
             )
+            req.available_date = date.today() + timedelta(days=1)
             req.save()
             return JsonResponse({"service_status": req.service_status}, safe=False)
         else:
