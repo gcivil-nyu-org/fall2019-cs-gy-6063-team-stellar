@@ -71,7 +71,6 @@ class UserSignUpForm(UserCreationForm):
     )
     school = forms.ChoiceField(
         label="school",
-        required=False,
         help_text="True",
         choices=SchoolChoice,
         widget=forms.Select(
@@ -80,7 +79,6 @@ class UserSignUpForm(UserCreationForm):
     )
     department = forms.ChoiceField(
         label="department",
-        required=False,
         help_text="True",
         choices=DepartmentChoice,
         widget=forms.Select(

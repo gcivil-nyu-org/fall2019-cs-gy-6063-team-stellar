@@ -34,10 +34,10 @@
 					<tr>
 						<th scope="col">Service type</th>
 						<th scope="col">Service started on</th>
-						<th scope="col">Preffered School</th>
-						<th scope="col">Preffered Department</th>
-						<th scope="col">Preffered Interests</th>
-						<th scope="col">Preffered Cuisines</th>
+						<th scope="col">Preferred School</th>
+						<th scope="col">Preferred Department</th>
+						<th scope="col">Preferred Interests</th>
+						<th scope="col">Preferred Cuisines</th>
 						<th scope="col">Service Status</th>
 					</tr>
 				</thead>
@@ -45,10 +45,22 @@
 						<tr>
 							<td>{{user_request.service_type}}</td>
 							<td>{{user_request.service_start_date  | date:"jS F Y"}}</td>
-							<td>{{user_request.preffered_school}}</td>
-							<td>{{user_request.preffered_department}}</td>
-							<td>{{user_request.preferred_interests}}</td>
-							<td>{{user_request.preferred_cuisines}}</td>
+							<td>
+								<i><p class="preferrence_priority">Priority: {{user_request.department_priority}}/10</p></i>
+								{{user_request.preffered_school}}
+							</td>
+							<td>
+								<i><p class="preferrence_priority" >Priority: {{user_request.department_priority}}/10</p></i>
+								{{user_request.preffered_department}} 
+							</td>
+							<td>
+								<i><p class="preferrence_priority" >Priority: {{user_request.interests_priority}}/10</p></i>
+								{{user_request.preferred_interests}}
+							</td>
+							<td>
+								<i><p class="preferrence_priority" >Priority: {{user_request.cuisines_priority}}/10</p></i>
+								{{user_request.preferred_cuisines}}
+							</td>
 							<td>
 								<label class="switch">
 									<input id="serviceToggle" type="checkbox">
@@ -59,7 +71,7 @@
 				</tbody>
 			</table>
 		{% else %}
-			<p>No service found, please subscribe to Lunch Ninja from service tab :)</p>
+			<p>No service found, please subscribe to Lunch Ninja! :)</p>
 		{% endif %}
 	</div>
 

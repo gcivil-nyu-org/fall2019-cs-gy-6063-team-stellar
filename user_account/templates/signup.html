@@ -96,9 +96,9 @@
 {#                        <input class="input100" type="text" name="username" placeholder="Username">#}
                         {{ signup_form.school }}
 						<span class="focus-input100"></span>
-						<span class="symbol-input100">
+						{% comment %} <span class="symbol-input100">
 							<span class="lnr lnr-book"></span>
-						</span>
+						</span> {% endcomment %}
 					</div>
                         {% if school %}
                           <div class="alert alert-warning">{{ school }}</div>
@@ -108,9 +108,9 @@
 {#                        <input class="input100" type="text" name="username" placeholder="Department">#}
                         {{ signup_form.department }}
 						<span class="focus-input100"></span>
-						<span class="symbol-input100">
+						{% comment %} <span class="symbol-input100">
 							<span class="lnr lnr-book"></span>
-						</span>
+						</span> {% endcomment %}
 					</div>
                         {% if department %}
                           <div class="alert alert-warning">{{ department }}</div>
