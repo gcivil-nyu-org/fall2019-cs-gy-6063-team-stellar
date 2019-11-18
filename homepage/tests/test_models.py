@@ -43,7 +43,7 @@ class UserRequestModelTest(TestCase):
             user_id=23,
             service_type="Monthly",
             time_stamp="2019-11-1",
-            school="Tandon School of Engineering",
-            department="Computer Engineering",
+            school=School.objects.filter(name="Tandon School of Engineering")[0],
+            department=Department.objects.filter(name="Computer Engineering")[0],
         )
         self.assertEqual(str(entry), entry.service_type)

@@ -76,16 +76,16 @@ def recommend_restaurants(user1, user2, cuisinelist):
 
     restautants_1 = {}
     restautants_2 = {}
-    if len(close_to_1) != 0:
+    if len(close_to_1) > 5:
         try:
             restautants_1 = random.sample(close_to_1, 5)
         except Exception:
-            restautants_1 = random.sample(close_to_1, 1)
-    if len(close_to_2) != 0:
+            restautants_1 = random.sample(close_to_1, len(close_to_1))
+    if len(close_to_2) > 5:
         try:
             restautants_2 = random.sample(close_to_2, 5)
         except Exception:
-            restautants_2 = random.sample(close_to_2, 1)
+            restautants_2 = random.sample(close_to_2, len(close_to_2))
     return restautants_1, restautants_2
 
 
@@ -145,10 +145,10 @@ def compose_email(
     if not len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
         prevname = ""
+
         for restaurant in restaurants1:
             if not restaurant.name == prevname:
                 link = get_yelp_link(restaurant)
-
                 html_content = (
                     html_content + "<p><b>" + restaurant.name.capitalize() + "</b></p>"
                 )
@@ -231,7 +231,7 @@ def send_email(html_content, ical_atch, attendee):
     )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
     msg.attach(ical_atch)
     print("sending out email")
-    msg.send()
+    # msg.send()
 
 
 def send_invitations(userRequest, userMatch):
@@ -455,8 +455,7 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        if user1.id == 1 or user2.id == 1:
-            send_invitations(match, request_match)
+        send_invitations(match, request_match)
 
 
 def find_match_user(available_set):

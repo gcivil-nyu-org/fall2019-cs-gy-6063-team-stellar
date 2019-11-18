@@ -133,15 +133,17 @@ class UserserviceViewTest(TestCase):
     #     self.assertEqual(response.status_code, 302)
     #     self.assertTemplateUsed(response, "homepage.html")
 
-    def test_call_view_success_correct_fields(self):
-        requestObj = {
-            "service_type": "Weekly",
-            "school": "Tandon School of Engineering",
-            "department": "Electrical Engineering",
-            "cuisine": "[Indian, Pizza]",
-        }
-        response = self.client.post("/serviceRequest/", requestObj)
-        self.assertRedirects(response, "/")
+    # @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj_raise_error())
+    # @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
+    # def test_call_view_success_correct_fields(self):
+    #     requestObj = {
+    #         "service_type": "Weekly",
+    #         "school": "Tandon School of Engineering",
+    #         "department": "Electrical Engineering",
+    #         "cuisine": "[Indian, Pizza]",
+    #     }
+    #     response = self.client.post("/serviceRequest/", requestObj)
+    #     self.assertRedirects(response, "/")
 
     def request_start(request):
         return True
