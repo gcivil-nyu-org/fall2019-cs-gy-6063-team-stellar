@@ -141,6 +141,25 @@ def compose_email(
         + "<p>Here are recommanded restaurants based on both of your locations and cuisines types:</p>"
     )
 
+    if not len(cuisine_names) == 0:
+        html_content = (
+                html_content + "<p><b> Common cuisines: </b>" + str(cuisine_names) + "</p>"
+        )
+    else:
+        html_content = (
+                html_content
+                + "<p><b> Common cuisines: </b> You don't have any common cuisine.</p>"
+        )
+
+    html_content = (
+            html_content
+            + "<p><b> School & Department: </b>"
+            + userRequest1.school
+            + ", "
+            + userRequest1.department
+            + "</p>"
+    )
+
     # Add restaurant near school1
     if not len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
@@ -503,7 +522,7 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
             print(matched_user.user1_id)
             print(matched_user.user2_id)
             user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
-            user2 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
+            user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
             match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
             match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
         # find all possible matches base on the users preference
