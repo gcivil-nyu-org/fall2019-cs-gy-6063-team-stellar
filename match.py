@@ -144,29 +144,32 @@ def compose_email(
     # Add restaurant near school1
     if not len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
-        for resturant in restaurants1:
-            link = get_yelp_link(resturant)
+        prevname = ""
+        for restaurant in restaurants1:
+            if not restaurant.name == prevname:
+                link = get_yelp_link(restaurant)
 
-            html_content = (
-                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
-            )
-            address = (
-                "Address: "
-                + resturant.building
-                + " "
-                + resturant.street
-                + ", "
-                + resturant.borough
-                + " "
-                + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
                 html_content = (
-                    html_content + "<p> Yelp link for this restaurant is: </p>"
+                    html_content + "<p><b>" + restaurant.name.capitalize() + "</b></p>"
                 )
-                # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
-                html_content = html_content + "<div>" + link + "</div>"
+                address = (
+                    "Address: "
+                    + restaurant.building
+                    + " "
+                    + restaurant.street
+                    + ", "
+                    + restaurant.borough
+                    + " "
+                    + str(restaurant.zipcode)
+                )
+                html_content = html_content + "<p>" + address + "</p>"
+                if not link == -1:
+                    html_content = (
+                        html_content + "<p> Yelp link for this restaurant is: </p>"
+                    )
+                    # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
+                    html_content = html_content + "<div>" + link + "</div>"
+                prevname = restaurant.name
 
     # Add restaurant near school2
     if not len(restaurants2) == 0:
@@ -174,28 +177,31 @@ def compose_email(
             html_content
             + "<br style=“line-height:2;”><p><b><i>Restaurants near your lunch partner's school:</p>"
         )
+        prevname = ""
         for resturant in restaurants2:
-            link = get_yelp_link(resturant)
+            if not prevname == restaurant.name:
+                link = get_yelp_link(resturant)
 
-            html_content = (
-                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
-            )
-            address = (
-                "Address: "
-                + resturant.building
-                + " "
-                + resturant.street
-                + ", "
-                + resturant.borough
-                + " "
-                + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
                 html_content = (
-                    html_content + "<p> Yelp link for this restaurant is: </p>"
+                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
                 )
-                html_content = html_content + "<div>" + link + "</div>"
+                address = (
+                    "Address: "
+                    + resturant.building
+                    + " "
+                    + resturant.street
+                    + ", "
+                    + resturant.borough
+                    + " "
+                    + str(resturant.zipcode)
+                )
+                html_content = html_content + "<p>" + address + "</p>"
+                if not link == -1:
+                    html_content = (
+                        html_content + "<p> Yelp link for this restaurant is: </p>"
+                    )
+                    html_content = html_content + "<div>" + link + "</div>"
+                prevname = restaurant.name
 
     # Add image
     html_content = html_content + '<p><img src="cid:myimage" /></p>'
@@ -260,11 +266,11 @@ def send_invitations(userRequest, userMatch):
     attendees = [user1Email, user2Email]
 
     description = (
-        "DESCRIPTION: Lunch meeting "
+        "DESCRIPTION: Lunch meeting: "
         + userRequest[1].user.first_name
         + " "
         + userRequest[1].user.last_name
-        + "and "
+        + " and "
         + userRequest[0].user.first_name
         + " "
         + userRequest[0].user.last_name
@@ -324,8 +330,7 @@ def send_invitations(userRequest, userMatch):
         + CRLF
         + "SEQUENCE:0"
         + CRLF
-        + "STATUS:"
-        + "tentative"
+        + "STATUS:TENTATIVE"
         + CRLF
     )
     ical += (

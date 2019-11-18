@@ -142,19 +142,19 @@ AUTH_USER_MODEL = "user_account.LunchNinjaUser"
 STATIC_URL = "/static/"
 
 # # SMTP Settings
-EMAIL_USE_TLS = True
-EMAIL_HOST = "smtp.mailtrap.io"
-EMAIL_HOST_USER = "c3ad93d6737c1e"
-EMAIL_HOST_PASSWORD = "f5a014dcafbc59"
-EMAIL_PORT = "2525"
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = "smtp.mailtrap.io"
+# EMAIL_HOST_USER = "c3ad93d6737c1e"
+# EMAIL_HOST_PASSWORD = "f5a014dcafbc59"
+# EMAIL_PORT = "2525"
 
 
 # SMTP Gmail
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = "smtp.gmail.com"
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = "teamstellarse@gmail.com"
-# EMAIL_HOST_PASSWORD = "Stellar123!"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "teamstellarse@gmail.com"
+EMAIL_HOST_PASSWORD = "Stellar123!"
 
 django_heroku.settings(locals(), test_runner=False)
