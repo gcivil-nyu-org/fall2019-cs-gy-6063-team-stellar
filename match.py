@@ -143,32 +143,32 @@ def compose_email(
         html_content = (
             html_content + "<p><b> Common cuisines: </b>" + str(cuisine_names) + "</p>"
         )
-        else:
-            html_content = (
-                    html_content
-                    + "<p><b> Common cuisines: </b> You don't have any common cuisine.</p>"
-            )
+    else:
+        html_content = (
+            html_content
+            + "<p><b> Common cuisines: </b> You don't have any common cuisine.</p>"
+        )
 
     html_content = (
-            html_content
-            + "<p><b> School & Department: </b>"
-            + userRequest1.school
-            + ", "
-            + userRequest1.department
-            + "</p>"
+        html_content
+        + "<p><b> School & Department: </b>"
+        + userRequest1.school
+        + ", "
+        + userRequest1.department
+        + "</p>"
     )
 
     if not len(interests_names) == 0:
         html_content = (
-                html_content
-                + "<p><b> Common conversation interests: </b>"
-                + str(interests_names)
-                + "</p>"
+            html_content
+            + "<p><b> Common conversation interests: </b>"
+            + str(interests_names)
+            + "</p>"
         )
     else:
         html_content = (
-                html_content
-                + "<p><b> Common interests: </b> You don't have any common interests.</p>"
+            html_content
+            + "<p><b> Common interests: </b> You don't have any common interests.</p>"
         )
 
     # Add restaurant near school1
@@ -201,32 +201,31 @@ def compose_email(
                     html_content = html_content + "<div>" + link + "</div>"
                 prevname = restaurant.name
 
-
     for resturant in restaurants2:
         prevname = ""
         if not prevname == restaurant.name:
-                link = get_yelp_link(resturant)
+            link = get_yelp_link(resturant)
 
+            html_content = (
+                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+            )
+            address = (
+                "Address: "
+                + resturant.building
+                + " "
+                + resturant.street
+                + ", "
+                + resturant.borough
+                + " "
+                + str(resturant.zipcode)
+            )
+            html_content = html_content + "<p>" + address + "</p>"
+            if not link == -1:
                 html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+                    html_content + "<p> Yelp link for this restaurant is: </p>"
                 )
-                address = (
-                    "Address: "
-                    + resturant.building
-                    + " "
-                    + resturant.street
-                    + ", "
-                    + resturant.borough
-                    + " "
-                    + str(resturant.zipcode)
-                )
-                html_content = html_content + "<p>" + address + "</p>"
-                if not link == -1:
-                    html_content = (
-                        html_content + "<p> Yelp link for this restaurant is: </p>"
-                    )
-                    html_content = html_content + "<div>" + link + "</div>"
-                prevname = restaurant.name
+                html_content = html_content + "<div>" + link + "</div>"
+            prevname = restaurant.name
 
     # Add image
     html_content = html_content + '<p><img src="cid:myimage" /></p>'
