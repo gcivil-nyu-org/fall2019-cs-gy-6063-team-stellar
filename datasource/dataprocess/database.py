@@ -216,7 +216,7 @@ def importDays():
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS homepage_days")
     cur.execute("CREATE TABLE homepage_days (day VARCHAR, id INTEGER PRIMARY KEY)")
-    
+
     week_days = [
         (0, "Monday"),
         (1, "Tuesday"),

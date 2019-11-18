@@ -25,7 +25,6 @@ from homepage.models import (
     UserRequestMatch,
     Restaurant,
     School,
-    # Days_left,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
