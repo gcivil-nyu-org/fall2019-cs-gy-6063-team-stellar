@@ -5,7 +5,7 @@ import datetime
 from django.utils import timezone
 from datetime import date
 
-# from datetime import timedelta
+from datetime import timedelta
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
@@ -19,6 +19,7 @@ from homepage.models import (
     Cuisine,
     Days_left,
     Interests,
+    Days,
 )  # noqa: E402
 
 
@@ -58,10 +59,19 @@ def generateuser(N):
         p_cuisine = random.sample(list(cuisines), p_cuisine_number)
         user["prefered cuisines"] = p_cuisine
 
+        # interests
         interests = Interests.objects.all()
         p_interest_number = random.randint(1, 10)
         p_interests = random.sample(list(interests), p_interest_number)
         user["interests"] = p_interests
+
+        # days
+        days = Days.objects.all()
+        p_days_number = random.randint(0, 3)
+
+        p_days = random.sample(list(days), p_days_number)
+
+        user["prefered days"] = p_days
 
         user["meet history"] = []
         user["cuisines_priority"] = random.randint(1, 10)
@@ -75,24 +85,28 @@ def generateuser(N):
 # This function saves the generated user requests to database
 def save_users(userlist):
     for user in userlist:
+        today = date.today() + timedelta(days=1)
         r = UserRequest(
             user=user["user"],
-            # service_type=user["service_type"],
-            service_type="Daily",
+            service_type=user["service_type"],
             school=user["school"][0],
             department=user["department"][0],
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],
             interests_priority=user["interests_priority"],
-            available_date=date.today()
-            # + timedelta(days=1)
+            available_date=today,
         )
         r.save()
         for each in user["prefered cuisines"]:
             r.cuisines.add(each)
         for each in user["interests"]:
             r.interests.add(each)
+
+        if not user["service_type"] == "Daily":
+            for each in user["prefered days"]:
+                r.days.add(each)
+
         days = Days_left(user=user["user"], days=Service_days[r.service_type])
         days.save()
 
