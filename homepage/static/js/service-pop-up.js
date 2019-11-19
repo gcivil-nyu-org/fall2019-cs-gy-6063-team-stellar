@@ -14,6 +14,13 @@ var multipleCancelButton = new Choices('#interestSelect', {
     // renderChoiceLimit: 20
 });
 
+var multipleCancelButton = new Choices('#daysSelect', {
+    //https://bbbootstrap.com/snippets/multiselect-dropdown-list-83601849
+    removeItemButton: true,
+    // searchResultLimit: 5,
+    // renderChoiceLimit: 20
+});
+
 let service_request = {}
 
 var rangeSlider = function () {
@@ -117,6 +124,20 @@ $("div[id^='myModal']").each(function () {
 $(document).on('submit', '#service_select_form', function (e) {
     e.preventDefault();
     service_request['service_type'] = $("#serviceSelect option:selected").val();
+    service_request['days'] = $("#daysSelect").val();
+})
+
+$(document).ready(function () {
+    $('#daysSelectContainer').hide();
+});
+
+
+$('#serviceSelect').on('change', function () {
+    if (this.value === 'Daily') {
+        $('#daysSelectContainer').hide();
+    }else{
+        $('#daysSelectContainer').show();
+    }
 })
 
 //School and department request model data

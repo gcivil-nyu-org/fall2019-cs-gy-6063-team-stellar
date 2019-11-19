@@ -13,12 +13,21 @@
                   <div class="form-top">
                      <div class="form-top-left">
                         <h4>Step 1 of 5</h4>
-                        Select preferred type of service:
-                        <div class="dropdown" class="col-md-12">
+                        <div class="dropdown col-md-12" >
+                           Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="serviceSelect">
                               <option selected>Daily</option>
                               <option>Weekly</option>
                               <option>Monthly</option>
+                           </select> 
+                        </div>
+                         <div id="daysSelectContainer" class="col-md-12"> 
+                           <br>
+                           Select preferred day(if any):
+                           <select id="daysSelect" placeholder="Select preferred days" multiple>
+                              {% for days in week_days %}
+                                 <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
+                              {% endfor %}
                            </select> 
                         </div>
                      </div>
