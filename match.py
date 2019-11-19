@@ -244,7 +244,7 @@ def compose_email(
 
 
 def send_email(html_content, ical_atch, attendee):
-    img_data = open("homepage/static/img/catcopy.jpg", "rb").read()
+    img_data = open("homepage/static/img/cat.jpg", "rb").read()
     html_part = MIMEMultipart(_subtype="related")
     # body = MIMEText('<p>Hello <img src="cid:myimage" /></p>', _subtype='html')
     body = MIMEText(html_content, _subtype="html")

@@ -3,16 +3,17 @@
 <style type="text/css">
 input[type="radio"]{margin-left: 100px;}
 </style>
-<body>
-    <form role="form" id="feedback_form" class="registration-form">
+
+    <form role="form" id="feedback_form" class="registration-form" method="post">
+                {% csrf_token %}
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
                         <h3>Thanks for being a valued member of LunchNinja!</h3>
                          We're trying to learn more about how you recently experienced the matched meeting so that you can help us improve it.<br>
                          <b>Did you show up?</b><br>
-                         <input type="radio" name="attendecnce" value="1"> Yes!
-                         <input type="radio" name="attendecnce" value="2"> I'd love to, but I got something emergency... <br>
+                         <input type="radio" name="attendance" value="1"> Yes!
+                         <input type="radio" name="attendance" value="2"> I'd love to, but I got something emergency... <br>
                          <br><br>
                          <b>How likely are you to recommend LunchNinja to a friend or family member?</b><br>
                          <pre>          No way                                                         Definitely</pre>
@@ -22,7 +23,7 @@ input[type="radio"]{margin-left: 100px;}
                          <input type="radio" name="experience" value="4"> 4
                          <input type="radio" name="experience" value="5"> 5 <br>
                          <br><br>
-                         <b>How likely are you to recommend LunchNinja to a friend or family member?</b><br>
+                         <b>How likely are you to recommend the restaurant to a friend or family member?</b><br>
                          <pre>          No way                                                         Definitely</pre>
                          <input type="radio" name="restaurant" value="1"> 1
                          <input type="radio" name="restaurant" value="2"> 2
@@ -37,6 +38,10 @@ input[type="radio"]{margin-left: 100px;}
                          <input type="radio" name="partner" value="3"> 3
                          <input type="radio" name="partner" value="4"> 4
                          <input type="radio" name="partner" value="5"> 5
+                         <br><br>
+                         <b>Anything other comments?</b><br>
+                         <textarea type="input" rows="8" cols="100"></textarea>
+{#                         <input type="text" name="comments"><br>#}
                      </div>
                      <br>
                   </div>
