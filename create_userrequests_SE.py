@@ -3,24 +3,13 @@ import random
 import django
 import datetime
 from django.utils import timezone
-from datetime import date
-
-from datetime import timedelta
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
 service = {1: "Daily", 2: "Weekly", 3: "Monthly"}
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 from user_account.models import LunchNinjaUser  # noqa: E402
-from homepage.models import (
-    UserRequest,
-    School,
-    Department,
-    Cuisine,
-    Days_left,
-    Interests,
-    Days,
-)  # noqa: E402
+from homepage.models import UserRequest, Cuisine, Days_left, Interests  # noqa: E402
 
 
 # This function generates random user requests
@@ -32,46 +21,25 @@ def generateuser(N):
         i += 1
         user = {}
         user["user"] = user_obj
-
-        # school
-        school_id = random.randint(1, School.objects.all().count())
-        school_id = random.randint(2, 2)
-        user["school"] = School.objects.filter(id=school_id)
+        user["school"] = "Tandon School of Engineering"
 
         # service type
         service_id = random.randint(1, 3)
         user["service_type"] = service[service_id]
 
         # department
-        departments = Department.objects.filter(school=school_id)
-        departments_count = departments.count()
-        if departments_count == 0:
-            continue
-        start_id = departments.first().id
-        department_index = random.randint(1, departments_count)
-        # department_index = random.randint(1, 6)
-        department_id = start_id + department_index - 1
-        user["department"] = Department.objects.filter(id=department_id)
+        user["department"] = "Computer Science"
 
         # cuisine
         cuisines = Cuisine.objects.all()
-        p_cuisine_number = random.randint(1, 10)
+        p_cuisine_number = random.randint(4, 10)
         p_cuisine = random.sample(list(cuisines), p_cuisine_number)
         user["prefered cuisines"] = p_cuisine
 
-        # interests
         interests = Interests.objects.all()
-        p_interest_number = random.randint(1, 10)
+        p_interest_number = random.randint(2, 10)
         p_interests = random.sample(list(interests), p_interest_number)
         user["interests"] = p_interests
-
-        # days
-        days = Days.objects.all()
-        p_days_number = random.randint(0, 3)
-
-        p_days = random.sample(list(days), p_days_number)
-
-        user["prefered days"] = p_days
 
         user["meet history"] = []
         user["cuisines_priority"] = random.randint(1, 10)
@@ -85,28 +53,22 @@ def generateuser(N):
 # This function saves the generated user requests to database
 def save_users(userlist):
     for user in userlist:
-        today = date.today() + timedelta(days=1)
         r = UserRequest(
             user=user["user"],
-            service_type=user["service_type"],
-            school=user["school"][0],
-            department=user["department"][0],
+            # service_type=user["service_type"],
+            service_type="Daily",
+            school=user["school"],
+            department=user["department"],
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],
             interests_priority=user["interests_priority"],
-            available_date=today,
         )
         r.save()
         for each in user["prefered cuisines"]:
             r.cuisines.add(each)
         for each in user["interests"]:
             r.interests.add(each)
-
-        if not user["service_type"] == "Daily":
-            for each in user["prefered days"]:
-                r.days.add(each)
-
         days = Days_left(user=user["user"], days=Service_days[r.service_type])
         days.save()
 

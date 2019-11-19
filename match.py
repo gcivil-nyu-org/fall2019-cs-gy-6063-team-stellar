@@ -11,7 +11,6 @@ from email.mime.image import MIMEImage
 import datetime
 import requests
 import json
-import time
 from django.db.models import Q
 
 from dateutil.relativedelta import relativedelta
@@ -25,6 +24,7 @@ from homepage.models import (
     UserRequestMatch,
     Restaurant,
     School,
+    Department,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -62,7 +62,7 @@ def recommend_restaurants(user1, user2, cuisinelist):
             getDistanceFromLatLonInKm(
                 school1.latitude, school1.longitude, each.latitude, each.longitude
             )
-            < 2
+            < 3
         ):
             close_to_1.append(each)
         else:
@@ -70,25 +70,21 @@ def recommend_restaurants(user1, user2, cuisinelist):
                 getDistanceFromLatLonInKm(
                     school2.latitude, school2.longitude, each.latitude, each.longitude
                 )
-                < 2
+                < 3
             ):
                 close_to_2.append(each)
 
     restautants_1 = {}
     restautants_2 = {}
-    if len(close_to_1) != 0:
-        try:
-            restautants_1 = random.sample(close_to_1, 5)
-        except Exception:
-            restautants_1 = random.sample(close_to_1, 1)
+    if len(close_to_1) > 5:
+        restautants_1 = random.sample(close_to_1, 5)
+    else:
+        restautants_1 = random.sample(close_to_1, len(close_to_1))
         # restautants_1 = random.sample(list(close_to_1), 1)
-    if len(close_to_2) != 0:
-        try:
-            restautants_2 = random.sample(close_to_2, 5)
-        except Exception:
-            restautants_2 = random.sample(close_to_2, 1)
-    # print("In restaurant, restaurant1 is")
-    # print(restautants_1)
+    if len(close_to_2) > 5:
+        restautants_2 = random.sample(close_to_2, 5)
+    else:
+        restautants_2 = random.sample(close_to_2, len(close_to_2))
     return restautants_1, restautants_2
 
 
@@ -106,7 +102,6 @@ def get_yelp_link(restaurant):
     }  # noqa: E501
     req = requests.get(url, params=params, headers=headers)
     # proceed only if the status code is 200
-    # print('The status code is {}'.format(req.status_code))
     if not req.status_code == 200:
         return -1
     yelp_result = json.loads(req.text)
@@ -117,37 +112,99 @@ def get_yelp_link(restaurant):
 
 
 def compose_email(
-    userRequest1, userRequest2, restaurants1, restaurants2, cuisine_names
+    userRequest1,
+    userRequest2,
+    restaurants1,
+    restaurants2,
+    cuisine_names,
+    interests_names,
 ):
     html_content = (
         "<p>Hi "
         + userRequest1.user.first_name
         + ",</p>"
-        + "<p>You got it! You have been matched with a NYU member:</p>"
-        + "<p><b>"
+        + "You got it! You have been matched with "
+        + "<b>"
         + userRequest2.user.first_name
         + " "
         + userRequest2.user.last_name
-        + "</b>("
+        + "</b> ("
         + userRequest2.user.email
         + ")"
-        + " from <b>"
+        + " from "
         + userRequest2.user.department
-        + " department </b>at <b>"
+        + " department at "
         + userRequest2.user.school
-        + "</b>. "
-        + "</p> <br style=“line-height:2;”>"
-        + "<p>Your match was based on your preferred department and cuisine type(s):</p>"
-        + "<p><b>"
-        + str(cuisine_names)
-        + "</b></p><br style=“line-height:2;”>"
-        + "<p>Here are recommanded restaurants based on both of your locations and cuisines types:</p>"
+        + ". "
+        + "<h3><b>Your match was based on your preferrences:</b></h3>"
     )
+
+    if not len(cuisine_names) == 0:
+        html_content = (
+            html_content + "<p><b> Common cuisines: </b>" + str(cuisine_names) + "</p>"
+        )
+    else:
+        html_content = (
+            html_content
+            + "<p><b> Common cuisines: </b> You don't have any common cuisine.</p>"
+        )
+
+    html_content = (
+        html_content
+        + "<p><b> School & Department: </b>"
+        + userRequest1.school.name
+        + ", "
+        + userRequest1.department.name
+        + "</p>"
+    )
+
+    if not len(interests_names) == 0:
+        html_content = (
+            html_content
+            + "<p><b> Common conversation interests: </b>"
+            + str(interests_names)
+            + "</p>"
+        )
+    else:
+        html_content = (
+            html_content
+            + "<p><b> Common interests: </b> You don't have any common interests.</p>"
+        )
 
     # Add restaurant near school1
     if not len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
-        for resturant in restaurants1:
+        prevname = ""
+
+        for restaurant in restaurants1:
+            if not restaurant.name == prevname:
+                link = get_yelp_link(restaurant)
+                html_content = (
+                    html_content + "<p><b>" + restaurant.name.capitalize() + "</b></p>"
+                )
+                address = (
+                    "Address: "
+                    + restaurant.building
+                    + " "
+                    + restaurant.street
+                    + ", "
+                    + restaurant.borough
+                    + " "
+                    + str(restaurant.zipcode)
+                )
+                html_content = html_content + "<p>" + address + "</p>"
+                if not link == -1:
+                    html_content = (
+                        html_content + "<p> Yelp link for this restaurant is: </p>"
+                    )
+                    # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
+                    html_content = html_content + "<div>" + link + "</div>"
+                prevname = restaurant.name
+
+    for resturant in restaurants2:
+        prevname = ""
+
+        if not prevname == restaurant.name:
             link = get_yelp_link(resturant)
 
             html_content = (
@@ -168,37 +225,8 @@ def compose_email(
                 html_content = (
                     html_content + "<p> Yelp link for this restaurant is: </p>"
                 )
-                # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
                 html_content = html_content + "<div>" + link + "</div>"
-
-    # Add restaurant near school2
-    if not len(restaurants2) == 0:
-        html_content = (
-            html_content
-            + "<br style=“line-height:2;”><p><b><i>Restaurants near your lunch partner's school:</p>"
-        )
-        for resturant in restaurants2:
-            link = get_yelp_link(resturant)
-
-            html_content = (
-                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
-            )
-            address = (
-                "Address: "
-                + resturant.building
-                + " "
-                + resturant.street
-                + ", "
-                + resturant.borough
-                + " "
-                + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
-                html_content = (
-                    html_content + "<p> Yelp link for this restaurant is: </p>"
-                )
-                html_content = html_content + "<div>" + link + "</div>"
+            prevname = restaurant.name
 
     # Add image
     html_content = html_content + '<p><img src="cid:myimage" /></p>'
@@ -216,9 +244,7 @@ def send_email(html_content, ical_atch, attendee):
     # Now create the MIME container for the image
     img = MIMEImage(img_data, "jpg")
     img.add_header("Content-Id", "<myimage>")  # angle brackets are important
-    img.add_header(
-        "Content-Disposition", "inline", filename="myimage"
-    )  # David Hess recommended this edit
+    img.add_header("Content-Disposition", "inline", filename="myimage")
     html_part.attach(img)
     msg = EmailMessage(
         "LunchNinja Match found!!", None, "teamstellarse@gmail.com", attendee
@@ -227,7 +253,6 @@ def send_email(html_content, ical_atch, attendee):
         html_part
     )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
     msg.attach(ical_atch)
-    time.sleep(5)
     print("sending out email")
     msg.send()
 
@@ -246,13 +271,25 @@ def send_invitations(userRequest, userMatch):
     cuisine_names = ", ".join(
         [cuisine.name for cuisine in (user1Cuisines & user2Cuisines)]
     )
+    print("cuisine_names is")
+    print(cuisine_names)
+
+    user1Interests = userRequest[0].interests.all()
+    user2Interests = userRequest[0].interests.all()
+
+    interests_name = ", ".join(
+        [interest.name for interest in (user1Interests & user2Interests)]
+    )
 
     restaurants1, restaurants2 = recommend_restaurants(
         userRequest[0].user, userRequest[1].user, commonCuisines
     )
+    print("restaurants1 is")
+    print(restaurants1)
 
     CRLF = "\r\n"
-    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
+    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
 
     dur = datetime.timedelta(hours=1)
 
@@ -262,21 +299,23 @@ def send_invitations(userRequest, userMatch):
     dtend = dtend.strftime("%Y%m%dT%H%M%S")
 
     attendees = [user1Email, user2Email]
+    # attendees = ["utkarshprakash21@gmail.com", "monsieurutkarsh@gmail.com"]
 
     description = (
-        "DESCRIPTION: Lunch meeting with"
+        "DESCRIPTION: Lunch meeting: "
         + userRequest[1].user.first_name
         + " "
         + userRequest[1].user.last_name
-        + "</b>("
-        + userRequest[1].user.email
-        + ")"
+        + " and "
+        + userRequest[0].user.first_name
+        + " "
+        + userRequest[0].user.last_name
         + CRLF
     )
     attendee = ""
     for att in attendees:
         attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-    PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE"
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE"
             + CRLF
             + " ;CN="
             + att
@@ -344,14 +383,24 @@ def send_invitations(userRequest, userMatch):
     ical_atch = MIMEBase("application/ics", ' ;name="%s"' % ("invite.ics"))
     ical_atch.set_payload(ical)
 
-    to1 = [user1Email]
-    to2 = [user2Email]
+    to1 = [attendees[0]]
+    to2 = [attendees[1]]
     html_content = compose_email(
-        userRequest[0], userRequest[1], restaurants1, restaurants2, cuisine_names
+        userRequest[0],
+        userRequest[1],
+        restaurants1,
+        restaurants2,
+        cuisine_names,
+        interests_name,
     )
     send_email(html_content, ical_atch, to1)
     html_content = compose_email(
-        userRequest[1], userRequest[0], restaurants1, restaurants2, cuisine_names
+        userRequest[1],
+        userRequest[0],
+        restaurants1,
+        restaurants2,
+        cuisine_names,
+        interests_name,
     )
     send_email(html_content, ical_atch, to2)
 
@@ -380,12 +429,14 @@ def interest_filter(matchpool, req):
 
 def dual_department_filter(matchpool, req):
     available_set_A = set()
-    A_users = LunchNinjaUser.objects.filter(department=req.department)
+
+    A_users = LunchNinjaUser.objects.filter(department=req.department.name)
     for each in A_users:
         ur = UserRequest.objects.filter(user_id=each.id)
         available_set_A = available_set_A.union(set(ur))
 
-    B = UserRequest.objects.filter(department=req.user.department)
+    d = Department.objects.filter(name=req.user.department)
+    B = UserRequest.objects.filter(department=d[0])
     M_A_B = available_set_A.intersection(set(B))
     available_set = M_A_B
     available_set = available_set.intersection(matchpool)
@@ -394,7 +445,7 @@ def dual_department_filter(matchpool, req):
 
 def single_department_filter(matchpool, req):
     available_set = set()
-    users = LunchNinjaUser.objects.filter(department=req.department)
+    users = LunchNinjaUser.objects.filter(department=req.department.name)
     for each in users:
         ur = UserRequest.objects.filter(user_id=each.id)
         available_set = available_set.union(set(ur))
@@ -412,17 +463,21 @@ def same_department_filter(matchpool, req):
 
     available_set = available_set.intersection(matchpool)
     return available_set
+
+
 def begining_of_week(day):
-    weekday=day.weekday()
-    begining=day-datetime.timedelta(days=weekday)
+    weekday = day.weekday()
+    begining = day - datetime.timedelta(days=weekday)
     return begining
 
+
 def find_day_prefer(user):
-    days=user.days.all()
-    if len(days)==0:
+    days = user.days.all()
+    if len(days) == 0:
         return 0
     else:
         return user.days.all()[0].id
+
 
 def save_matches(matches):
     # save matches to user_request_match table
@@ -436,8 +491,12 @@ def save_matches(matches):
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
 
-        first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(days=find_day_prefer(ur1))
-        first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(days=find_day_prefer(ur2))
+        first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
+            days=find_day_prefer(ur1)
+        )
+        first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
+            days=find_day_prefer(ur2)
+        )
         if ur1.service_type == "monthly":
             ur1.available_date = first_available_weekday_u1 + month
         elif ur1.service_type == "weekly":
@@ -462,7 +521,9 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        # send_invitations(match, request_match)
+
+        if user1.id == 1 or user2.id == 1:
+            send_invitations(match, request_match)
 
 
 def find_match_user(available_set):
@@ -470,7 +531,10 @@ def find_match_user(available_set):
     match_request = random.choice(list(available_set))
     return match_request
 
-today=datetime.date.today()+datetime.timedelta(days=1)
+
+today = datetime.date.today() + datetime.timedelta(days=1)
+
+
 def get_matchpool():
     matchpool = set()
     reqlist = []
@@ -506,6 +570,8 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
         for matched_user in match_history:
 
             # users cannot match matched users
+            print(matched_user.user1_id)
+            print(matched_user.user2_id)
             user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
             user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
             if user1 in matchlist and user2 in matchlist:
@@ -623,6 +689,7 @@ def match():
         user_num2 = user_tuple[1]
         user1 = matchlist[user_num1]
         user2 = matchlist[user_num2]
+        print("[" + str(user1.user.id) + ", " + str(user2.user.id) + "]")
         if user1 in matchpool and user2 in matchpool:
             matched_user.append([user1.user_id, user2.user_id])
             matched_user_request.append([user1, user2])
@@ -636,19 +703,21 @@ def match():
     for u in not_matched_user:
         print(u.user.username)
 
-    fake_not_matched_user=[]
+    fake_not_matched_user = []
     for user in not_matched_user:
-        prefer_weekday=[]
+        prefer_weekday = []
         for d in user.days.all():
             prefer_weekday.append(d.id)
         for i in prefer_weekday:
-            if i>today.weekday():
-                user.available_date=begining_of_week(today)+datetime.timedelta(days=i)
+            if i > today.weekday():
+                user.available_date = begining_of_week(today) + datetime.timedelta(
+                    days=i
+                )
                 user.save()
                 fake_not_matched_user.append(user)
-    real_not_matched_user=[]
+    real_not_matched_user = []
     for user in not_matched_user:
-        if not user in fake_not_matched_user:
+        if user not in fake_not_matched_user:
             real_not_matched_user.append(user)
     print("matched user")
     print(matched_user_request)
@@ -660,9 +729,8 @@ def match():
     return matched_user_request
 
 
-
-matched_user_request=match()
-userlist=UserRequest.objects.all()
+matched_user_request = match()
+userlist = UserRequest.objects.all()
 for user in userlist:
     if user in matched_user_request:
         print("Matched")

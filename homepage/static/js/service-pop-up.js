@@ -21,7 +21,11 @@ var multipleCancelButton = new Choices('#daysSelect', {
     // renderChoiceLimit: 20
 });
 
-let service_request = {}
+let service_request = {
+    "cuisines_priority":"10",
+    "department_priority":"10",
+    "interests_priority":"10"
+}
 
 var rangeSlider = function () {
     var departmentSlider = $('#department_slider'),
@@ -36,7 +40,8 @@ var rangeSlider = function () {
         });
 
         departmentRange.on('input', function () {
-            service_request["department_priority"] = this.value
+            service_request["department_priority"] = this.value;
+            debugger;
             $(this).next(departmentValue).html(this.value);
         });
     });
@@ -46,7 +51,6 @@ var rangeSlider = function () {
         cuisineValue = $('#cuisine_slider_value');
 
     cuisineSlider.each(function () {
-
         cuisineValue.each(function () {
             var value = $(this).prev().attr('value');
             $(this).html(value);

@@ -55,17 +55,13 @@ def merge():
 
 
 def check_ajax_department(request):
-    if request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_departments_homepage"
-    ):
+    if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
         return True
     return False
 
 
 def check_ajax_school(request):
-    if request.method == "GET" and request.path.startswith(
-        "/homepage/ajax/load_school_homepage"
-    ):
+    if request.method == "GET" and "/ajax/load_school_homepage" in request.path:
         return True
     return False
 
@@ -85,7 +81,13 @@ def check_user_authenticated(request):
 
 
 def User_service_send_email_authenticated(
-    request, service_type, cuisine_names, interests_names, school, department
+    request,
+    service_type,
+    cuisine_names,
+    interests_names,
+    selected_days_names,
+    school,
+    department,
 ):
     email_subject = "Service Confirmation"
     message = render_to_string(
@@ -132,7 +134,9 @@ def user_service(request):
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
+            school_object = School.objects.filter(name=school)
             department = request.POST["department"]
+            department_object = Department.objects.filter(name=department)
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
@@ -154,10 +158,13 @@ def user_service(request):
 
             # if request already exist then update the request otherwise update it
             try:
+                import pdb
+
+                pdb.set_trace()
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
-                req.school = school
-                req.department = department
+                req.school = school_object[0]
+                req.department = department_object[0]
                 req.cuisines_priority = cuisines_priority
                 req.department_priority = department_priority
                 req.interests_priority = interests_priority
@@ -178,7 +185,6 @@ def user_service(request):
                 #        break
                 # print(next_availabe_day)
 
-
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
                 req.save()
@@ -193,8 +199,8 @@ def user_service(request):
                 req = UserRequest(
                     user=logged_user,
                     service_type=service_type,
-                    school=school,
-                    department=department,
+                    school=school_object,
+                    department=department_object,
                     cuisines_priority=cuisines_priority,
                     department_priority=department_priority,
                     interests_priority=interests_priority,
@@ -222,7 +228,7 @@ def user_service(request):
         else:
             email_subject = "Service Confirmation"
             message = "Service selected"
-            to_email = "up@nyu.edu"
+            to_email = request.user.email
             email = EmailMessage(email_subject, message, to=[to_email])
             email.send()
         return redirect("/")
@@ -275,13 +281,18 @@ def match_history(request):
             matched_user_cuisines_instance = UserRequest.objects.get(
                 user=matched_user
             ).cuisines.all()
+            matched_user_interests_instances = UserRequest.objects.get(
+                user=matched_user
+            ).interests.all()
             matched_user_cuisines = ", ".join(
                 [cuisine.name for cuisine in matched_user_cuisines_instance]
             )
-            matched_restaurants = ", ".join(
-                [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
+            matched_user_interests = ", ".join(
+                [interest.name for interest in matched_user_interests_instances]
             )
-            print(matched_restaurants)
+            # matched_restaurants = ", ".join(
+            #     [restaurant.name.capitalize() for restaurant in match.restaurants.all()]
+            # )
             match_dict = {
                 "match_time": match.match_time,
                 "matched_user_name": matched_user.first_name
@@ -291,7 +302,7 @@ def match_history(request):
                 "matched_user_school": matched_user.school,
                 "matched_user_department": matched_user.department,
                 "matched_user_cuisines": matched_user_cuisines,
-                "matched_restaurants": matched_restaurants,
+                "matched_user_interests": matched_user_interests,
             }
             if datetime.now(timezone.utc) <= match.match_time:
                 next_lunch_matches.append(match_dict)
@@ -333,6 +344,9 @@ def settings(request):
                 "preferred_interests": ", ".join(
                     [interest.name for interest in preffered_interests_instances]
                 ),
+                "department_priority": user_request_instance.department_priority,
+                "cuisines_priority": user_request_instance.cuisines_priority,
+                "interests_priority": user_request_instance.interests_priority,
             }
         except UserRequest.DoesNotExist:
             user_request = None

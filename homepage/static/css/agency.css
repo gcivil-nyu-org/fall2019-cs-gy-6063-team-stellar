@@ -845,3 +845,6 @@ input:checked + .slider:before {
   padding-right: 0px;
   padding-left: 0px;
 }
+.preferrence_priority{
+  margin-bottom:0 ;
+}

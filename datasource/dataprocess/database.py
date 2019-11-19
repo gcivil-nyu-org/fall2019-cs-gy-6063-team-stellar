@@ -115,7 +115,7 @@ def importRestaurant():
                 distance = getDistanceFromLatLonInKm(
                     lat[j], log[j], latitude, longitude
                 )
-                if distance <= 1.5:
+                if distance <= 2:
                     cur.execute(
                         "SELECT COUNT(*) FROM homepage_restaurant WHERE id == "
                         + str(rid)

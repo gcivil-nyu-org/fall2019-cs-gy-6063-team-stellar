@@ -6,4 +6,5 @@ omit =
     match.py
     create_usermatch.py
     create_users_SE.py
+    create_userrequests_SE.py
     delete_user.py
