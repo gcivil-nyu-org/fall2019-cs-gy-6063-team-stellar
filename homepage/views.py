@@ -13,6 +13,7 @@ from .models import (
     Days_left,
     Interests,
     Department,
+    Days,
 )
 from datetime import datetime, timezone, timedelta, date
 
@@ -80,7 +81,13 @@ def check_user_authenticated(request):
 
 
 def User_service_send_email_authenticated(
-    request, service_type, cuisine_names, interests_names, school, department
+    request,
+    service_type,
+    cuisine_names,
+    interests_names,
+    selected_days_names,
+    school,
+    department,
 ):
     email_subject = "Service Confirmation"
     message = render_to_string(
@@ -99,22 +106,25 @@ def User_service_send_email_authenticated(
     email.send()
 
 
+def getModelData():
+    return {
+        "cuisines": Cuisine.objects.all(),
+        "schools": School.objects.all(),
+        "departments": Department.objects.all(),
+        "interests": Interests.objects.all(),
+        "week_days": Days.objects.all(),
+    }
+
+
+def Merge(dict1, dict2):
+    res = {**dict1, **dict2}
+    return res
+
+
 def index(request):
     if check_login(request):  # no repeat log in
-        department = Department.objects.all()
-        school = School.objects.all()
-        cuisine = Cuisine.objects.all()
-        interests = Interests.objects.all()
-        return render(
-            request,
-            "homepage.html",
-            {
-                "cuisines": cuisine,
-                "schools": school,
-                "departments": department,
-                "interests": interests,
-            },
-        )
+        preference_model_data = getModelData()
+        return render(request, "homepage.html", Merge({}, preference_model_data))
     return redirect("/login/")
 
 
@@ -140,28 +150,45 @@ def user_service(request):
                 [interest.name for interest in interests_objects]
             )
 
+            selected_days_ids = request.POST.getlist("day[]")
+            selected_days_objects = Days.objects.filter(id__in=selected_days_ids)
+            selected_days_names = ", ".join([day.day for day in selected_days_objects])
+
             logged_user = request.user
+
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
-                req.school = school_object
-                req.department = department_object
+                req.school = school_object[0]
+                req.department = department_object[0]
                 req.cuisines_priority = cuisines_priority
                 req.department_priority = department_priority
                 req.interests_priority = interests_priority
                 req.cuisines.clear()
                 req.interests.clear()
+                req.days.clear()
 
                 # match_his = UserRequestMatch.objects.filter(Q(user1=req.user) | Q(user2=req.user)).order_by(
                 #     "-match_time")
                 # print(match_his[0])
+
+                # available_weekday=[]
+                # for i in req.days.all():
+                #     available_weekday.append(i.id)
+                # for d in range(0,7):
+                #    next_availabe_day=date.today()+timedelta(days=d)
+                #    if next_availabe_day.weekday() in available_weekday:
+                #        break
+                # print(next_availabe_day)
 
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
+                req.days.add(*selected_days_objects)
+
                 day = Days_left.objects.get(user_id=logged_user.id)
                 day.days = Service_days[req.service_type]
                 day.save()
@@ -179,6 +206,8 @@ def user_service(request):
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
+                req.days.add(*selected_days_objects)
+
                 days = Days_left(user=logged_user, days=Service_days[req.service_type])
                 days.save()
 
@@ -189,6 +218,7 @@ def user_service(request):
                 service_type,
                 cuisine_names,
                 interests_names,
+                selected_days_names,
                 school,
                 department,
             )
@@ -276,22 +306,18 @@ def match_history(request):
             else:
                 past_lunch_macthes.append(match_dict)
 
-        department = Department.objects.all()
-        school = School.objects.all()
-        cuisine = Cuisine.objects.all()
-        interests = Interests.objects.all()
+        preference_model_data = getModelData()
 
         return render(
             request,
             "match_history.html",
-            {
-                "next_lunch_matches": next_lunch_matches,
-                "past_lunch_macthes": past_lunch_macthes,
-                "cuisines": cuisine,
-                "schools": school,
-                "departments": department,
-                "interests": interests,
-            },
+            Merge(
+                {
+                    "next_lunch_matches": next_lunch_matches,
+                    "past_lunch_macthes": past_lunch_macthes,
+                },
+                preference_model_data,
+            ),
         )
 
     return redirect("/login/")
@@ -299,11 +325,6 @@ def match_history(request):
 
 def settings(request):
     if check_login(request):
-        department = Department.objects.all()
-        school = School.objects.all()
-        cuisine = Cuisine.objects.all()
-        interests = Interests.objects.all()
-
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
             preffered_cuisines_instances = user_request_instance.cuisines.all()
@@ -327,16 +348,12 @@ def settings(request):
         except UserRequest.DoesNotExist:
             user_request = None
 
+        preference_model_data = getModelData()
+
         return render(
             request,
             "settings.html",
-            {
-                "cuisines": cuisine,
-                "schools": school,
-                "departments": department,
-                "user_request": user_request,
-                "interests": interests,
-            },
+            Merge({"user_request": user_request}, preference_model_data),
         )
     return redirect("/login/")
 
