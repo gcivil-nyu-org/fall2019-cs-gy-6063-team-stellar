@@ -341,6 +341,11 @@ def settings(request):
     return redirect("/login/")
 
 
+def feedback(request):
+    print(request.body)
+    return render(request, "feedback.html")
+
+
 def test(request):
     return render(request, "test.html")
 

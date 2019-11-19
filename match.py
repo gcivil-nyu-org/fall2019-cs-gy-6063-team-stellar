@@ -15,6 +15,7 @@ from django.db.models import Q
 
 from dateutil.relativedelta import relativedelta
 
+#Yelp API Key
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
@@ -197,7 +198,7 @@ def compose_email(
                     html_content = (
                         html_content + "<p> Yelp link for this restaurant is: </p>"
                     )
-                    # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
+                    html_content = html_content + "<div> <a herf = \"" + link + "\">" + restaurant.name.capitalize() + "</a></div>"
                     html_content = html_content + "<div>" + link + "</div>"
                 prevname = restaurant.name
 

@@ -11,6 +11,7 @@ urlpatterns = [
     path("homepage/test/match", views.match),
     path("homepage/test/create_users", views.create_users),
     path("homepage/test/create_ur", views.create_ur),
+    path("feedback/", views.feedback),
     re_path(r"^[a-zA-Z]*/ajax/load_departments_homepage/$", views.user_service),
     re_path(r"^[a-zA-Z]*/ajax/load_school_homepage/$", views.user_service),
 ]
