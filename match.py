@@ -465,6 +465,20 @@ def same_department_filter(matchpool, req):
     return available_set
 
 
+def begining_of_week(day):
+    weekday = day.weekday()
+    begining = day - datetime.timedelta(days=weekday)
+    return begining
+
+
+def find_day_prefer(user):
+    days = user.days.all()
+    if len(days) == 0:
+        return 0
+    else:
+        return user.days.all()[0].id
+
+
 def save_matches(matches):
     # save matches to user_request_match table
     month = relativedelta(months=1)
@@ -477,18 +491,24 @@ def save_matches(matches):
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
 
+        first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
+            days=find_day_prefer(ur1)
+        )
+        first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
+            days=find_day_prefer(ur2)
+        )
         if ur1.service_type == "monthly":
-            ur1.available_date = datetime.date.today() + month
+            ur1.available_date = first_available_weekday_u1 + month
         elif ur1.service_type == "weekly":
-            ur1.available_date = datetime.date.today() + week
+            ur1.available_date = first_available_weekday_u1 + week
         elif ur1.service_type == "daily":
-            ur1.available_date = datetime.date.today() + day
+            ur1.available_date = first_available_weekday_u1 + day
         if ur2.service_type == "Monthly":
-            ur2.available_date = datetime.date.today() + month
+            ur2.available_date = first_available_weekday_u2 + month
         elif ur2.service_type == "Weekly":
-            ur2.available_date = datetime.date.today() + week
+            ur2.available_date = first_available_weekday_u2 + week
         elif ur2.service_type == "Daily":
-            ur2.available_date = datetime.date.today() + day
+            ur2.available_date = first_available_weekday_u2 + day
         ur1.save()
         ur2.save()
         user1Cuisines = ur1.cuisines.all()
@@ -512,14 +532,16 @@ def find_match_user(available_set):
     return match_request
 
 
+today = datetime.date.today() + datetime.timedelta(days=1)
+
+
 def get_matchpool():
     matchpool = set()
     reqlist = []
-    # today=datetime.date.today()+datetime.timedelta(days=1)
-    today = datetime.date.today()
+
+    # today = datetime.date.today()
     print(today)
     available_day_entry = UserRequest.objects.filter(available_date=today)
-    print(available_day_entry)
     # days_entry = Days_left.objects.filter(days=1)
     # for day in days_entry:
     #     user = day.user
@@ -545,15 +567,16 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
         match_history = UserRequestMatch.objects.filter(
             Q(user1=user_r.user) | Q(user2=user_r.user)
         )
-
         for matched_user in match_history:
+
             # users cannot match matched users
             print(matched_user.user1_id)
             print(matched_user.user2_id)
             user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
             user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
-            match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
-            match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
+            if user1 in matchlist and user2 in matchlist:
+                match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
+                match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
         # find all possible matches base on the users preference
         available_set_cuisine = cuisine_filter(matchpool, user_r)
         available_set_interest = interest_filter(matchpool, user_r)
@@ -636,7 +659,9 @@ def match():
     matchlist = []
     for user in matchpool:
         matchlist.append(user)
+
     match_matrix = creat_match_matrix(matchpool, matchlist, preference_score)
+
     match_score_list = []
 
     for i in range(0, len(matchlist)):
@@ -655,8 +680,9 @@ def match():
     matched_user_request = []
     matched_user = []
     not_matched_user = []
-
+    print(match_score_list)
     for user_tuple in match_score_list:
+
         if user_tuple[2] < 0:
             continue
         user_num1 = user_tuple[0]
@@ -674,5 +700,42 @@ def match():
         not_matched_user.append(user)
     save_matches(matched_user_request)
 
+    for u in not_matched_user:
+        print(u.user.username)
 
-match()
+    fake_not_matched_user = []
+    for user in not_matched_user:
+        prefer_weekday = []
+        for d in user.days.all():
+            prefer_weekday.append(d.id)
+        for i in prefer_weekday:
+            if i > today.weekday():
+                user.available_date = begining_of_week(today) + datetime.timedelta(
+                    days=i
+                )
+                user.save()
+                fake_not_matched_user.append(user)
+    real_not_matched_user = []
+    for user in not_matched_user:
+        if user not in fake_not_matched_user:
+            real_not_matched_user.append(user)
+    print("matched user")
+    print(matched_user_request)
+    print("fake not matched user")
+    print(fake_not_matched_user)
+    print("real_matched_user")
+    print(real_not_matched_user)
+
+    return matched_user_request
+
+
+matched_user_request = match()
+userlist = UserRequest.objects.all()
+for user in userlist:
+    if user in matched_user_request:
+        print("Matched")
+    print(user.user.username)
+    print(user.service_type)
+    print(user.days.all())
+    print(user.days.all())
+    print(user.available_date)

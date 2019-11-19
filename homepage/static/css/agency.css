@@ -841,6 +841,10 @@ input:checked + .slider:before {
 	 border: 0;
 }
  
+#daysSelect{
+  padding-right: 0px;
+  padding-left: 0px;
+}
 .preferrence_priority{
   margin-bottom:0 ;
 }
