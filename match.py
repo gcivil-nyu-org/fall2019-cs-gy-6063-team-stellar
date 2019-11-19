@@ -203,6 +203,7 @@ def compose_email(
 
     for resturant in restaurants2:
         prevname = ""
+
         if not prevname == restaurant.name:
             link = get_yelp_link(resturant)
 
@@ -287,7 +288,8 @@ def send_invitations(userRequest, userMatch):
     print(restaurants1)
 
     CRLF = "\r\n"
-    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
+    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
 
     dur = datetime.timedelta(hours=1)
 
@@ -313,7 +315,7 @@ def send_invitations(userRequest, userMatch):
     attendee = ""
     for att in attendees:
         attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-    PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE"
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE"
             + CRLF
             + " ;CN="
             + att
@@ -364,7 +366,7 @@ def send_invitations(userRequest, userMatch):
         + CRLF
         + "SEQUENCE:0"
         + CRLF
-        + "STATUS:TENTATIVE"
+        + "STATUS:CONFIRMED"
         + CRLF
     )
     ical += (
@@ -499,7 +501,8 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        if user1.id == 1 or user1.id == 3 or user2.id == 1 or user2.id == 3:
+
+        if user1.id == 1 or user2.id == 1:
             send_invitations(match, request_match)
 
 
@@ -660,6 +663,7 @@ def match():
         user_num2 = user_tuple[1]
         user1 = matchlist[user_num1]
         user2 = matchlist[user_num2]
+        print("[" + str(user1.user.id) + ", " + str(user2.user.id) + "]")
         if user1 in matchpool and user2 in matchpool:
             matched_user.append([user1.user_id, user2.user_id])
             matched_user_request.append([user1, user2])
