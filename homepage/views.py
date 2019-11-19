@@ -158,9 +158,6 @@ def user_service(request):
 
             # if request already exist then update the request otherwise update it
             try:
-                import pdb
-
-                pdb.set_trace()
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
                 req.school = school_object[0]
