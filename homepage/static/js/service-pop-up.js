@@ -1,24 +1,58 @@
-var multipleCancelButton = new Choices('#cuisineSelect', {
-    //https://bbbootstrap.com/snippets/multiselect-dropdown-list-83601849
-    removeItemButton: true,
-    maxItemCount:10,
-    // searchResultLimit: 5,
-    // renderChoiceLimit: 20
-});
-
-var multipleCancelButton = new Choices('#interestSelect', {
-    //https://bbbootstrap.com/snippets/multiselect-dropdown-list-83601849
+var customTemplates = new Choices('#cuisineSelect', {
     removeItemButton: true,
     maxItemCount: 10,
-    // searchResultLimit: 5,
-    // renderChoiceLimit: 20
+    callbackOnCreateTemplates: function (strToEl) {
+        var classNames = this.config.classNames;
+        var itemSelectText = this.config.itemSelectText;
+        return {
+            choice: function (classNames, data) {
+                return strToEl('\
+                <div\
+                  class="' + String(classNames.item) + ' ' + String(classNames.itemChoice) + ' ' + String(data.disabled ? classNames.itemDisabled : classNames.itemSelectable) + '"\
+                  data-select-text="' + String(itemSelectText) + '"\
+                  data-choice \
+                  ' + String(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\
+                  data-id="' + String(data.id) + '"\
+                  data-value="' + String(data.value) + '"\
+                  ' + String(data.groupId > 0 ? 'role="treeitem"' : 'role="option"') + '\
+                  >\
+                  <span style="margin-right:10px;">'+ String(data.label) + String(top_cuisines.includes(parseInt(data.value)) ? '<i class="fa fa-fire fire-icon"></i></span>' : '<div></div>') + '\
+                </div>\
+              ');
+            },
+        };
+    },
+});
+
+var customTemplates = new Choices('#interestSelect', {
+    removeItemButton: true,
+    maxItemCount: 10,
+    callbackOnCreateTemplates: function (strToEl) {
+        var classNames = this.config.classNames;
+        var itemSelectText = this.config.itemSelectText;
+        return {
+            choice: function (classNames, data) {
+                return strToEl('\
+                <div\
+                  class="' + String(classNames.item) + ' ' + String(classNames.itemChoice) + ' ' + String(data.disabled ? classNames.itemDisabled : classNames.itemSelectable) + '"\
+                  data-select-text="' + String(itemSelectText) + '"\
+                  data-choice \
+                  ' + String(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\
+                  data-id="' + String(data.id) + '"\
+                  data-value="' + String(data.value) + '"\
+                  ' + String(data.groupId > 0 ? 'role="treeitem"' : 'role="option"') + '\
+                  >\
+                  <span style="margin-right:10px;">'+ String(data.label) + String(top_interests.includes(parseInt(data.value)) ? '<i class="fa fa-fire fire-icon"></i></span>' : '<div></div>') + '\
+                </div>\
+              ');
+            },
+        };
+    },
 });
 
 var multipleCancelButton = new Choices('#daysSelect', {
     //https://bbbootstrap.com/snippets/multiselect-dropdown-list-83601849
     removeItemButton: true,
-    // searchResultLimit: 5,
-    // renderChoiceLimit: 20
 });
 
 let service_request = {
@@ -41,7 +75,6 @@ var rangeSlider = function () {
 
         departmentRange.on('input', function () {
             service_request["department_priority"] = this.value;
-            debugger;
             $(this).next(departmentValue).html(this.value);
         });
     });

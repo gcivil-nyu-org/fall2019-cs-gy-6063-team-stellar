@@ -16,6 +16,7 @@ from .models import (
     Days,
 )
 from datetime import datetime, timezone, timedelta, date
+from collections import Counter
 
 
 # Create your views here.
@@ -107,12 +108,25 @@ def User_service_send_email_authenticated(
 
 
 def getModelData():
+    all_selected_cuisine = UserRequest.objects.values_list("cuisines", flat=True)
+    all_selected_interests = UserRequest.objects.values_list("interests", flat=True)
+
+    # get top 7 most common cuisine
+    most_frequent_cuisine = [x for x, _ in Counter(all_selected_cuisine).most_common(7)]
+
+    # get top 5 most common interests
+    most_frequent_interest = [
+        x for x, _ in Counter(all_selected_interests).most_common(5)
+    ]
+
     return {
         "cuisines": Cuisine.objects.all(),
         "schools": School.objects.all(),
         "departments": Department.objects.all(),
         "interests": Interests.objects.all(),
         "week_days": Days.objects.all(),
+        "top_cuisines": most_frequent_cuisine,
+        "top_interests": most_frequent_interest,
     }
 
 
