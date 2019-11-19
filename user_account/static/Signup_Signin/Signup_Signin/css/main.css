@@ -1,16 +1,10 @@
 
-
-
-
-/*//////////////////////////////////////////////////////////////////
-[ FONT ]*/
-
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 
 * {
-	margin: 0px; 
-	padding: 0px; 
+	margin: 0px;
+	padding: 0px;
 	box-sizing: border-box;
 }
 
@@ -38,7 +32,9 @@ a:focus {
 
 a:hover {
 	text-decoration: none;
+  /*color: #d33f8d;*/
   color: #fed136;
+
 }
 
 /*---------------------------------------------*/
@@ -113,7 +109,6 @@ iframe {
 
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
-
 .txt1 {
   font-family: Raleway-Regular;
   font-size: 16px;
@@ -133,14 +128,13 @@ iframe {
 /*//////////////////////////////////////////////////////////////////
 [ login ]*/
 
-/*not remove*/
 .limiter {
   width: 100%;
   margin: 0 auto;
 }
 
 .container-login100 {
-  width: 100%;  
+  width: 100%;
   min-height: 100vh;
   display: -webkit-box;
   display: -webkit-flex;
@@ -151,11 +145,12 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: #fed136;
-  background: -webkit-linear-gradient(bottom, #fed136, #0250c5);
-  background: -o-linear-gradient(bottom, #fed136, #0250c5);
-  background: -moz-linear-gradient(bottom, #fed136, #0250c5);
-  background: linear-gradient(bottom, #fed136, #0250c5);
+  /*background: #0250c5;*/
+  background: #D3D3D3;
+  background: -webkit-linear-gradient(bottom, #D3D3D3, #fed136);
+  background: -o-linear-gradient(bottom, #D3D3D3, #fed136);
+  background: -moz-linear-gradient(bottom, #D3D3D3, #fed136);
+  background: linear-gradient(bottom, #D3D3D3, #fed136);
   position: relative;
   z-index: 1;
 }
@@ -334,7 +329,7 @@ iframe {
   height: 18px;
   border-radius: 3px;
   background: #fff;
-  border: 2px solid #d33f8d;
+  border: 2px solid #fed136;
   left: 0;
   top: 48%;
   -webkit-transform: translateY(-50%);
@@ -345,7 +340,7 @@ iframe {
 }
 
 .input-checkbox100:checked + .label-checkbox100::before {
-  color: #d33f8d;
+  color: #fed136;
 }
 
 
@@ -443,7 +438,7 @@ iframe {
 
 .btn-face:hover,
 .btn-google:hover {
-  border-color: #d33f8d;
+    border-color: #fed136;
 }
 
 
@@ -507,13 +502,7 @@ iframe {
   visibility: visible;
   opacity: 1;
 }
-.back-lunchninja {
-    margin-left: auto;
-    margin-right:auto;
-    display:block;
-  max-width:15%;
-  max-height:15%
-}
+
 @media (max-width: 992px) {
   .alert-validate::before {
     visibility: visible;
