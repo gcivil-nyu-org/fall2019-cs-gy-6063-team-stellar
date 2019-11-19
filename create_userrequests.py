@@ -64,8 +64,10 @@ def generateuser(N):
 
         # days
         days = Days.objects.all()
-        p_days_number = random.randint(1, 3)
+        p_days_number = random.randint(0, 3)
+
         p_days = random.sample(list(days), p_days_number)
+
         user["prefered days"] = p_days
 
         user["meet history"] = []
@@ -80,26 +82,29 @@ def generateuser(N):
 # This function saves the generated user requests to database
 def save_users(userlist):
     for user in userlist:
-        print(date.today() + timedelta(days=1))
+        today=date.today() + timedelta(days=1)
         r = UserRequest(
             user=user["user"],
-            # service_type=user["service_type"],
-            service_type="Daily",
+            service_type=user["service_type"],
             school=user["school"][0].name,
             department=user["department"][0].name,
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],
             interests_priority=user["interests_priority"],
-            available_date=date.today() + timedelta(days=1),
+            available_date=today,
         )
         r.save()
         for each in user["prefered cuisines"]:
             r.cuisines.add(each)
         for each in user["interests"]:
             r.interests.add(each)
-        for each in user["prefered days"]:
-            r.days.add(each)
+
+        if not user["service_type"]=="Daily":
+            for each in user["prefered days"]:
+                r.days.add(each)
+
+
 
         days = Days_left(user=user["user"], days=Service_days[r.service_type])
         days.save()

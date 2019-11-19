@@ -160,6 +160,16 @@ def user_service(request):
                 #     "-match_time")
                 # print(match_his[0])
 
+                # available_weekday=[]
+                # for i in req.days.all():
+                #     available_weekday.append(i.id)
+                # for d in range(0,7):
+                #    next_availabe_day=date.today()+timedelta(days=d)
+                #    if next_availabe_day.weekday() in available_weekday:
+                #        break
+                # print(next_availabe_day)
+
+
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
                 req.save()
