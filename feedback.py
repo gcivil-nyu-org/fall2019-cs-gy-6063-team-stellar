@@ -1,35 +1,20 @@
 import os
-import math
-import random
 import django
 from django.core.mail import EmailMessage
-import numpy as np
-from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from datetime import date, datetime, timedelta
-from django.utils import timezone
-import requests
-import json
 
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
-from homepage.models import (
-    UserRequest,
-    UserRequestMatch,
-    Restaurant,
-    School,
-    Department,
-)  # noqa: E402
+from homepage.models import UserRequestMatch  # noqa: E402
 
-def compose_email(
-    user1,
-    user2
-):
+
+def compose_email(user1, user2):
     html_content = (
         "<p>Hi "
         + user1.first_name
@@ -46,8 +31,6 @@ def compose_email(
     )
     html_content = html_content + '<p><img src="cid:myimage2" /></p>'
     return html_content
-
-
 
 
 def send_email(html_content, attendee):
@@ -71,23 +54,24 @@ def send_email(html_content, attendee):
     msg.send()
 
 
-
 def prepare_feedback():
     tomorrow = date.today() + timedelta(days=1)
-                   # (tz=timezone.get_current_timezone()) + timedelta(1)
+    # (tz=timezone.get_current_timezone()) + timedelta(1)
     print(tomorrow)
-    yesterday = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
+    # yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
     # matches = UserRequestMatch.objects.filer(match_time = yesterday)
-    matches = UserRequestMatch.objects.filter(match_time__date= tomorrow)
+    matches = UserRequestMatch.objects.filter(match_time__date=tomorrow)
     for each in matches:
         print(each.id)
         user1 = each.user1
         user2 = each.user2
-        html_content = compose_email(user1, user2)
+        html_content1 = compose_email(user1, user2)
+        html_content2 = compose_email(user2, user1)
         to1 = [user1.email]
         to2 = [user2.email]
-        if(user1.id == 1 or user2.id == 1):
-            send_email(html_content, to1)
-            send_email(html_content, to2)
+        if user1.id == 1 or user2.id == 1:
+            send_email(html_content1, to1)
+            send_email(html_content2, to2)
+
 
 prepare_feedback()
