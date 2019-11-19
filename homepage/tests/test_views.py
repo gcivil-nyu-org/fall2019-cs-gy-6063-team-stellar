@@ -29,12 +29,23 @@ class UserserviceViewTest(TestCase):
             def clear(**kargs):
                 return "Cleared"
 
+        class days_for_mock:
+            def __init__(self):
+                pass
+
+            def clear(**kargs):
+                return "Cleared"
+
+            def add(**kargs):
+                return "Added"
+
         class userObj:
             def __init__(self):
                 self.service_type = "Monthly"
                 self.school = "Tandon School of Engineering"
                 self.cuisines = cuisine_for_mock
                 self.interests = interest_for_mock
+                self.days = days_for_mock
 
             def save(self):
                 return "Saved"
@@ -65,7 +76,7 @@ class UserserviceViewTest(TestCase):
 
         return days_for_mock
 
-    def send_email_mock(self, p2, p3, p4, p5, p6):
+    def send_email_mock(self, p2, p3, p4, p5, p6, p7):
         pass
 
     @mock.patch(
