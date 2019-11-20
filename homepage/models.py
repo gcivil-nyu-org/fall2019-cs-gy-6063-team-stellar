@@ -130,6 +130,7 @@ class UserRequest(models.Model):
 
 
 def in_one_day():
+    # next_day = timezone.now() + timedelta(days=1)
     next_day = timezone.now() + timedelta(days=1)
     new_period = next_day.replace(hour=12, minute=00)
     return new_period
@@ -180,13 +181,15 @@ class Choice(models.Model):
 
 
 class Feedback(models.Model):
+    id = models.IntegerField(primary_key=True)
     match = models.ForeignKey(UserRequestMatch, on_delete=models.CASCADE)
-    user1 = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="%(class)s_user1",
     )
-    choices = models.ForeignKey(Choice, on_delete=models.CASCADE)
+
+    choices = models.ManyToManyField(Choice, blank=True)
     comment = models.CharField(max_length=200)
 
 

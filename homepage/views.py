@@ -16,8 +16,9 @@ from .models import (
     Department,
     Days,
     Question,
-
+    Feedback,
 )
+from user_account.models import LunchNinjaUser
 from datetime import datetime, timezone, timedelta, date
 
 
@@ -389,64 +390,39 @@ def feedback(request):
     if request.method == "POST":
         print("post!!!!")
         print(request.META.get("PATH_INFO"))
+        data = request.META.get("PATH_INFO")[1:].split("-")
+        print("data[0] is ")
+        print(data[0])
+        print("data[1] is ")
+        print(data[1])
+        match_id = int(data[0])
+        match = UserRequestMatch.objects.get(id=match_id)
+        user_id = int(data[1])
+        user = LunchNinjaUser.objects.get(id=user_id)
         attendecnce = request.POST["attendance"]
         experience = request.POST["experience"]
         restaurant = request.POST["restaurant"]
         partner = request.POST["partner"]
-        print("attendecnce is")
-        print(attendecnce)
-        print("experience is")
-        print(experience)
-        print("restaurant is")
-        print(restaurant)
-        print("partner is")
-        print(partner)
-
-        # fb = Feedback(match= )
-        # try:
-        #     req = UserRequest.objects.get(pk=logged_user)
-        #     req.service_type = service_type
-        #     req.school = school_object[0]
-        #     req.department = department_object[0]
-        #     req.cuisines_priority = cuisines_priority
-        #     req.department_priority = department_priority
-        #     req.interests_priority = interests_priority
-        #     req.cuisines.clear()
-        #     req.interests.clear()
-        #     req.days.clear()
-        #
-        #     req.available_date = date.today() + timedelta(days=1)
-        #     req.time_stamp = datetime.now()
-        #     req.save()
-        #     req.cuisines.add(*cuisine_objects)
-        #     req.interests.add(*interests_objects)
-        #     req.days.add(*selected_days_objects)
-        #
-        #     day = Days_left.objects.get(user_id=logged_user.id)
-        #     day.days = Service_days[req.service_type]
-        #     day.save()
-        # except ObjectDoesNotExist:
-        #     req = UserRequest(
-        #         user=logged_user,
-        #         service_type=service_type,
-        #         school=school_object,
-        #         department=department_object,
-        #         cuisines_priority=cuisines_priority,
-        #         department_priority=department_priority,
-        #         interests_priority=interests_priority,
-        #         available_date=date.today() + timedelta(days=1),
-        #     )
-        #     req.save()
-        #     req.cuisines.add(*cuisine_objects)
-        #     req.interests.add(*interests_objects)
-        #     req.days.add(*selected_days_objects)
-        #
-        #     days = Days_left(user=logged_user, days=Service_days[req.service_type])
-        #     days.save()
+        comment = request.POST["comment"]
+        count = int(Feedback.objects.all().count())
+        fb = Feedback(id=count + 1, match=match, user=user, comment=comment)
+        fb.save()
+        q1 = Question.objects.get(label="attendance")
+        c1 = q1.choice_set.get(choice_text=attendecnce)
+        fb.choices.add(c1)
+        q2 = Question.objects.get(label="experience")
+        c2 = q2.choice_set.get(choice_text=experience)
+        fb.choices.add(c2)
+        q3 = Question.objects.get(label="restaurant")
+        c3 = q3.choice_set.get(choice_text=restaurant)
+        fb.choices.add(c3)
+        q4 = Question.objects.get(label="partner")
+        c4 = q4.choice_set.get(choice_text=partner)
+        fb.choices.add(c4)
         return redirect("/homepage/")
     else:
         context = {"latest_question_list": Question.objects.all()}
-        return render(request, "feedback2.html", context=context)
+        return render(request, "feedback.html", context=context)
 
 
 def test(request):

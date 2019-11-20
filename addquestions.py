@@ -2,9 +2,13 @@ import os
 import django
 from datetime import datetime
 from django.utils.timezone import get_current_timezone
-from homepage.models import Question
+
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 django.setup()
+
+from homepage.models import Question  # noqa: E402
+
 
 
 def addquestion():
@@ -18,7 +22,9 @@ def addquestion():
     q.choice_set.create(choice_text="I'd love to, but I got something emergency...")
 
     q1 = Question(
-        question_text="How likely are you to recommend LunchNinja to a NYU community member?",
+
+        question_text="How likely are you to recommend LunchNinja to another NYU community member?",
+
         pub_date=datetime.now(tz=get_current_timezone()),
     )
     q1.label = "experience"
@@ -30,7 +36,8 @@ def addquestion():
     q1.choice_set.create(choice_text="5")
 
     q2 = Question(
-        question_text="How likely are you to recommend the restaurant to a friend or family member?",
+
+        question_text="How likely are you to recommend the restaurant to a friend or your peers?",
         pub_date=datetime.now(tz=get_current_timezone()),
     )
     q2.label = "restaurant"

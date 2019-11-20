@@ -4,6 +4,8 @@ omit =
     create_users.py
     lunchNinja/wsgi.py
     match.py
+    feedback.py
+    addquestions.py
     create_usermatch.py
     create_users_SE.py
     create_userrequests_SE.py
