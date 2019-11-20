@@ -1,5 +1,6 @@
 [run]
 omit =
+    manage.py
     create_userrequests.py
     create_users.py
     lunchNinja/wsgi.py
@@ -10,3 +11,7 @@ omit =
     create_users_SE.py
     create_userrequests_SE.py
     delete_user.py
+    user_account/tests/test_forms.py
+    user_account/tests/test_views.py
+    homepage/tests/test_forms.py
+    homepage/tests/test_views.py

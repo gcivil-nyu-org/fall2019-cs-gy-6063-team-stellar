@@ -58,21 +58,21 @@ def merge():
     return school, department, school_department, department_school
 
 
-def get_weekday(date):
-    if date.weekday() == 0:
-        return "Monday"
-    elif date.weekday() == 1:
-        return "Tuesday"
-    elif date.weekday() == 2:
-        return "Wednesday"
-    elif date.weekday() == 3:
-        return "Thursday"
-    elif date.weekday() == 4:
-        return "Friday"
-    elif date.weekday() == 5:
-        return "Saturday"
-    elif date.weekday() == 6:
-        return "Sunday"
+# def get_weekday(date):
+#     if date.weekday() == 0:
+#         return "Monday"
+#     elif date.weekday() == 1:
+#         return "Tuesday"
+#     elif date.weekday() == 2:
+#         return "Wednesday"
+#     elif date.weekday() == 3:
+#         return "Thursday"
+#     elif date.weekday() == 4:
+#         return "Friday"
+#     elif date.weekday() == 5:
+#         return "Saturday"
+#     elif date.weekday() == 6:
+#         return "Sunday"
 
 
 def check_ajax_department(request):
@@ -229,8 +229,8 @@ def user_service(request):
                 req.interests.add(*interests_objects)
                 req.days.add(*selected_days_objects)
 
-                days = Days_left(user=logged_user, days=Service_days[req.service_type])
-                days.save()
+                # days = Days_left(user=logged_user, days=Service_days[req.service_type])
+                # days.save()
 
             # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
             # daysleft.save()
@@ -243,12 +243,12 @@ def user_service(request):
                 school,
                 department,
             )
-        else:
-            email_subject = "Service Confirmation"
-            message = "Service selected"
-            to_email = request.user.email
-            email = EmailMessage(email_subject, message, to=[to_email])
-            email.send()
+        # else:
+        #     email_subject = "Service Confirmation"
+        #     message = "Service selected"
+        #     to_email = request.user.email
+        #     email = EmailMessage(email_subject, message, to=[to_email])
+        #     email.send()
         return redirect("/")
     elif check_ajax_department(request):
 
@@ -369,9 +369,7 @@ def settings(request):
                 "preferred_weekday": ", ".join(
                     [day.day for day in preffered_days_instances]
                 ),
-                "next_meet_day": str(user_request_instance.available_date)
-                + "\n"
-                + get_weekday(user_request_instance.available_date),
+                "next_meet_day": str(user_request_instance.available_date),
             }
         except UserRequest.DoesNotExist:
             user_request = None
@@ -388,22 +386,27 @@ def settings(request):
 
 def feedback(request):
     if request.method == "POST":
-        print("post!!!!")
-        print(request.META.get("PATH_INFO"))
-        data = request.META.get("PATH_INFO")[1:].split("-")
-        print("data[0] is ")
-        print(data[0])
-        print("data[1] is ")
-        print(data[1])
+        # print("post!!!!")
+        # print(request.META.get("PATH_INFO"))
+        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        # print("data[0] is ")
+        # print(data[0])
+        # print("data[1] is ")
+        # print(data[1])
         match_id = int(data[0])
         match = UserRequestMatch.objects.get(id=match_id)
         user_id = int(data[1])
         user = LunchNinjaUser.objects.get(id=user_id)
         attendecnce = request.POST["attendance"]
+
         experience = request.POST["experience"]
+
         restaurant = request.POST["restaurant"]
+
         partner = request.POST["partner"]
+
         comment = request.POST["comment"]
+
         count = int(Feedback.objects.all().count())
         fb = Feedback(id=count + 1, match=match, user=user, comment=comment)
         fb.save()
@@ -425,20 +428,20 @@ def feedback(request):
         return render(request, "feedback.html", context=context)
 
 
-def test(request):
-    return render(request, "test.html")
+# def test(request):
+#     return render(request, "test.html")
 
-
-def match(request):
-    run(["python", "match.py"], shell=False, stdout=PIPE)
-    return redirect("/homepage/test")
-
-
-def create_users(request):
-    run(["python", "create_users.py"], shell=False, stdout=PIPE)
-    return redirect("/homepage/test")
-
-
-def create_ur(request):
-    run(["python", "create_userrequests.py"], shell=False, stdout=PIPE)
-    return redirect("/homepage/test")
+#
+# def match(request):
+#     run(["python", "match.py"], shell=False, stdout=PIPE)
+#     return redirect("/homepage/test")
+#
+#
+# def create_users(request):
+#     run(["python", "create_users.py"], shell=False, stdout=PIPE)
+#     return redirect("/homepage/test")
+#
+#
+# def create_ur(request):
+#     run(["python", "create_userrequests.py"], shell=False, stdout=PIPE)
+#     return redirect("/homepage/test")

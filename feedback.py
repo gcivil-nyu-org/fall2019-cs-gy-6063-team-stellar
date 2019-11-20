@@ -24,10 +24,11 @@ def compose_email(user1, user2, match):
         + user2.first_name
         + "</b>.<br>"
         + "http://127.0.0.1:8000/"
+        + "feedback"
+        + "/"
         + str(match.id)
         + "-"
         + str(user1.id)
-        + "-feedback"
         # + " <button href\"http://127.0.0.1:8000/feedback\" class=\"btn btn-warning\">Take the survey</button><br>"
         + "<br><br>"
         + "Best,<br>"
@@ -59,7 +60,7 @@ def send_email(html_content, attendee):
 
 
 def prepare_feedback():
-    tomorrow = date.today() + timedelta(days=2)
+    tomorrow = date.today() + timedelta(days=1)
     # (tz=timezone.get_current_timezone()) + timedelta(1)
     print(tomorrow)
     # yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
