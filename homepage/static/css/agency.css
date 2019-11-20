@@ -849,3 +849,8 @@ input:checked + .slider:before {
 .preferrence_priority{
   margin-bottom:0 ;
 }
+
+.fire-icon{
+  color:orangered;
+  font-size: 30px;
+}
