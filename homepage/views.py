@@ -5,6 +5,8 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+
+
 from .models import (
     UserRequest,
     School,
@@ -17,6 +19,13 @@ from .models import (
 )
 from datetime import datetime, timezone, timedelta, date
 from collections import Counter
+
+# Dont remove, for macthing algorithm
+
+# from background_task.models import Task
+# from homepage.tasks import run_matching
+# new_years_2022 = datetime(2022, 1, 1)
+# run_matching(repeat=Task.DAILY, repeat_until=new_years_2022)
 
 
 # Create your views here.
