@@ -232,9 +232,9 @@ def user_service(request):
                 req.interests.add(*interests_objects)
                 req.days.add(*selected_days_objects)
 
-                day = Days_left.objects.get(user_id=logged_user.id)
-                day.days = Service_days[req.service_type]
-                day.save()
+                # day = Days_left.objects.get(user_id=logged_user.id)
+                # day.days = Service_days[req.service_type]
+                # day.save()
             except ObjectDoesNotExist:
                 req = UserRequest(
                     user=logged_user,
