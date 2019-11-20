@@ -424,15 +424,17 @@ def feedback(request):
                 context = {"latest_question_list": Question.objects.all()}
                 return render(request, "feedback.html", context=context)
             else:
-                response = JsonResponse({"error": "We did not find a match record for you."})
+                response = JsonResponse(
+                    {"error": "We did not find a match record for you."}
+                )
                 response.status_code = 403
                 return response
-        except:
-            response = JsonResponse({"error": "We did not find a match record for you."})
+        except UserRequestMatch.DoesNotExist:
+            response = JsonResponse(
+                {"error": "We did not find a match record for you."}
+            )
             response.status_code = 403
             return response
-
-
 
 
 # def test(request):
