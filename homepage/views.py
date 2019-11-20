@@ -397,7 +397,7 @@ def feedback(request):
         return redirect("/homepage/")
     else:
         context = {"latest_question_list": Question.objects.all()}
-        return render(request, "feedback2.html", context=context)
+        return render(request, "feedback.html", context=context)
 
 
 def test(request):

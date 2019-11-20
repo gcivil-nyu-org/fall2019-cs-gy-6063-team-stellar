@@ -2,7 +2,7 @@
 <html lang="en">
 <style type="text/css">
 input[type="radio"]{margin-left: 100px;}
-.btn {
+    .btn {
   border: none;
   color: white;
   padding: 14px 28px;
@@ -13,44 +13,36 @@ input[type="radio"]{margin-left: 100px;}
 .warning {background-color: #ff9800;} /* Orange */
 .warning:hover {background: #e68a00;}
 </style>
-
-    <form role="form" id="feedback_form" class="registration-form" method="post">
+<body>
+<form role="form" id="feedback_form" class="registration-form" method="post">
                 {% csrf_token %}
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
                         <h3>Thanks for being a valued member of LunchNinja!</h3>
-                         We're trying to learn more about how you recently experienced the matched meeting so that you can help us improve it.<br>
-                         <b>Did you show up?</b><br>
-                         <input type="radio" name="attendance" value="1"> Yes!
-                         <input type="radio" name="attendance" value="2"> I'd love to, but I got something emergency... <br>
+                         We're trying to learn more about how you recently experienced the matched meeting so that you can help us improve it.<br><br>
+                         {% if latest_question_list %}
+                            <div>
+                            {% for question in latest_question_list %}
+                                <b>{{ question.question_text }}</b><br><br>
+                                {% if question.id == 2 or question.id == 3 %}
+                                        <pre>          No way                                                           Definitely</pre>
+                                    {% endif %}
+                                {% if question.id == 4 %}
+                                        <pre>I wish I had a different lunch partner                                     I would like to have lunch again with my lunch partner</pre>
+                                    {% endif %}
+                                {% for choice in question.choice_set.all%}
+                                   <input type="radio" name={{question.label}} id={{choice.choice_text }} value="{{choice.choice_text }}">
+                                    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+                                   {% endfor %}
+                                <br><br>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+
                          <br><br>
-                         <b>How likely are you to recommend LunchNinja to a friend or your peers?</b><br>
-                         <pre>          No way                                                         Definitely</pre>
-                         <input type="radio" name="experience" value="1"> 1
-                         <input type="radio" name="experience" value="2"> 2
-                         <input type="radio" name="experience" value="3"> 3
-                         <input type="radio" name="experience" value="4"> 4
-                         <input type="radio" name="experience" value="5"> 5 <br>
-                         <br><br>
-                         <b>How likely are you to recommend the restaurant to a friend or your peers?</b><br>
-                         <pre>          No way                                                         Definitely</pre>
-                         <input type="radio" name="restaurant" value="1"> 1
-                         <input type="radio" name="restaurant" value="2"> 2
-                         <input type="radio" name="restaurant" value="3"> 3
-                         <input type="radio" name="restaurant" value="4"> 4
-                         <input type="radio" name="restaurant" value="5"> 5 <br>
-                         <br><br>
-                         <b>How would you rate your experience with your lunch partner (considering punctuality and behavior/attitude, etc.)?</b><br>
-                         <pre>I wish I had a different lunch partner                                     I would like to have lunch again with my lunch partner</pre>
-                         <input type="radio" name="partner" value="1"> 1
-                         <input type="radio" name="partner" value="2"> 2
-                         <input type="radio" name="partner" value="3"> 3
-                         <input type="radio" name="partner" value="4"> 4
-                         <input type="radio" name="partner" value="5"> 5
-                         <br><br>
-                         <b>Anything other comments?</b><br>
-                         <textarea type="input" rows="8" cols="100"></textarea>
+                         <b>Any other comments?</b><br>
+                         <textarea type="input" id="comment" name="comment" rows="8" cols="100"></textarea>
 {#                         <input type="text" name="comments"><br>#}
                      </div>
                      <br>
@@ -60,5 +52,4 @@ input[type="radio"]{margin-left: 100px;}
         <button type="button" class="btn warning" data-dismiss="modal">Close</button>
     </form>
 </body>
-
 </html>
