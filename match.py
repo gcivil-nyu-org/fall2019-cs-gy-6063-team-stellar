@@ -198,45 +198,56 @@ def compose_email(
                     html_content = (
                         html_content + "<p> Yelp link for this restaurant is: </p>"
                     )
+                    # html_content = (
+                    #     html_content
+                    #     + '<div> <a herf = "'
+                    #     + link
+                    #     + '">'
+                    #     + restaurant.name.capitalize()
+                    #     + "</a></div>"
+                    # )
+                    link_short = "<a href=\'" + link + "\'>" + restaurant.name.capitalize() + "</a>"
+                    html_content = html_content + "<div>" + link_short + "</div>"
+
+                prevname = restaurant.name
+    if not len(restaurants1) == 0:
+        html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
+        for resturant in restaurants2:
+            prevname = ""
+
+            if not prevname == restaurant.name:
+                link = get_yelp_link(resturant)
+
+                html_content = (
+                        html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+                )
+                address = (
+                        "Address: "
+                        + resturant.building
+                        + " "
+                        + resturant.street
+                        + ", "
+                        + resturant.borough
+                        + " "
+                        + str(resturant.zipcode)
+                )
+                html_content = html_content + "<p>" + address + "</p>"
+                if not link == -1:
                     html_content = (
-                        html_content
-                        + '<div> <a herf = "'
-                        + link
-                        + '">'
-                        + restaurant.name.capitalize()
-                        + "</a></div>"
+                            html_content + "<p> Yelp link for this restaurant is: </p>"
                     )
-                    html_content = html_content + "<div>" + link + "</div>"
+
+                    link_short = "<a href=\'" + link + "\'>" + resturant.name.capitalize() + "</a>"
+                    html_content = html_content + "<div>" + link_short + "</div>"
                 prevname = restaurant.name
 
-    for resturant in restaurants2:
-        prevname = ""
 
-        if not prevname == restaurant.name:
-            link = get_yelp_link(resturant)
-
-            html_content = (
-                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
-            )
-            address = (
-                "Address: "
-                + resturant.building
-                + " "
-                + resturant.street
-                + ", "
-                + resturant.borough
-                + " "
-                + str(resturant.zipcode)
-            )
-            html_content = html_content + "<p>" + address + "</p>"
-            if not link == -1:
-                html_content = (
-                    html_content + "<p> Yelp link for this restaurant is: </p>"
-                )
-                html_content = html_content + "<div>" + link + "</div>"
-            prevname = restaurant.name
-
+    html_content = html_content + "<p><b>" + "Not satisfied with the result?" + "</b></p>"
+    html_content = html_content + "<a href='http://127.0.0.1:8000/settings'>Change your preference</a>"
     # Add image
+    # html_content = html_content + "<p> Not satisfied with the result? </p>"
+
+
     html_content = html_content + '<p><img src="cid:myimage" /></p>'
     html_content = html_content + "<p>Bon appétit!</p>"
     html_content = html_content + "<p>Lunch Ninja</p>"
@@ -485,40 +496,73 @@ def find_day_prefer(user):
         return 0
     else:
         return user.days.all()[0].id
-
-
-def save_matches(matches):
-    # save matches to user_request_match table
+def change_available_day(user1,user2):
     month = relativedelta(months=1)
     week = datetime.timedelta(weeks=1)
     day = datetime.timedelta(days=1)
+    ur1 = UserRequest.objects.get(user_id=user1.id)
+    ur2 = UserRequest.objects.get(user_id=user2.id)
+
+    first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
+        days=find_day_prefer(ur1)
+    )
+    first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
+        days=find_day_prefer(ur2)
+    )
+    if ur1.service_type == "monthly":
+        ur1.available_date = first_available_weekday_u1 + month
+    elif ur1.service_type == "weekly":
+        ur1.available_date = first_available_weekday_u1 + week
+    elif ur1.service_type == "daily":
+        ur1.available_date = first_available_weekday_u1 + day
+    if ur2.service_type == "Monthly":
+        ur2.available_date = first_available_weekday_u2 + month
+    elif ur2.service_type == "Weekly":
+        ur2.available_date = first_available_weekday_u2 + week
+    elif ur2.service_type == "Daily":
+        ur2.available_date = first_available_weekday_u2 + day
+    ur1.save()
+    ur2.save()
+    return
+
+def save_matches(matches):
+    # save matches to user_request_match table
+    # month = relativedelta(months=1)
+    # week = datetime.timedelta(weeks=1)
+    # day = datetime.timedelta(days=1)
 
     for match in matches:
+        print(match)
         user1 = match[0].user
         user2 = match[1].user
+        print(user1)
+        print(user2)
+        print(user1.id)
+        print(user2.id)
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
-
-        first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
-            days=find_day_prefer(ur1)
-        )
-        first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
-            days=find_day_prefer(ur2)
-        )
-        if ur1.service_type == "monthly":
-            ur1.available_date = first_available_weekday_u1 + month
-        elif ur1.service_type == "weekly":
-            ur1.available_date = first_available_weekday_u1 + week
-        elif ur1.service_type == "daily":
-            ur1.available_date = first_available_weekday_u1 + day
-        if ur2.service_type == "Monthly":
-            ur2.available_date = first_available_weekday_u2 + month
-        elif ur2.service_type == "Weekly":
-            ur2.available_date = first_available_weekday_u2 + week
-        elif ur2.service_type == "Daily":
-            ur2.available_date = first_available_weekday_u2 + day
-        ur1.save()
-        ur2.save()
+        #
+        # first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
+        #     days=find_day_prefer(ur1)
+        # )
+        # first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
+        #     days=find_day_prefer(ur2)
+        # )
+        # if ur1.service_type == "monthly":
+        #     ur1.available_date = first_available_weekday_u1 + month
+        # elif ur1.service_type == "weekly":
+        #     ur1.available_date = first_available_weekday_u1 + week
+        # elif ur1.service_type == "daily":
+        #     ur1.available_date = first_available_weekday_u1 + day
+        # if ur2.service_type == "Monthly":
+        #     ur2.available_date = first_available_weekday_u2 + month
+        # elif ur2.service_type == "Weekly":
+        #     ur2.available_date = first_available_weekday_u2 + week
+        # elif ur2.service_type == "Daily":
+        #     ur2.available_date = first_available_weekday_u2 + day
+        # ur1.save()
+        # ur2.save()
+        # change_available_day(user1, user2)
         user1Cuisines = ur1.cuisines.all()
         user2Cuisines = ur2.cuisines.all()
         commonCuisines = list(user1Cuisines & user2Cuisines)
@@ -530,7 +574,7 @@ def save_matches(matches):
         for r in restaurants2:
             request_match.restaurants.add(r)
 
-        if user1.id == 1 or user2.id == 1:
+        if user1.id == 3 or user2.id == 3:
             send_invitations(match, request_match)
 
 
