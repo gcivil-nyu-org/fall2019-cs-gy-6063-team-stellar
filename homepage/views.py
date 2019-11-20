@@ -385,27 +385,16 @@ def settings(request):
 
 def feedback(request):
     if request.method == "POST":
-        # print("post!!!!")
-        # print(request.META.get("PATH_INFO"))
         data = request.META.get("PATH_INFO").split("/")[-1].split("-")
-        # print("data[0] is ")
-        # print(data[0])
-        # print("data[1] is ")
-        # print(data[1])
         match_id = int(data[0])
-        match = UserRequestMatch.objects.get(id=match_id)
         user_id = int(data[1])
+        match = UserRequestMatch.objects.get(id=match_id)
         user = LunchNinjaUser.objects.get(id=user_id)
         attendecnce = request.POST["attendance"]
-
         experience = request.POST["experience"]
-
         restaurant = request.POST["restaurant"]
-
         partner = request.POST["partner"]
-
         comment = request.POST["comment"]
-
         count = int(Feedback.objects.all().count())
         fb = Feedback(id=count + 1, match=match, user=user, comment=comment)
         fb.save()
@@ -423,8 +412,27 @@ def feedback(request):
         fb.choices.add(c4)
         return redirect("/homepage/")
     else:
-        context = {"latest_question_list": Question.objects.all()}
-        return render(request, "feedback.html", context=context)
+        try:
+            data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+            match_id = int(data[0])
+            user_id = int(data[1])
+            match = UserRequestMatch.objects.get(id=match_id)
+            match_user1 = match.user1
+            match_user2 = match.user2
+            user = LunchNinjaUser.objects.get(id=user_id)
+            if user.id == match_user1.id or user_id == match_user2.id:
+                context = {"latest_question_list": Question.objects.all()}
+                return render(request, "feedback.html", context=context)
+            else:
+                response = JsonResponse({"error": "We did not find a match record for you."})
+                response.status_code = 403
+                return response
+        except:
+            response = JsonResponse({"error": "We did not find a match record for you."})
+            response.status_code = 403
+            return response
+
+
 
 
 # def test(request):
