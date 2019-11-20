@@ -179,7 +179,7 @@ def user_service(request):
             school = request.POST["school"]
             school_object = School.objects.get(name=school)
             department = request.POST["department"]
-            department_object = Department.objects.get(name=department)
+            department_object = school_object.department_set.get(name=department)
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
