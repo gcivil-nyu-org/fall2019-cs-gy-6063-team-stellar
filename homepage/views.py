@@ -133,7 +133,7 @@ def getModelData(user):
         "departments": Department.objects.all(),
         "interests": Interests.objects.all(),
         "week_days": Days.objects.all(),
-        "username":user.username
+        "username": user.username,
     }
 
 

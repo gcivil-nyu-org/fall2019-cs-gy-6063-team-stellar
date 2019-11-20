@@ -41,7 +41,7 @@
                         {% if not user_request.service_type == "Daily" %}
                         <th scope="col">Preferred Weekday</th>
                         {% endif %}
-                        <th scope="col">Next Meeting</th>
+{#                        <th scope="col">Next Meeting</th>#}
 
 						<th scope="col">Service Status</th>
 
@@ -72,10 +72,10 @@
 								{{user_request.preferred_weekday}}
 							</td>
                             {% endif %}
-                            <td>
-
-								{{user_request.next_meet_day}}
-							</td>
+{#                            <td>#}
+{##}
+{#								{{user_request.next_meet_day}}#}
+{#							</td>#}
 							<td>
 								<label class="switch">
 									<input id="serviceToggle" type="checkbox">

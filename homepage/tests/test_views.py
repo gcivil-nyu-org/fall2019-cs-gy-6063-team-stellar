@@ -420,37 +420,38 @@ class SettingViewTest(TestCase):
     def mock_lunchuser(id):
         class lunchuser_for_mock:
             def __init__(self):
-                self.username="Utkarsh"
-                self.first_name="Utkarsh"
-                self.last_name="P"
-                self.email="2345@nyu.edu"
-                self.school="Tandon school"
-                self.department="Computer Science"
-        return lunchuser_for_mock()
+                self.username = "Utkarsh"
+                self.first_name = "Utkarsh"
+                self.last_name = "P"
+                self.email = "2345@nyu.edu"
+                self.school = "Tandon school"
+                self.department = "Computer Science"
 
+        return lunchuser_for_mock()
 
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_correct_setting(self, mock_login,mock_lunchuser, mock_userrequest):
+    def test_correct_setting(self, mock_login, mock_lunchuser, mock_userrequest):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 200)
 
     def mock_lunchuser(id):
         class lunchuser_for_mock:
             def __init__(self):
-                self.username="Utkarsh"
-                self.first_name="Utkarsh"
-                self.last_name="P"
-                self.email="2345@nyu.edu"
-                self.school="Tandon school"
-                self.department="Computer Science"
+                self.username = "Utkarsh"
+                self.first_name = "Utkarsh"
+                self.last_name = "P"
+                self.email = "2345@nyu.edu"
+                self.school = "Tandon school"
+                self.department = "Computer Science"
+
         return lunchuser_for_mock()
 
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=raise_error)
     @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_incorrect_setting(self, mock_login,mock_lunch, mock_userrequest):
+    def test_incorrect_setting(self, mock_login, mock_lunch, mock_userrequest):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 200)
 
@@ -671,24 +672,29 @@ class MatchHistoryTest(TestCase):
 
 
 class FeedbackViewTest(TestCase):
-    def mock_feedback(id,match,user,comment):
-
+    def mock_feedback(id, match, user, comment):
         class choice_for_mock:
             def __init__(self):
                 pass
+
             def add(p1):
                 return "add"
+
         class feedback_for_mock:
-            def __init__(self,id,match,user,comment):
-                self.choices=choice_for_mock
+            def __init__(self, id, match, user, comment):
+                self.choices = choice_for_mock
                 pass
+
             def save(p1):
                 return "saved"
-        return feedback_for_mock(id,match,user,comment)
+
+        return feedback_for_mock(id, match, user, comment)
+
     def mock_question(**kargs):
         class choice_for_mock:
-            def __init__(self,label):
+            def __init__(self, label):
                 pass
+
             def get(choice_text):
                 return "get"
 
@@ -697,15 +703,22 @@ class FeedbackViewTest(TestCase):
                 self.choice_set = choice_for_mock
 
         return question_for_mock()
+
     def mock_userrequest(id):
         return 1
+
     def mock_lunchuser(id):
         return 1
-    @mock.patch("homepage.views.Question.objects.get",side_effect=mock_question)
-    @mock.patch("homepage.views.Feedback",side_effect=mock_feedback)
-    @mock.patch("homepage.views.UserRequestMatch.objects.get",side_effect=mock_userrequest)
-    @mock.patch("homepage.views.LunchNinjaUser.objects.get",side_effect=mock_lunchuser)
-    def test_post_feedback(self,mock_lunchuser,mock_userreq,feedback_mock,question_mock):
+
+    @mock.patch("homepage.views.Question.objects.get", side_effect=mock_question)
+    @mock.patch("homepage.views.Feedback", side_effect=mock_feedback)
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.get", side_effect=mock_userrequest
+    )
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
+    def test_post_feedback(
+        self, mock_lunchuser, mock_userreq, feedback_mock, question_mock
+    ):
 
         service_type_Obj = {
             "attendance": "Yes!",
