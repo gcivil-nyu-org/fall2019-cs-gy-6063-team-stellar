@@ -41,6 +41,7 @@ def generateuser(N):
         # service type
         service_id = random.randint(1, 3)
         user["service_type"] = service[service_id]
+        # user["service_type"] = "Daily"
 
         # department
         departments = Department.objects.filter(school=school_id)
@@ -67,12 +68,11 @@ def generateuser(N):
 
         # days
         days = Days.objects.all()
-        p_days_number = random.randint(0, 3)
+        p_days_number = random.randint(1, 3)
 
         p_days = random.sample(list(days), p_days_number)
 
         user["prefered days"] = p_days
-
         user["meet history"] = []
         user["cuisines_priority"] = random.randint(1, 10)
         user["department_priority"] = random.randint(1, 10)

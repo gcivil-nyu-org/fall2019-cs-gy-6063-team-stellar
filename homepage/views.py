@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from subprocess import run, PIPE
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
@@ -16,7 +15,10 @@ from .models import (
     Interests,
     Department,
     Days,
+    Question,
+    Feedback,
 )
+from user_account.models import LunchNinjaUser
 from datetime import datetime, timezone, timedelta, date
 from collections import Counter
 
@@ -62,6 +64,23 @@ def merge():
     school_department["select school"] = department
 
     return school, department, school_department, department_school
+
+
+# def get_weekday(date):
+#     if date.weekday() == 0:
+#         return "Monday"
+#     elif date.weekday() == 1:
+#         return "Tuesday"
+#     elif date.weekday() == 2:
+#         return "Wednesday"
+#     elif date.weekday() == 3:
+#         return "Thursday"
+#     elif date.weekday() == 4:
+#         return "Friday"
+#     elif date.weekday() == 5:
+#         return "Saturday"
+#     elif date.weekday() == 6:
+#         return "Sunday"
 
 
 def check_ajax_department(request):
@@ -116,6 +135,9 @@ def User_service_send_email_authenticated(
     email.send()
 
 
+
+def getModelData(user):
+
 def getModelData():
     all_selected_cuisine = UserRequest.objects.values_list("cuisines", flat=True)
     all_selected_interests = UserRequest.objects.values_list("interests", flat=True)
@@ -134,6 +156,7 @@ def getModelData():
         "departments": Department.objects.all(),
         "interests": Interests.objects.all(),
         "week_days": Days.objects.all(),
+        "username": user.username,
         "top_cuisines": most_frequent_cuisine,
         "top_interests": most_frequent_interest,
     }
@@ -146,7 +169,7 @@ def Merge(dict1, dict2):
 
 def index(request):
     if check_login(request):  # no repeat log in
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
         return render(request, "homepage.html", Merge({}, preference_model_data))
     return redirect("/login/")
 
@@ -231,8 +254,8 @@ def user_service(request):
                 req.interests.add(*interests_objects)
                 req.days.add(*selected_days_objects)
 
-                days = Days_left(user=logged_user, days=Service_days[req.service_type])
-                days.save()
+                # days = Days_left(user=logged_user, days=Service_days[req.service_type])
+                # days.save()
 
             # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
             # daysleft.save()
@@ -245,12 +268,12 @@ def user_service(request):
                 school,
                 department,
             )
-        else:
-            email_subject = "Service Confirmation"
-            message = "Service selected"
-            to_email = request.user.email
-            email = EmailMessage(email_subject, message, to=[to_email])
-            email.send()
+        # else:
+        #     email_subject = "Service Confirmation"
+        #     message = "Service selected"
+        #     to_email = request.user.email
+        #     email = EmailMessage(email_subject, message, to=[to_email])
+        #     email.send()
         return redirect("/")
     elif check_ajax_department(request):
 
@@ -329,7 +352,7 @@ def match_history(request):
             else:
                 past_lunch_macthes.append(match_dict)
 
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
 
         return render(
             request,
@@ -347,11 +370,25 @@ def match_history(request):
 
 
 def settings(request):
+
     if check_login(request):
+
+        user_info = LunchNinjaUser.objects.get(id=request.user.id)
+        user_profile = {
+            "username": user_info.username,
+            "name": user_info.first_name + " " + user_info.last_name,
+            "email": user_info.email,
+            "school": user_info.school,
+            "department": user_info.department,
+        }
+
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
+
             preffered_cuisines_instances = user_request_instance.cuisines.all()
             preffered_interests_instances = user_request_instance.interests.all()
+            preffered_days_instances = user_request_instance.days.all()
+
             user_request = {
                 "service_type": user_request_instance.service_type,
                 "service_start_date": user_request_instance.time_stamp,
@@ -367,34 +404,87 @@ def settings(request):
                 "department_priority": user_request_instance.department_priority,
                 "cuisines_priority": user_request_instance.cuisines_priority,
                 "interests_priority": user_request_instance.interests_priority,
+                "preferred_weekday": ", ".join(
+                    [day.day for day in preffered_days_instances]
+                ),
+                "next_meet_day": str(user_request_instance.available_date),
             }
         except UserRequest.DoesNotExist:
             user_request = None
 
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
 
         return render(
             request,
             "settings.html",
-            Merge({"user_request": user_request}, preference_model_data),
+            Merge(
+                {"user_request": user_request, "user_profile": user_profile},
+                preference_model_data,
+            ),
         )
     return redirect("/login/")
 
 
-def test(request):
-    return render(request, "test.html")
+def feedback(request):
+    if request.method == "POST":
+        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        match_id = int(data[0])
+        user_id = int(data[1])
+        match = UserRequestMatch.objects.get(id=match_id)
+        user = LunchNinjaUser.objects.get(id=user_id)
+        attendecnce = request.POST["attendance"]
+        experience = request.POST["experience"]
+        restaurant = request.POST["restaurant"]
+        partner = request.POST["partner"]
+        comment = request.POST["comment"]
+        count = int(Feedback.objects.all().count())
+        fb = Feedback(id=count + 1, match=match, user=user, comment=comment)
+        fb.save()
+        q1 = Question.objects.get(label="attendance")
+        c1 = q1.choice_set.get(choice_text=attendecnce)
+        fb.choices.add(c1)
+        q2 = Question.objects.get(label="experience")
+        c2 = q2.choice_set.get(choice_text=experience)
+        fb.choices.add(c2)
+        q3 = Question.objects.get(label="restaurant")
+        c3 = q3.choice_set.get(choice_text=restaurant)
+        fb.choices.add(c3)
+        q4 = Question.objects.get(label="partner")
+        c4 = q4.choice_set.get(choice_text=partner)
+        fb.choices.add(c4)
+        return redirect("/homepage/")
+    else:
+        try:
+            data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+            match_id = int(data[0])
+            user_id = int(data[1])
+            match = UserRequestMatch.objects.get(id=match_id)
+            match_user1 = match.user1
+            match_user2 = match.user2
+            user = LunchNinjaUser.objects.get(id=user_id)
+            if user.id == match_user1.id or user_id == match_user2.id:
+                context = {"latest_question_list": Question.objects.all()}
+                return render(request, "feedback.html", context=context)
+            else:
+                return render(request, "error.html")
+        except UserRequestMatch.DoesNotExist:
+            return render(request, "error.html")
 
 
-def match(request):
-    run(["python", "match.py"], shell=False, stdout=PIPE)
-    return redirect("/homepage/test")
+# def test(request):
+#     return render(request, "test.html")
 
-
-def create_users(request):
-    run(["python", "create_users.py"], shell=False, stdout=PIPE)
-    return redirect("/homepage/test")
-
-
-def create_ur(request):
-    run(["python", "create_userrequests.py"], shell=False, stdout=PIPE)
-    return redirect("/homepage/test")
+#
+# def match(request):
+#     run(["python", "match.py"], shell=False, stdout=PIPE)
+#     return redirect("/homepage/test")
+#
+#
+# def create_users(request):
+#     run(["python", "create_users.py"], shell=False, stdout=PIPE)
+#     return redirect("/homepage/test")
+#
+#
+# def create_ur(request):
+#     run(["python", "create_userrequests.py"], shell=False, stdout=PIPE)
+#     return redirect("/homepage/test")
