@@ -179,7 +179,7 @@ def user_service(request):
             school = request.POST["school"]
             school_object = School.objects.get(name=school)
             department = request.POST["department"]
-            department_object = Department.objects.get(name=department)
+            department_object = school_object.department_set.get(name=department)
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
@@ -198,13 +198,12 @@ def user_service(request):
             selected_days_names = ", ".join([day.day for day in selected_days_objects])
 
             logged_user = request.user
-
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
-                req.school = school_object[0]
-                req.department = department_object[0]
+                req.school = school_object
+                req.department = department_object
                 req.cuisines_priority = cuisines_priority
                 req.department_priority = department_priority
                 req.interests_priority = interests_priority

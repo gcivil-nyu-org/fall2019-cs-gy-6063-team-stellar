@@ -23,7 +23,7 @@ def compose_email(user1, user2, match):
         + "Please take a moment to complete our short survey about your most recent lunch experience with <b>"
         + user2.first_name
         + "</b>.<br>"
-        + "http://127.0.0.1:8000/"
+        + "http:/lunch-ninja.herokuapp.com/"
         + "feedback"
         + "/"
         + str(match.id)
