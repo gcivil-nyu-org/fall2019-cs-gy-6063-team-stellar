@@ -11,7 +11,7 @@ from .models import (
     School,
     Cuisine,
     UserRequestMatch,
-    Days_left,
+    # Days_left,
     Interests,
     Department,
     Days,
