@@ -394,6 +394,7 @@ def feedback(request):
         # print(data[1])
         match_id = int(data[0])
         match = UserRequestMatch.objects.get(id=match_id)
+        print(match)
         user_id = int(data[1])
         user = LunchNinjaUser.objects.get(id=user_id)
         attendecnce = request.POST["attendance"]
@@ -410,6 +411,8 @@ def feedback(request):
         fb = Feedback(id=count + 1, match=match, user=user, comment=comment)
         fb.save()
         q1 = Question.objects.get(label="attendance")
+
+
         c1 = q1.choice_set.get(choice_text=attendecnce)
         fb.choices.add(c1)
         q2 = Question.objects.get(label="experience")

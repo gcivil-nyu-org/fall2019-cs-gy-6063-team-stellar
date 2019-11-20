@@ -646,7 +646,38 @@ class MatchHistoryTest(TestCase):
 
 
 class FeedbackViewTest(TestCase):
-    def test_post_feedback(self):
+    def mock_feedback(id,match,user,comment):
+
+        class choice_for_mock:
+            def __init__(self):
+                pass
+            def add(p1):
+                return "add"
+        class feedback_for_mock:
+            def __init__(self,id,match,user,comment):
+                self.choices=choice_for_mock
+                pass
+            def save(p1):
+                return "saved"
+        return feedback_for_mock(id,match,user,comment)
+    def mock_question(**kargs):
+        class choice_for_mock:
+            def __init__(self,label):
+                pass
+            def get(choice_text):
+                return "get"
+
+        class question_for_mock:
+            def __init__(self):
+                self.choice_set = choice_for_mock
+
+        return question_for_mock()
+
+
+    @mock.patch("homepage.views.Question.objects.get",side_effect=mock_question)
+    @mock.patch("homepage.views.Feedback",side_effect=mock_feedback)
+    def test_post_feedback(self,feedback_mock,question_mock):
+
         service_type_Obj = {
             "attendance": "Yes!",
             "experience": 1,
