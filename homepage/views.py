@@ -11,7 +11,7 @@ from .models import (
     School,
     Cuisine,
     UserRequestMatch,
-    Days_left,
+    # Days_left,
     Interests,
     Department,
     Days,
@@ -177,9 +177,9 @@ def user_service(request):
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
-            school_object = School.objects.filter(name=school)
+            school_object = School.objects.get(name=school)
             department = request.POST["department"]
-            department_object = Department.objects.filter(name=department)
+            department_object = school_object.department_set.get(name=department)
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
@@ -198,13 +198,12 @@ def user_service(request):
             selected_days_names = ", ".join([day.day for day in selected_days_objects])
 
             logged_user = request.user
-
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
-                req.school = school_object[0]
-                req.department = department_object[0]
+                req.school = school_object
+                req.department = department_object
                 req.cuisines_priority = cuisines_priority
                 req.department_priority = department_priority
                 req.interests_priority = interests_priority
@@ -232,9 +231,9 @@ def user_service(request):
                 req.interests.add(*interests_objects)
                 req.days.add(*selected_days_objects)
 
-                day = Days_left.objects.get(user_id=logged_user.id)
-                day.days = Service_days[req.service_type]
-                day.save()
+                # day = Days_left.objects.get(user_id=logged_user.id)
+                # day.days = Service_days[req.service_type]
+                # day.save()
             except ObjectDoesNotExist:
                 req = UserRequest(
                     user=logged_user,

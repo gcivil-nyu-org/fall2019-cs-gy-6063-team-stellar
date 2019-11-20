@@ -254,7 +254,7 @@ def compose_email(
     )
     html_content = (
         html_content
-        + "<a href='http://127.0.0.1:8000/settings'>Change your preference</a>"
+        + "<a href='http:/lunch-ninja.herokuapp.com/settings'>Change your preference</a>"
     )
     # Add image
     # html_content = html_content + "<p> Not satisfied with the result? </p>"
@@ -555,28 +555,6 @@ def save_matches(matches):
         print(user2.id)
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
-        #
-        # first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
-        #     days=find_day_prefer(ur1)
-        # )
-        # first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
-        #     days=find_day_prefer(ur2)
-        # )
-        # if ur1.service_type == "monthly":
-        #     ur1.available_date = first_available_weekday_u1 + month
-        # elif ur1.service_type == "weekly":
-        #     ur1.available_date = first_available_weekday_u1 + week
-        # elif ur1.service_type == "daily":
-        #     ur1.available_date = first_available_weekday_u1 + day
-        # if ur2.service_type == "Monthly":
-        #     ur2.available_date = first_available_weekday_u2 + month
-        # elif ur2.service_type == "Weekly":
-        #     ur2.available_date = first_available_weekday_u2 + week
-        # elif ur2.service_type == "Daily":
-        #     ur2.available_date = first_available_weekday_u2 + day
-        # ur1.save()
-        # ur2.save()
-        # change_available_day(user1, user2)
         user1Cuisines = ur1.cuisines.all()
         user2Cuisines = ur2.cuisines.all()
         commonCuisines = list(user1Cuisines & user2Cuisines)
