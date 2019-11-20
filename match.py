@@ -565,7 +565,6 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-
         send_invitations(match, request_match)
 
 
