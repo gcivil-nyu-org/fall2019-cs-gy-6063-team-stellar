@@ -350,6 +350,14 @@ def settings(request):
             preffered_cuisines_instances = user_request_instance.cuisines.all()
             preffered_interests_instances = user_request_instance.interests.all()
             preffered_days_instances = user_request_instance.days.all()
+
+            user_profile = {
+                "username": request.user.username,
+                "name": request.user.first_name + " " + request.user.last_name,
+                "email": request.user.email,
+                "school": request.user.school,
+                "department": request.user.department,
+            }
             user_request = {
                 "service_type": user_request_instance.service_type,
                 "service_start_date": user_request_instance.time_stamp,
@@ -378,7 +386,10 @@ def settings(request):
         return render(
             request,
             "settings.html",
-            Merge({"user_request": user_request}, preference_model_data),
+            Merge(
+                {"user_request": user_request, "user_profile": user_profile},
+                preference_model_data,
+            ),
         )
     return redirect("/login/")
 
