@@ -198,7 +198,6 @@ def user_service(request):
             selected_days_names = ", ".join([day.day for day in selected_days_objects])
 
             logged_user = request.user
-            # commment
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
