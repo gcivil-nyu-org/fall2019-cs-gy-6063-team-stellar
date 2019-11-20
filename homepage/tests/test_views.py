@@ -672,11 +672,15 @@ class FeedbackViewTest(TestCase):
                 self.choice_set = choice_for_mock
 
         return question_for_mock()
-
-
+    def mock_userrequest(id):
+        return 1
+    def mock_lunchuser(id):
+        return 1
     @mock.patch("homepage.views.Question.objects.get",side_effect=mock_question)
     @mock.patch("homepage.views.Feedback",side_effect=mock_feedback)
-    def test_post_feedback(self,feedback_mock,question_mock):
+    @mock.patch("homepage.views.UserRequestMatch.objects.get",side_effect=mock_userrequest)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get",side_effect=mock_lunchuser)
+    def test_post_feedback(self,mock_lunchuser,mock_userreq,feedback_mock,question_mock):
 
         service_type_Obj = {
             "attendance": "Yes!",

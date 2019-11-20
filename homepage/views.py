@@ -399,8 +399,6 @@ def feedback(request):
         fb = Feedback(id=count + 1, match=match, user=user, comment=comment)
         fb.save()
         q1 = Question.objects.get(label="attendance")
-
-
         c1 = q1.choice_set.get(choice_text=attendecnce)
         fb.choices.add(c1)
         q2 = Question.objects.get(label="experience")
