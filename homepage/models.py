@@ -153,11 +153,11 @@ class UserRequestMatch(models.Model):
         return "Match for " + self.user1.username + " and " + self.user2.username
 
 
-
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published")
     label = models.CharField(max_length=200)
+
     def __str__(self):
         return self.question_text
 
@@ -187,5 +187,7 @@ class Feedback(models.Model):
         related_name="%(class)s_user1",
     )
     choices = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    comment = models.CharField(max_length = 200)
+    comment = models.CharField(max_length=200)
+
+
 # UserRequestMatch.objects.

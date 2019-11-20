@@ -206,7 +206,13 @@ def compose_email(
                     #     + restaurant.name.capitalize()
                     #     + "</a></div>"
                     # )
-                    link_short = "<a href=\'" + link + "\'>" + restaurant.name.capitalize() + "</a>"
+                    link_short = (
+                        "<a href='"
+                        + link
+                        + "'>"
+                        + restaurant.name.capitalize()
+                        + "</a>"
+                    )
                     html_content = html_content + "<div>" + link_short + "</div>"
 
                 prevname = restaurant.name
@@ -219,34 +225,39 @@ def compose_email(
                 link = get_yelp_link(resturant)
 
                 html_content = (
-                        html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
                 )
                 address = (
-                        "Address: "
-                        + resturant.building
-                        + " "
-                        + resturant.street
-                        + ", "
-                        + resturant.borough
-                        + " "
-                        + str(resturant.zipcode)
+                    "Address: "
+                    + resturant.building
+                    + " "
+                    + resturant.street
+                    + ", "
+                    + resturant.borough
+                    + " "
+                    + str(resturant.zipcode)
                 )
                 html_content = html_content + "<p>" + address + "</p>"
                 if not link == -1:
                     html_content = (
-                            html_content + "<p> Yelp link for this restaurant is: </p>"
+                        html_content + "<p> Yelp link for this restaurant is: </p>"
                     )
 
-                    link_short = "<a href=\'" + link + "\'>" + resturant.name.capitalize() + "</a>"
+                    link_short = (
+                        "<a href='" + link + "'>" + resturant.name.capitalize() + "</a>"
+                    )
                     html_content = html_content + "<div>" + link_short + "</div>"
                 prevname = restaurant.name
 
-
-    html_content = html_content + "<p><b>" + "Not satisfied with the result?" + "</b></p>"
-    html_content = html_content + "<a href='http://127.0.0.1:8000/settings'>Change your preference</a>"
+    html_content = (
+        html_content + "<p><b>" + "Not satisfied with the result?" + "</b></p>"
+    )
+    html_content = (
+        html_content
+        + "<a href='http://127.0.0.1:8000/settings'>Change your preference</a>"
+    )
     # Add image
     # html_content = html_content + "<p> Not satisfied with the result? </p>"
-
 
     html_content = html_content + '<p><img src="cid:myimage" /></p>'
     html_content = html_content + "<p>Bon appétit!</p>"
@@ -496,7 +507,9 @@ def find_day_prefer(user):
         return 0
     else:
         return user.days.all()[0].id
-def change_available_day(user1,user2):
+
+
+def change_available_day(user1, user2):
     month = relativedelta(months=1)
     week = datetime.timedelta(weeks=1)
     day = datetime.timedelta(days=1)
@@ -524,6 +537,7 @@ def change_available_day(user1,user2):
     ur1.save()
     ur2.save()
     return
+
 
 def save_matches(matches):
     # save matches to user_request_match table

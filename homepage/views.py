@@ -5,8 +5,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from django.views import generic
-import datetime
+
 from .models import (
     UserRequest,
     School,
@@ -17,8 +16,7 @@ from .models import (
     Department,
     Days,
     Question,
-    Choice,
-    Feedback
+
 )
 from datetime import datetime, timezone, timedelta, date
 
@@ -57,21 +55,24 @@ def merge():
     school_department["select school"] = department
 
     return school, department, school_department, department_school
+
+
 def get_weekday(date):
-    if date.weekday()==0:
+    if date.weekday() == 0:
         return "Monday"
-    elif date.weekday()==1:
+    elif date.weekday() == 1:
         return "Tuesday"
-    elif date.weekday()==2:
+    elif date.weekday() == 2:
         return "Wednesday"
-    elif date.weekday()==3:
+    elif date.weekday() == 3:
         return "Thursday"
-    elif date.weekday()==4:
+    elif date.weekday() == 4:
         return "Friday"
-    elif date.weekday()==5:
+    elif date.weekday() == 5:
         return "Saturday"
-    elif date.weekday()==6:
+    elif date.weekday() == 6:
         return "Sunday"
+
 
 def check_ajax_department(request):
     if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
@@ -348,7 +349,7 @@ def settings(request):
             user_request_instance = UserRequest.objects.get(user=request.user)
             preffered_cuisines_instances = user_request_instance.cuisines.all()
             preffered_interests_instances = user_request_instance.interests.all()
-            preffered_days_instances=user_request_instance.days.all()
+            preffered_days_instances = user_request_instance.days.all()
             user_request = {
                 "service_type": user_request_instance.service_type,
                 "service_start_date": user_request_instance.time_stamp,
@@ -365,8 +366,11 @@ def settings(request):
                 "cuisines_priority": user_request_instance.cuisines_priority,
                 "interests_priority": user_request_instance.interests_priority,
                 "preferred_weekday": ", ".join(
-                    [day.day for day in preffered_days_instances]),
-                "next_meet_day":str(user_request_instance.available_date)+"\n"+get_weekday(user_request_instance.available_date)
+                    [day.day for day in preffered_days_instances]
+                ),
+                "next_meet_day": str(user_request_instance.available_date)
+                + "\n"
+                + get_weekday(user_request_instance.available_date),
             }
         except UserRequest.DoesNotExist:
             user_request = None
