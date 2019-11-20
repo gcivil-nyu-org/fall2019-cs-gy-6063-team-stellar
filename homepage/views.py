@@ -126,13 +126,14 @@ def User_service_send_email_authenticated(
     email.send()
 
 
-def getModelData():
+def getModelData(user):
     return {
         "cuisines": Cuisine.objects.all(),
         "schools": School.objects.all(),
         "departments": Department.objects.all(),
         "interests": Interests.objects.all(),
         "week_days": Days.objects.all(),
+        "username":user.username
     }
 
 
@@ -143,7 +144,7 @@ def Merge(dict1, dict2):
 
 def index(request):
     if check_login(request):  # no repeat log in
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
         return render(request, "homepage.html", Merge({}, preference_model_data))
     return redirect("/login/")
 
@@ -326,7 +327,7 @@ def match_history(request):
             else:
                 past_lunch_macthes.append(match_dict)
 
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
 
         return render(
             request,
@@ -381,7 +382,7 @@ def settings(request):
         except UserRequest.DoesNotExist:
             user_request = None
 
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
 
         return render(
             request,
