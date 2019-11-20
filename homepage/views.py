@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 
+
 from .models import (
     UserRequest,
     School,
@@ -19,6 +20,14 @@ from .models import (
 )
 from user_account.models import LunchNinjaUser
 from datetime import datetime, timezone, timedelta, date
+from collections import Counter
+
+# Dont remove, for macthing algorithm
+
+# from background_task.models import Task
+# from homepage.tasks import run_matching
+# new_years_2022 = datetime(2022, 1, 1)
+# run_matching(repeat=Task.DAILY, repeat_until=new_years_2022)
 
 
 # Create your views here.
@@ -126,7 +135,21 @@ def User_service_send_email_authenticated(
     email.send()
 
 
+
 def getModelData(user):
+
+def getModelData():
+    all_selected_cuisine = UserRequest.objects.values_list("cuisines", flat=True)
+    all_selected_interests = UserRequest.objects.values_list("interests", flat=True)
+
+    # get top 7 most common cuisine
+    most_frequent_cuisine = [x for x, _ in Counter(all_selected_cuisine).most_common(7)]
+
+    # get top 5 most common interests
+    most_frequent_interest = [
+        x for x, _ in Counter(all_selected_interests).most_common(5)
+    ]
+
     return {
         "cuisines": Cuisine.objects.all(),
         "schools": School.objects.all(),
@@ -134,6 +157,8 @@ def getModelData(user):
         "interests": Interests.objects.all(),
         "week_days": Days.objects.all(),
         "username": user.username,
+        "top_cuisines": most_frequent_cuisine,
+        "top_interests": most_frequent_interest,
     }
 
 
