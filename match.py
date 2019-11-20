@@ -13,6 +13,8 @@ import requests
 import json
 from django.db.models import Q
 
+from dateutil.relativedelta import relativedelta
+
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
 headers = {"Authorization": "Bearer %s" % api_key}
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
@@ -22,7 +24,7 @@ from homepage.models import (
     UserRequestMatch,
     Restaurant,
     School,
-    Days_left,
+    Department,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -83,8 +85,6 @@ def recommend_restaurants(user1, user2, cuisinelist):
         restautants_2 = random.sample(close_to_2, 5)
     else:
         restautants_2 = random.sample(close_to_2, len(close_to_2))
-    # print("In restaurant, restaurant1 is")
-    # print(restautants_1)
     return restautants_1, restautants_2
 
 
@@ -152,9 +152,9 @@ def compose_email(
     html_content = (
         html_content
         + "<p><b> School & Department: </b>"
-        + userRequest1.school
+        + userRequest1.school.name
         + ", "
-        + userRequest1.department
+        + userRequest1.department.name
         + "</p>"
     )
 
@@ -172,70 +172,61 @@ def compose_email(
         )
 
     # Add restaurant near school1
-    if not len(cuisine_names) == 0:
-        html_content = (
-            html_content
-            + "<h3>Here are recommended restaurants based on both of your locations, cuisines types and NYC Health Department inspection score:</h3>"
-        )
-        if not len(restaurants1) == 0:
-            html_content = html_content + "<u><i>Restaurants near your school:</i></u>"
-            for i, resturant in enumerate(restaurants1):
-                link = get_yelp_link(resturant)
+    if not len(restaurants1) == 0:
+        html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
+        prevname = ""
 
+        for restaurant in restaurants1:
+            if not restaurant.name == prevname:
+                link = get_yelp_link(restaurant)
                 html_content = (
-                    html_content
-                    + "<p><b>"
-                    + str(i + 1)
-                    + ") "
-                    + resturant.name.capitalize()
-                    + "</b></p>"
+                    html_content + "<p><b>" + restaurant.name.capitalize() + "</b></p>"
                 )
                 address = (
                     "Address: "
-                    + resturant.building
+                    + restaurant.building
                     + " "
-                    + resturant.street
+                    + restaurant.street
                     + ", "
-                    + resturant.borough
+                    + restaurant.borough
                     + " "
-                    + str(resturant.zipcode)
+                    + str(restaurant.zipcode)
                 )
                 html_content = html_content + "<p>" + address + "</p>"
                 if not link == -1:
-                    html_content = html_content + "Yelp link: "
+                    html_content = (
+                        html_content + "<p> Yelp link for this restaurant is: </p>"
+                    )
+                    # html_content = html_content + "<div> <a herf = \"" + link + "\">" + resturant.name.capitalize() + "</a></div>"
                     html_content = html_content + "<div>" + link + "</div>"
+                prevname = restaurant.name
 
-        # Add restaurant near school2
-        if not len(restaurants2) == 0:
+    for resturant in restaurants2:
+        prevname = ""
+
+        if not prevname == restaurant.name:
+            link = get_yelp_link(resturant)
+
             html_content = (
-                html_content
-                + "<br style=“line-height:2;”<u><i>Restaurants near your lunch partner's school:</i></u>"
+                html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
             )
-            for i, resturant in enumerate(restaurants2):
-                link = get_yelp_link(resturant)
-
+            address = (
+                "Address: "
+                + resturant.building
+                + " "
+                + resturant.street
+                + ", "
+                + resturant.borough
+                + " "
+                + str(resturant.zipcode)
+            )
+            html_content = html_content + "<p>" + address + "</p>"
+            if not link == -1:
                 html_content = (
-                    html_content
-                    + "<p><b>"
-                    + str(i + 1)
-                    + ") "
-                    + resturant.name.capitalize()
-                    + "</b></p>"
+                    html_content + "<p> Yelp link for this restaurant is: </p>"
                 )
-                address = (
-                    "Address: "
-                    + resturant.building
-                    + " "
-                    + resturant.street
-                    + ", "
-                    + resturant.borough
-                    + " "
-                    + str(resturant.zipcode)
-                )
-                html_content = html_content + "<p>" + address + "</p>"
-                if not link == -1:
-                    html_content = html_content + "Yelp link: "
-                    html_content = html_content + "<div>" + link + "</div>"
+                html_content = html_content + "<div>" + link + "</div>"
+            prevname = restaurant.name
 
     # Add image
     html_content = html_content + '<p><img src="cid:myimage" /></p>'
@@ -297,7 +288,8 @@ def send_invitations(userRequest, userMatch):
     print(restaurants1)
 
     CRLF = "\r\n"
-    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
+    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
 
     dur = datetime.timedelta(hours=1)
 
@@ -310,19 +302,20 @@ def send_invitations(userRequest, userMatch):
     # attendees = ["utkarshprakash21@gmail.com", "monsieurutkarsh@gmail.com"]
 
     description = (
-        "DESCRIPTION: Lunch meeting with"
+        "DESCRIPTION: Lunch meeting: "
         + userRequest[1].user.first_name
         + " "
         + userRequest[1].user.last_name
-        + "</b>("
-        + userRequest[1].user.email
-        + ")"
+        + " and "
+        + userRequest[0].user.first_name
+        + " "
+        + userRequest[0].user.last_name
         + CRLF
     )
     attendee = ""
     for att in attendees:
         attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-    PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE"
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE"
             + CRLF
             + " ;CN="
             + att
@@ -436,12 +429,14 @@ def interest_filter(matchpool, req):
 
 def dual_department_filter(matchpool, req):
     available_set_A = set()
-    A_users = LunchNinjaUser.objects.filter(department=req.department)
+
+    A_users = LunchNinjaUser.objects.filter(department=req.department.name)
     for each in A_users:
         ur = UserRequest.objects.filter(user_id=each.id)
         available_set_A = available_set_A.union(set(ur))
 
-    B = UserRequest.objects.filter(department=req.user.department)
+    d = Department.objects.filter(name=req.user.department)
+    B = UserRequest.objects.filter(department=d[0])
     M_A_B = available_set_A.intersection(set(B))
     available_set = M_A_B
     available_set = available_set.intersection(matchpool)
@@ -450,7 +445,7 @@ def dual_department_filter(matchpool, req):
 
 def single_department_filter(matchpool, req):
     available_set = set()
-    users = LunchNinjaUser.objects.filter(department=req.department)
+    users = LunchNinjaUser.objects.filter(department=req.department.name)
     for each in users:
         ur = UserRequest.objects.filter(user_id=each.id)
         available_set = available_set.union(set(ur))
@@ -470,14 +465,52 @@ def same_department_filter(matchpool, req):
     return available_set
 
 
+def begining_of_week(day):
+    weekday = day.weekday()
+    begining = day - datetime.timedelta(days=weekday)
+    return begining
+
+
+def find_day_prefer(user):
+    days = user.days.all()
+    if len(days) == 0:
+        return 0
+    else:
+        return user.days.all()[0].id
+
+
 def save_matches(matches):
     # save matches to user_request_match table
+    month = relativedelta(months=1)
+    week = datetime.timedelta(weeks=1)
+    day = datetime.timedelta(days=1)
+
     for match in matches:
         user1 = match[0].user
         user2 = match[1].user
         ur1 = UserRequest.objects.get(user_id=user1.id)
         ur2 = UserRequest.objects.get(user_id=user2.id)
 
+        first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
+            days=find_day_prefer(ur1)
+        )
+        first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
+            days=find_day_prefer(ur2)
+        )
+        if ur1.service_type == "monthly":
+            ur1.available_date = first_available_weekday_u1 + month
+        elif ur1.service_type == "weekly":
+            ur1.available_date = first_available_weekday_u1 + week
+        elif ur1.service_type == "daily":
+            ur1.available_date = first_available_weekday_u1 + day
+        if ur2.service_type == "Monthly":
+            ur2.available_date = first_available_weekday_u2 + month
+        elif ur2.service_type == "Weekly":
+            ur2.available_date = first_available_weekday_u2 + week
+        elif ur2.service_type == "Daily":
+            ur2.available_date = first_available_weekday_u2 + day
+        ur1.save()
+        ur2.save()
         user1Cuisines = ur1.cuisines.all()
         user2Cuisines = ur2.cuisines.all()
         commonCuisines = list(user1Cuisines & user2Cuisines)
@@ -488,7 +521,9 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        send_invitations(match, request_match)
+
+        if user1.id == 1 or user2.id == 1:
+            send_invitations(match, request_match)
 
 
 def find_match_user(available_set):
@@ -497,14 +532,24 @@ def find_match_user(available_set):
     return match_request
 
 
+today = datetime.date.today() + datetime.timedelta(days=1)
+
+
 def get_matchpool():
     matchpool = set()
     reqlist = []
-    days_entry = Days_left.objects.filter(days=1)
-    for day in days_entry:
-        user = day.user
-        matchpool.add(UserRequest.objects.get(user_id=user.id))
-        reqlist.append(UserRequest.objects.get(user_id=user.id))
+
+    # today = datetime.date.today()
+    print(today)
+    available_day_entry = UserRequest.objects.filter(available_date=today)
+    # days_entry = Days_left.objects.filter(days=1)
+    # for day in days_entry:
+    #     user = day.user
+    #     matchpool.add(UserRequest.objects.get(user_id=user.id))
+    #     reqlist.append(UserRequest.objects.get(user_id=user.id))
+    for user in available_day_entry:
+        matchpool.add(user)
+        reqlist.append(user)
     return matchpool, reqlist
 
 
@@ -522,13 +567,16 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
         match_history = UserRequestMatch.objects.filter(
             Q(user1=user_r.user) | Q(user2=user_r.user)
         )
-
         for matched_user in match_history:
+
             # users cannot match matched users
+            print(matched_user.user1_id)
+            print(matched_user.user2_id)
             user1 = UserRequest.objects.filter(user_id=matched_user.user1_id)[0]
             user2 = UserRequest.objects.filter(user_id=matched_user.user2_id)[0]
-            match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
-            match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
+            if user1 in matchlist and user2 in matchlist:
+                match_matrix[matchlist.index(user1)][matchlist.index(user2)] = -1000
+                match_matrix[matchlist.index(user2)][matchlist.index(user1)] = -1000
         # find all possible matches base on the users preference
         available_set_cuisine = cuisine_filter(matchpool, user_r)
         available_set_interest = interest_filter(matchpool, user_r)
@@ -611,7 +659,9 @@ def match():
     matchlist = []
     for user in matchpool:
         matchlist.append(user)
+
     match_matrix = creat_match_matrix(matchpool, matchlist, preference_score)
+
     match_score_list = []
 
     for i in range(0, len(matchlist)):
@@ -630,14 +680,16 @@ def match():
     matched_user_request = []
     matched_user = []
     not_matched_user = []
-
+    print(match_score_list)
     for user_tuple in match_score_list:
+
         if user_tuple[2] < 0:
             continue
         user_num1 = user_tuple[0]
         user_num2 = user_tuple[1]
         user1 = matchlist[user_num1]
         user2 = matchlist[user_num2]
+        print("[" + str(user1.user.id) + ", " + str(user2.user.id) + "]")
         if user1 in matchpool and user2 in matchpool:
             matched_user.append([user1.user_id, user2.user_id])
             matched_user_request.append([user1, user2])
@@ -648,5 +700,42 @@ def match():
         not_matched_user.append(user)
     save_matches(matched_user_request)
 
+    for u in not_matched_user:
+        print(u.user.username)
 
-match()
+    fake_not_matched_user = []
+    for user in not_matched_user:
+        prefer_weekday = []
+        for d in user.days.all():
+            prefer_weekday.append(d.id)
+        for i in prefer_weekday:
+            if i > today.weekday():
+                user.available_date = begining_of_week(today) + datetime.timedelta(
+                    days=i
+                )
+                user.save()
+                fake_not_matched_user.append(user)
+    real_not_matched_user = []
+    for user in not_matched_user:
+        if user not in fake_not_matched_user:
+            real_not_matched_user.append(user)
+    print("matched user")
+    print(matched_user_request)
+    print("fake not matched user")
+    print(fake_not_matched_user)
+    print("real_matched_user")
+    print(real_not_matched_user)
+
+    return matched_user_request
+
+
+matched_user_request = match()
+userlist = UserRequest.objects.all()
+for user in userlist:
+    if user in matched_user_request:
+        print("Matched")
+    print(user.user.username)
+    print(user.service_type)
+    print(user.days.all())
+    print(user.days.all())
+    print(user.available_date)
