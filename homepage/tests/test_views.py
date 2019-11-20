@@ -94,11 +94,14 @@ class UserserviceViewTest(TestCase):
             "service_type": "Monthly",
             "school": "Tandon School of Engineering",
             "department": "Computer Science",
-            "user": {"first_name": "donald", "last_name": "trump","mail":"2345@nyu.edu"},
+            "user": {
+                "first_name": "donald",
+                "last_name": "trump",
+                "mail": "2345@nyu.edu",
+            },
         }
         response = self.client.post("/serviceRequest/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
-
 
     # def is_authenticated(self):
     #     return False
@@ -122,7 +125,7 @@ class UserserviceViewTest(TestCase):
                 pass
 
             def clear(**kargs):
-                raise  ObjectDoesNotExist
+                raise ObjectDoesNotExist
 
             def add(**kargs):
                 return "Added"
@@ -134,9 +137,10 @@ class UserserviceViewTest(TestCase):
                 self.cuisines = cuisine_for_mock
 
             def save(self):
-                return  "saved"
+                return "saved"
 
         return userObj()
+
     def UserRequest_mock(**kargs):
         class cuisine_for_mock:
             def __init__(self):
@@ -180,14 +184,20 @@ class UserserviceViewTest(TestCase):
                 return "Saved"
 
         return userObj()
+
     @mock.patch("homepage.views.UserRequest", side_effect=UserRequest_mock)
     @mock.patch(
         "homepage.views.User_service_send_email_authenticated",
         side_effect=send_email_mock,
     )
-    @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj_raise_error())
+    @mock.patch(
+        "homepage.views.UserRequest.objects.get",
+        side_effect=User_request_Obj_raise_error(),
+    )
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
-    def test_authenticate_user_object_not_exist(self, mock_authenticated, mock_request, mock_email,mock_userrequest):
+    def test_authenticate_user_object_not_exist(
+        self, mock_authenticated, mock_request, mock_email, mock_userrequest
+    ):
         service_type_Obj = {
             "service_type": "Monthly",
             "school": "Tandon School of Engineering",
@@ -325,9 +335,10 @@ class SettingViewTest(TestCase):
             def __init__(self, name):
                 self.name = name
                 pass
+
         class day_for_mock:
-            def __init__(self,day):
-                self.day=day
+            def __init__(self, day):
+                self.day = day
 
             def clear(**kargs):
                 return "Cleared"
@@ -337,9 +348,9 @@ class SettingViewTest(TestCase):
 
             def save(**kargs):
                 return "save"
+
             def weekday(**kargs):
                 return 1
-
 
         class days_for_mock:
             def all(**kargs):
@@ -393,8 +404,8 @@ class SettingViewTest(TestCase):
                 self.department_priority = 9
                 self.cuisines_priority = 4
                 self.interests_priority = 8
-                self.days=days_for_mock
-                self.available_date=day_for_mock
+                self.days = days_for_mock
+                self.available_date = day_for_mock
 
         return userObj()
 
@@ -405,8 +416,6 @@ class SettingViewTest(TestCase):
     def login_mock(request):
 
         return True
-
-
 
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
@@ -534,8 +543,6 @@ class MatchHistoryTest(TestCase):
         response = self.client.get("/matchHistory/")
         self.assertEqual(response.status_code, 302)
 
-
-
     def User_match_Obj(a):
         class username:
             def __init__(self):
@@ -641,14 +648,15 @@ class MatchHistoryTest(TestCase):
 class FeedbackViewTest(TestCase):
     def test_post_feedback(self):
         service_type_Obj = {
-            "attendance":"Yes!",
-            "experience":1,
-            "restaurant":1,
-            "partner":1,
-            "comment":" hahaha"
+            "attendance": "Yes!",
+            "experience": 1,
+            "restaurant": 1,
+            "partner": 1,
+            "comment": " hahaha",
         }
         response = self.client.post("/feedback/2-3", service_type_Obj)
         self.assertEqual(response.status_code, 302)
+
     def test_get_feedback(self):
 
         response = self.client.get("/feedback/2-3")

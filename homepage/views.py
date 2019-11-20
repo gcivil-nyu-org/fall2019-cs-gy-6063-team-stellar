@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from subprocess import run, PIPE
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
