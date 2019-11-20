@@ -417,15 +417,40 @@ class SettingViewTest(TestCase):
 
         return True
 
+    def mock_lunchuser(id):
+        class lunchuser_for_mock:
+            def __init__(self):
+                self.username="Utkarsh"
+                self.first_name="Utkarsh"
+                self.last_name="P"
+                self.email="2345@nyu.edu"
+                self.school="Tandon school"
+                self.department="Computer Science"
+        return lunchuser_for_mock()
+
+
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_correct_setting(self, mock_login, mock_userrequest):
+    def test_correct_setting(self, mock_login,mock_lunchuser, mock_userrequest):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 200)
 
+    def mock_lunchuser(id):
+        class lunchuser_for_mock:
+            def __init__(self):
+                self.username="Utkarsh"
+                self.first_name="Utkarsh"
+                self.last_name="P"
+                self.email="2345@nyu.edu"
+                self.school="Tandon school"
+                self.department="Computer Science"
+        return lunchuser_for_mock()
+
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=raise_error)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_incorrect_setting(self, mock_login, mock_userrequest):
+    def test_incorrect_setting(self, mock_login,mock_lunch, mock_userrequest):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 200)
 
