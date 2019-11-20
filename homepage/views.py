@@ -177,9 +177,9 @@ def user_service(request):
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
             school = request.POST["school"]
-            school_object = School.objects.filter(name=school)
+            school_object = School.objects.get(name=school)
             department = request.POST["department"]
-            department_object = Department.objects.filter(name=department)
+            department_object = Department.objects.get(name=department)
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
