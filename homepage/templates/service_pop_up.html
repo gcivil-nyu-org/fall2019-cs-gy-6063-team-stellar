@@ -13,12 +13,21 @@
                   <div class="form-top">
                      <div class="form-top-left">
                         <h4>Step 1 of 5</h4>
-                        Select preferred type of service:
-                        <div class="dropdown" class="col-md-12">
+                        <div class="dropdown col-md-12" >
+                           Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="serviceSelect">
                               <option selected>Daily</option>
                               <option>Weekly</option>
                               <option>Monthly</option>
+                           </select> 
+                        </div>
+                         <div id="daysSelectContainer" class="col-md-12"> 
+                           <br>
+                           Select preferred day(if any):
+                           <select id="daysSelect" placeholder="Select preferred days" multiple>
+                              {% for days in week_days %}
+                                 <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
+                              {% endfor %}
                            </select> 
                         </div>
                      </div>
@@ -70,9 +79,6 @@
                         </div>
                      </div>
                      <br>
-                     <div class="form-top-right">
-                        <i class="fa fa-key"></i>
-                     </div>
                   </div>
                </fieldset>
                <div class="modal-footer">
@@ -102,17 +108,15 @@
                      <div class="form-top-left">
                         <h4>Step 3 of 5</h4>
                         <p>Select preferred Cuisine:</p>
+                                      
                         <div class="col-md-12"> 
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
                               {% for cuisine in cuisines %}
-                                 <option value="{{ cuisine.id }}" name="{{ cuisine.name }}">{{ cuisine.name }}</option>
+                                    <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>         
                               {% endfor %}
                            </select> 
                         </div>
                         <br>
-                     </div>
-                     <div class="form-top-right">
-                        <i class="fa fa-twitter"></i>
                      </div>
                   </div>
                   <div class="modal-footer">
@@ -154,9 +158,6 @@
                         </div>
                         <br>
 
-                     </div>
-                     <div class="form-top-right">
-                        <i class="fa fa-twitter"></i>
                      </div>
                   </div>
                    <div class="modal-footer">
@@ -231,4 +232,9 @@
 </div>
 
 <link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006288/BBBootstrap/choices.min.css?version=7.0.0">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 <script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
+<script type="text/javascript">
+	var top_cuisines = {{top_cuisines}}
+   var top_interests = {{top_interests}}
+</script>

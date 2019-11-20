@@ -34,11 +34,17 @@
 					<tr>
 						<th scope="col">Service type</th>
 						<th scope="col">Service started on</th>
-						<th scope="col">Preffered School</th>
-						<th scope="col">Preffered Department</th>
-						<th scope="col">Preffered Interests</th>
-						<th scope="col">Preffered Cuisines</th>
+						<th scope="col">Preferred School</th>
+						<th scope="col">Preferred Department</th>
+						<th scope="col">Preferred Interests</th>
+						<th scope="col">Preferred Cuisines</th>
+                        {% if not user_request.service_type == "Daily" %}
+                        <th scope="col">Preferred Weekday</th>
+                        {% endif %}
+{#                        <th scope="col">Next Meeting</th>#}
+
 						<th scope="col">Service Status</th>
+
 					</tr>
 				</thead>
 				<tbody>
@@ -61,6 +67,15 @@
 								<i><p class="preferrence_priority" >Priority: {{user_request.cuisines_priority}}/10</p></i>
 								{{user_request.preferred_cuisines}}
 							</td>
+                            {% if not user_request.service_type == "Daily" %}
+                            <td>
+								{{user_request.preferred_weekday}}
+							</td>
+                            {% endif %}
+{#                            <td>#}
+{##}
+{#								{{user_request.next_meet_day}}#}
+{#							</td>#}
 							<td>
 								<label class="switch">
 									<input id="serviceToggle" type="checkbox">
@@ -73,6 +88,39 @@
 		{% else %}
 			<p>No service found, please subscribe to Lunch Ninja! :)</p>
 		{% endif %}
+	
+	<br>
+		<h3 id="active_service_header">User Profile</h3>
+			<table id="service_table" class="table">
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Username</th>
+						<th scope="col">Email</th>
+						<th scope="col">School</th>
+						<th scope="col">Department</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								{{user_profile.name}}
+							</td>
+							<td>
+								{{user_profile.username}}
+							</td>
+							<td>
+								{{user_profile.email}}
+							</td>
+							<td>
+								{{user_profile.school}}
+							</td>
+							<td>
+								{{user_profile.department}} 
+							</td>
+						</tr>
+				</tbody>
+			</table>
 	</div>
 
 	<!-- Pop-up models -->
