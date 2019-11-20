@@ -135,10 +135,7 @@ def User_service_send_email_authenticated(
     email.send()
 
 
-
 def getModelData(user):
-
-def getModelData():
     all_selected_cuisine = UserRequest.objects.values_list("cuisines", flat=True)
     all_selected_interests = UserRequest.objects.values_list("interests", flat=True)
 
