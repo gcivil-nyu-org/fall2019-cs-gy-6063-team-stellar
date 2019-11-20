@@ -35,8 +35,7 @@ def generateuser(N):
 
         # school
         school_id = random.randint(1, School.objects.all().count())
-        school_id = random.randint(2, 2)
-        user["school"] = School.objects.filter(id=school_id)
+        user["school"] = School.objects.get(id=school_id)
 
         # service type
         service_id = random.randint(1, 3)
@@ -52,7 +51,7 @@ def generateuser(N):
         department_index = random.randint(1, departments_count)
         # department_index = random.randint(1, 6)
         department_id = start_id + department_index - 1
-        user["department"] = Department.objects.filter(id=department_id)
+        user["department"] = Department.objects.get(id=department_id)
 
         # cuisine
         cuisines = Cuisine.objects.all()
@@ -89,8 +88,8 @@ def save_users(userlist):
         r = UserRequest(
             user=user["user"],
             service_type=user["service_type"],
-            school=user["school"][0],
-            department=user["department"][0],
+            school=user["school"],
+            department=user["department"],
             time_stamp=datetime.datetime.now(tz=timezone.get_current_timezone()),
             cuisines_priority=user["cuisines_priority"],
             department_priority=user["department_priority"],
