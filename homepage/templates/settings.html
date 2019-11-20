@@ -38,7 +38,9 @@
 						<th scope="col">Preferred Department</th>
 						<th scope="col">Preferred Interests</th>
 						<th scope="col">Preferred Cuisines</th>
+                        {% if not user_request.service_type == "Daily" %}
                         <th scope="col">Preferred Weekday</th>
+                        {% endif %}
                         <th scope="col">Next Meeting</th>
 
 						<th scope="col">Service Status</th>
@@ -65,10 +67,11 @@
 								<i><p class="preferrence_priority" >Priority: {{user_request.cuisines_priority}}/10</p></i>
 								{{user_request.preferred_cuisines}}
 							</td>
+                            {% if not user_request.service_type == "Daily" %}
                             <td>
-	
 								{{user_request.preferred_weekday}}
 							</td>
+                            {% endif %}
                             <td>
 
 								{{user_request.next_meet_day}}

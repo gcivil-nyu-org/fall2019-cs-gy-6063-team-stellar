@@ -126,13 +126,14 @@ def User_service_send_email_authenticated(
     email.send()
 
 
-def getModelData():
+def getModelData(user):
     return {
         "cuisines": Cuisine.objects.all(),
         "schools": School.objects.all(),
         "departments": Department.objects.all(),
         "interests": Interests.objects.all(),
         "week_days": Days.objects.all(),
+        "username":user.username
     }
 
 
@@ -143,7 +144,7 @@ def Merge(dict1, dict2):
 
 def index(request):
     if check_login(request):  # no repeat log in
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
         return render(request, "homepage.html", Merge({}, preference_model_data))
     return redirect("/login/")
 
@@ -326,7 +327,7 @@ def match_history(request):
             else:
                 past_lunch_macthes.append(match_dict)
 
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
 
         return render(
             request,
@@ -346,6 +347,7 @@ def match_history(request):
 def settings(request):
 
     if check_login(request):
+
         user_info = LunchNinjaUser.objects.get(id=request.user.id)
         user_profile = {
             "username": user_info.username,
@@ -354,12 +356,14 @@ def settings(request):
             "school": user_info.school,
             "department": user_info.department,
         }
+
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
 
             preffered_cuisines_instances = user_request_instance.cuisines.all()
             preffered_interests_instances = user_request_instance.interests.all()
             preffered_days_instances = user_request_instance.days.all()
+
             user_request = {
                 "service_type": user_request_instance.service_type,
                 "service_start_date": user_request_instance.time_stamp,
@@ -383,7 +387,7 @@ def settings(request):
         except UserRequest.DoesNotExist:
             user_request = None
 
-        preference_model_data = getModelData()
+        preference_model_data = getModelData(request.user)
 
         return render(
             request,
