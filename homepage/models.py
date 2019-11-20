@@ -131,7 +131,7 @@ class UserRequest(models.Model):
 
 def in_one_day():
     # next_day = timezone.now() + timedelta(days=1)
-    next_day = timezone.now() + timedelta(days=1)
+    next_day = timezone.localtime(timezone.now()) + timedelta(days=1)
     new_period = next_day.replace(hour=12, minute=00)
     return new_period
 
@@ -163,7 +163,7 @@ class Question(models.Model):
         return self.question_text
 
     def was_published_recently(self):
-        now = timezone.now()
+        now = timezone.localtime(timezone.now())
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
     was_published_recently.admin_order_field = "pub_date"
