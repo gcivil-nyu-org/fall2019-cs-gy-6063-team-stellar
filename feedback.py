@@ -74,9 +74,8 @@ def prepare_feedback():
         html_content2 = compose_email(user2, user1, each)
         to1 = [user1.email]
         to2 = [user2.email]
-        if user1.id == 2 or user2.id == 2:
-            send_email(html_content1, to1)
-            send_email(html_content2, to2)
+        send_email(html_content1, to1)
+        send_email(html_content2, to2)
 
 
 prepare_feedback()

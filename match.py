@@ -588,8 +588,7 @@ def save_matches(matches):
         for r in restaurants2:
             request_match.restaurants.add(r)
 
-        if user1.id == 3 or user2.id == 3:
-            send_invitations(match, request_match)
+        send_invitations(match, request_match)
 
 
 def find_match_user(available_set):
