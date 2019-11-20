@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from datetime import timedelta, datetime, date
+from datetime import timedelta, datetime
 from django.utils import timezone
 
 m_state = False
@@ -154,11 +154,11 @@ class UserRequestMatch(models.Model):
         return "Match for " + self.user1.username + " and " + self.user2.username
 
 
-
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published")
     label = models.CharField(max_length=200)
+
     def __str__(self):
         return self.question_text
 
@@ -188,6 +188,8 @@ class Feedback(models.Model):
         on_delete=models.CASCADE,
         related_name="%(class)s_user1",
     )
-    choices = models.ManyToManyField(Choice, blank= True)
-    comment = models.CharField(max_length = 200)
+    choices = models.ManyToManyField(Choice, blank=True)
+    comment = models.CharField(max_length=200)
+
+
 # UserRequestMatch.objects.
