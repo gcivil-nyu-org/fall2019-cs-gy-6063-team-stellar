@@ -65,7 +65,7 @@
                          {% if latest_question_list %}
                             <div>
                             {% for question in latest_question_list %}
-                                <b>{{ question.question_text }}</b><br><br>
+                                <b>{{ forloop.counter }}) {{ question.question_text }}</b><br><br>
                                 {% if question.id == 2 or question.id == 3 %}
                                         <pre>          No way                                                           Definitely</pre>
                                     {% endif %}
@@ -80,25 +80,19 @@
                             {% endfor %}
                             </div>
                         {% endif %}
-
-                         <br><br>
-                         <b>Any other comments?</b><br>
+                         <b>5) Any other comments?</b><br>
                          <textarea type="input" id="comment" name="comment" rows="8" cols="100"></textarea>
-{#                         <input type="text" name="comments"><br>#}
                      </div>
                      <br>
                   </div>
                </fieldset>
         <button type="submit" class="btn warning">Submit</button>
         <button type="button" class="btn warning" data-dismiss="modal">Close</button>
+        <br>
+        <br>
     </form>
 	</div>
 
-	<!-- Pop-up models -->
-	{% include "service_pop_up.html" %}
-	
-	<!-- Footer -->
-	{% comment %} {% include "footer.html" %} {% endcomment %}
 </body>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </html>
