@@ -39,8 +39,9 @@ def generateuser(N):
         user["school"] = School.objects.filter(id=school_id)
 
         # service type
-        service_id = random.randint(1, 3)
-        user["service_type"] = service[service_id]
+        # service_id = random.randint(1, 3)
+        # user["service_type"] = service[service_id]
+        user["service_type"] = "Daily"
 
         # department
         departments = Department.objects.filter(school=school_id)

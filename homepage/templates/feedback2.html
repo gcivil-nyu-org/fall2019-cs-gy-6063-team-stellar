@@ -2,6 +2,16 @@
 <html lang="en">
 <style type="text/css">
 input[type="radio"]{margin-left: 100px;}
+    .btn {
+  border: none;
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.warning {background-color: #ff9800;} /* Orange */
+.warning:hover {background: #e68a00;}
 </style>
 <body>
 <form role="form" id="feedback_form" class="registration-form" method="post">
@@ -26,14 +36,14 @@ input[type="radio"]{margin-left: 100px;}
 
                          <br><br>
                          <b>Any other comments?</b><br>
-                         <textarea type="input" rows="8" cols="100"></textarea>
+                         <textarea type="input" id="comment" name="comment" rows="8" cols="100"></textarea>
 {#                         <input type="text" name="comments"><br>#}
                      </div>
                      <br>
                   </div>
                </fieldset>
-        <button type="submit" class="btn btn-warning">Submit</button>
-        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn warning">Submit</button>
+        <button type="button" class="btn warning" data-dismiss="modal">Close</button>
     </form>
 </body>
 </html>

@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from datetime import date, timedelta
+from django.utils import timezone
 
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
@@ -14,7 +15,7 @@ django.setup()
 from homepage.models import UserRequestMatch  # noqa: E402
 
 
-def compose_email(user1, user2):
+def compose_email(user1, user2, match):
     html_content = (
         "<p>Hi "
         + user1.first_name
@@ -23,7 +24,11 @@ def compose_email(user1, user2):
         + "Please take a moment to complete our short survey about your most recent lunch experience with <b>"
         + user2.first_name
         + "</b>.<br>"
-        + "http://127.0.0.1:8000/feedback"
+        + "http://127.0.0.1:8000/"
+        + str(match.id)
+        + "-"
+        + str(user1.id)
+        + "-feedback"
         # + " <button href\"http://127.0.0.1:8000/feedback\" class=\"btn btn-warning\">Take the survey</button><br>"
         + "<br><br>"
         + "Best,<br>"
@@ -55,7 +60,7 @@ def send_email(html_content, attendee):
 
 
 def prepare_feedback():
-    tomorrow = date.today() + timedelta(days=1)
+    tomorrow = date.today() + timedelta(days=2)
     # (tz=timezone.get_current_timezone()) + timedelta(1)
     print(tomorrow)
     # yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
@@ -65,8 +70,8 @@ def prepare_feedback():
         print(each.id)
         user1 = each.user1
         user2 = each.user2
-        html_content1 = compose_email(user1, user2)
-        html_content2 = compose_email(user2, user1)
+        html_content1 = compose_email(user1, user2, each)
+        html_content2 = compose_email(user2, user1, each)
         to1 = [user1.email]
         to2 = [user2.email]
         if user1.id == 1 or user2.id == 1:
