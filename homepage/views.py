@@ -203,8 +203,8 @@ def user_service(request):
             try:
                 req = UserRequest.objects.get(pk=logged_user)
                 req.service_type = service_type
-                req.school = school_object[0]
-                req.department = department_object[0]
+                req.school = school_object
+                req.department = department_object
                 req.cuisines_priority = cuisines_priority
                 req.department_priority = department_priority
                 req.interests_priority = interests_priority
