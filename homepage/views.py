@@ -346,6 +346,7 @@ def match_history(request):
 
 def settings(request):
     if check_login(request):
+
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
             preffered_cuisines_instances = user_request_instance.cuisines.all()
@@ -359,6 +360,9 @@ def settings(request):
                 "school": request.user.school,
                 "department": request.user.department,
             }
+            print(", ".join(
+                [day.day for day in preffered_days_instances]
+            ))
             user_request = {
                 "service_type": user_request_instance.service_type,
                 "service_start_date": user_request_instance.time_stamp,
