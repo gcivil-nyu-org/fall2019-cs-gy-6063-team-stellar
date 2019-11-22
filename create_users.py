@@ -66,20 +66,20 @@ if __name__ == "__main__":
     )
     user.set_password("1234mnbv")
     user.save()
-    # user1 = LunchNinjaUser(
-    #     username="Utkarsh",
-    #     email="up239@nyu.com",
-    #     school="Tandon School of Engineering",
-    #     department="Computer Science",
-    #     first_name="utkarsh",
-    #     last_name="P",
-    #     is_active=True,
-    # )
-    # user1.set_password("Stellar123!")
-    # user1.save()
+    user1 = LunchNinjaUser(
+        username="Utkarsh",
+        email="huyixin3333@gmail.com",
+        school="Tandon School of Engineering",
+        department="Computer Science",
+        first_name="utkarsh",
+        last_name="P",
+        is_active=True,
+    )
+    user1.set_password("Stellar123!")
+    user1.save()
     user2 = LunchNinjaUser(
         username="Xinchi",
-        email="huangxinchi666@gmail.com",
+        email="huyixin3333@hotmail.com",
         school="Tandon School of Engineering",
         department="Computer Science",
         first_name="xinchi",
