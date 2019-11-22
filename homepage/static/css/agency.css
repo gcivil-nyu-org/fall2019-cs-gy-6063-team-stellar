@@ -98,9 +98,9 @@ img::-moz-selection {
 }
 
 .btn-primary:active, .btn-primary:focus, .btn-primary:hover {
-  background-color: #fec810 !important;
-  border-color: #fec810 !important;
-  color: white;
+  background-color: #fff !important;
+  border-color: #fff !important;
+  color: blue;
 }
 
 .btn-primary:active, .btn-primary:focus {
