@@ -147,10 +147,39 @@ def getModelData(user):
         x for x, _ in Counter(all_selected_interests).most_common(5)
     ]
 
+    school_set=School.objects.all()
+    department_set=Department.objects.all()
+    school_list = []
+    department_list = []
+    if user.is_anonymous==False:
+        user_request_instance = UserRequest.objects.get(user=user)
+        selected_school = user_request_instance.school
+        selected_department = user_request_instance.department
+        print(selected_school)
+        print(school_set)
+
+        for s in school_set:
+            if not s == selected_school:
+                school_list.append(s)
+        for d in department_set:
+            if not d == selected_department:
+                department_list.append(d)
+
+        school_list.append(selected_school)
+        department_list.append(selected_department)
+    else:
+        for s in school_set:
+             school_list.append(s)
+        for d in department_set:
+             department_list.append(d)
+    print(school_list)
+
+
+
     return {
         "cuisines": Cuisine.objects.all(),
-        "schools": School.objects.all(),
-        "departments": Department.objects.all(),
+        "schools": school_list,
+        "departments": department_list,
         "interests": Interests.objects.all(),
         "week_days": Days.objects.all(),
         "username": user.username,
@@ -159,20 +188,56 @@ def getModelData(user):
     }
 
 
-def Merge(dict1, dict2):
-    res = {**dict1, **dict2}
+def Merge(dict1, dict2, dict3):
+    res = {**dict1, **dict2, **dict3}
     return res
+def get_selected_data(user):
+    user_request_instance = UserRequest.objects.get(user=user)
+    preffered_cuisines_instances = user_request_instance.cuisines.all()
+    preffered_interests_instances = user_request_instance.interests.all()
+    preffered_days_instances = user_request_instance.days.all()
+    selected_type = user_request_instance.service_type
+    selected_school = user_request_instance.school
+    selected_department = user_request_instance.department
+    selected_cuisine = preffered_cuisines_instances
+    selected_interest = preffered_interests_instances
+    selected_days=preffered_days_instances
+    selected_info = {
+        "selected_type": selected_type,
+        "selected_school": selected_school,
+        "selected_department": selected_department,
+        "selected_cuisine": selected_cuisine,
+        "selected_interest": selected_interest,
+        "selected_days":selected_days
 
-
+    }
+    return selected_info
 def index(request):
     if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
-        return render(request, "homepage.html", Merge({}, preference_model_data))
+        selected_info = get_selected_data(request.user)
+        return render(request, "homepage.html", Merge({}, preference_model_data,selected_info))
     return redirect("/login/")
+def handle_ajax(request):
+    schoolist, departmentlist, school_departments, depatment_school = merge()
+    if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
+
+        school_id = request.GET.get("school_id", None)
+        response = school_departments[school_id]
+        return JsonResponse(response, safe=False)
+    elif request.method == "GET" and "/ajax/load_school_homepage" in request.path:
+        department_id = request.GET.get("department_id", None)
+        school = depatment_school[department_id][0]
+        response = []
+        response.append(school)
+        for s in schoolist:
+            if not s == school or s == "select school":
+                response.append(s)
+        return JsonResponse(response, safe=False)
 
 
 def user_service(request):
-    schoolist, departmentlist, school_departments, depatment_school = merge()
+
     if request.method == "POST":
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
@@ -271,20 +336,6 @@ def user_service(request):
         #     email = EmailMessage(email_subject, message, to=[to_email])
         #     email.send()
         return redirect("/")
-    elif check_ajax_department(request):
-
-        school_id = request.GET.get("school_id", None)
-        response = school_departments[school_id]
-        return JsonResponse(response, safe=False)
-    elif check_ajax_school(request):
-        department_id = request.GET.get("department_id", None)
-        school = depatment_school[department_id][0]
-        response = []
-        response.append(school)
-        for s in schoolist:
-            if not s == school or s == "select school":
-                response.append(s)
-        return JsonResponse(response, safe=False)
 
     else:
         return redirect("/login/")
@@ -380,7 +431,6 @@ def settings(request):
 
         try:
             user_request_instance = UserRequest.objects.get(user=request.user)
-
             preffered_cuisines_instances = user_request_instance.cuisines.all()
             preffered_interests_instances = user_request_instance.interests.all()
             preffered_days_instances = user_request_instance.days.all()
@@ -409,13 +459,14 @@ def settings(request):
             user_request = None
 
         preference_model_data = getModelData(request.user)
+        selected_info = get_selected_data(request.user)
 
         return render(
             request,
             "settings.html",
             Merge(
                 {"user_request": user_request, "user_profile": user_profile},
-                preference_model_data,
+                preference_model_data,selected_info
             ),
         )
     return redirect("/login/")

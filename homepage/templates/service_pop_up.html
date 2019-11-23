@@ -62,7 +62,7 @@
                         <div class="dropdown row">
                             <div class="col-md-6">
                                  Select preferred school:
-                                 <select class="form-control" type="text" id="schoolSelect" name="schoolSelect">
+                                 <select class="form-control" type="text" id="schoolSelect" name="schoolSelect" placehoder="{{ school.name }}" >
                                     {% for school in schools %}
                                           <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
                                     {% endfor %}
@@ -70,9 +70,11 @@
                             </div>
                             <div class="col-md-6">
                                  Select preferred department:
-                                 <select class="form-control" type="text" id="departmentSelect" name="departmentSelect">
+                                 <select class="form-control" type="text" id="departmentSelect" name="departmentSelect" >
+                                     <option selected="selected" value="{{ selected_department.name }}" name="{{ selected_department.name }}"> {{ selected_department.name }} </option>
+
                                     {% for department in departments %}
-                                          <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
+                                        <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
                                     {% endfor %}
                                  </select> 
                             </div>
@@ -111,9 +113,13 @@
                                       
                         <div class="col-md-12"> 
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
-                              {% for cuisine in cuisines %}
-                                    <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>         
+                              {% for selected in selected_cuisine %}
+                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
                               {% endfor %}
+                              {% for cuisine in cuisines %}
+                                    <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>
+                              {% endfor %}
+
                            </select> 
                         </div>
                         <br>
@@ -151,6 +157,9 @@
                         
                         <div class="col-md-12"> 
                            <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
+                               {% for selected in selected_interest %}
+                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
+                              {% endfor %}
                               {% for interest in interests %}
                                     <option value="{{ interest.id }}" name="{{ interest.name }}">{{ interest.name }}</option>
                               {% endfor %}
