@@ -21,4 +21,5 @@ urlpatterns = [
     path("", include("homepage.urls")),
     path("admin/", admin.site.urls),
     path("captcha/", include("captcha.urls")),
+    path(r'^admin/statuscheck/', include('celerybeat_status.urls'))
 ]

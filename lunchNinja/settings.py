@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "captcha",
-    "background_task",
+    "celery",
+    "celerybeat_status"
+    # "background_task",
 ]
 
 MIDDLEWARE = [
