@@ -242,4 +242,4 @@ def generateuser(user_info):
 
 
 if __name__ == "__main__":
-    generateuser(team_stellar)
+    generateuser(team_stellar+software_engineering)
