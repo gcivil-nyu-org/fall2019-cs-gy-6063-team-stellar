@@ -21,7 +21,7 @@
         input[type="radio"]{margin-left: 100px;}
             .btn {
         border: none;
-        color: white;
+        color: black;
         padding: 14px 28px;
         font-size: 16px;
         cursor: pointer;
@@ -30,6 +30,11 @@
         .warning {background-color: #ff9800;} /* Orange */
         .warning:hover {background: #e68a00;}
     </style>
+    <script type ="text/javascript">
+    function submitclick() {
+        alert("Thank you for submitting your feedback!");
+    }
+    </script>
 </head>
 <body id="page-top">
 	
@@ -86,7 +91,7 @@
                      <br>
                   </div>
                </fieldset>
-        <button type="submit" class="btn warning">Submit</button>
+        <button type="submit" class="btn warning" onclick="submitclick()">Submit</button>
         <button type="button" class="btn warning" data-dismiss="modal">Close</button>
         <br>
         <br>
