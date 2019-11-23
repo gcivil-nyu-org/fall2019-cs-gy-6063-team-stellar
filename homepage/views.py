@@ -155,8 +155,6 @@ def getModelData(user):
         user_request_instance = UserRequest.objects.get(user=user)
         selected_school = user_request_instance.school
         selected_department = user_request_instance.department
-        print(selected_school)
-        print(school_set)
 
         for s in school_set:
             if not s == selected_school:
@@ -172,7 +170,6 @@ def getModelData(user):
              school_list.append(s)
         for d in department_set:
              department_list.append(d)
-    print(school_list)
 
 
 
@@ -202,13 +199,20 @@ def get_selected_data(user):
     selected_cuisine = preffered_cuisines_instances
     selected_interest = preffered_interests_instances
     selected_days=preffered_days_instances
+
+    selected_department_priority = user_request_instance.department_priority
+    selected_cuisine_priority = user_request_instance.cuisines_priority
+    selected_interest_priority = user_request_instance.interests_priority
     selected_info = {
         "selected_type": selected_type,
         "selected_school": selected_school,
         "selected_department": selected_department,
         "selected_cuisine": selected_cuisine,
         "selected_interest": selected_interest,
-        "selected_days":selected_days
+        "selected_days":selected_days,
+        "selected_department_priority": selected_department_priority,
+        "selected_cuisine_priority": selected_cuisine_priority,
+        "selected_interest_priority": selected_interest_priority,
 
     }
     return selected_info

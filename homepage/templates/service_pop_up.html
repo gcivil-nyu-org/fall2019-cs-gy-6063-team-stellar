@@ -16,15 +16,30 @@
                         <div class="dropdown col-md-12" >
                            Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="serviceSelect">
-                              <option selected>Daily</option>
-                              <option>Weekly</option>
-                              <option>Monthly</option>
+                               {% if selected_type  == "Daily"  %}
+                                  <option selected>Daily</option>
+                                  <option>Weekly</option>
+                                  <option>Monthly</option>
+                               {% endif %}
+                               {% if selected_type  == "Weekly"  %}
+                                  <option>Daily</option>
+                                  <option selected>Weekly</option>
+                                  <option>Monthly</option>
+                               {% endif %}
+                               {% if selected_type  == "Monthly"  %}
+                                  <option>Daily</option>
+                                  <option selected>Weekly</option>
+                                  <option>Monthly</option>
+                               {% endif %}
                            </select> 
                         </div>
                          <div id="daysSelectContainer" class="col-md-12"> 
                            <br>
                            Select preferred day(if any):
                            <select id="daysSelect" placeholder="Select preferred days" multiple>
+                              {% for selected in selected_days %}
+                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
+                              {% endfor %}
                               {% for days in week_days %}
                                  <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
                               {% endfor %}
@@ -204,20 +219,20 @@
                            
                            <div class="range-slider" id="department_slider" >
                               Select priority for department:
-                              <input class="range-slider__range" id="department_slider_range" type="range" value="10" min="1" max="10" step="1">
-                              <span class="range-slider__value" id="department_slider_value">10</span>
+                              <input class="range-slider__range" id="department_slider_range" type="range" value="{{ selected_department_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="department_slider_value">{{ selected_department_priority }}</span>
                            </div>
                            <br>
                            <div class="range-slider" id="cuisine_slider" >
                               Select priority for cuisines:
-                              <input class="range-slider__range" id="cuisine_slider_range" type="range" value="10" min="1" max="10" step="1">
-                              <span class="range-slider__value" id="cuisine_slider_value">10</span>
+                              <input class="range-slider__range" id="cuisine_slider_range" type="range" value="{{ selected_cuisine_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="cuisine_slider_value">{{ selected_cuisine_priority }}</span>
                            </div>
                            <br>
                            <div class="range-slider" id="interest_slider" >
                               Select priority for conversation interests:
-                              <input class="range-slider__range" id="interest_slider_range" type="range" value="10" min="1" max="10" step="1">
-                              <span class="range-slider__value" id="interest_slider_value">10</span>
+                              <input class="range-slider__range" id="interest_slider_range" type="range" value="{{ selected_interest_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="interest_slider_value">{{ selected_interest_priority }}</span>
                            </div>
                         </div>
                         <br>
