@@ -6,6 +6,7 @@ from celery.task.schedules import crontab
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 
+
 app = Celery("lunchNinja")
 
 # Using a string here means the worker doesn't have to serialize
@@ -16,6 +17,9 @@ app = Celery("lunchNinja")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.conf.timezone = "UTC"
 app.conf.enable_utc = True
+app.conf.update(BROKER_URL=os.environ['REDIS_URL'],
+                CELERY_RESULT_BACKEND=os.environ['REDIS_URL'])
+# amqp://pcsrozek:Mgc_X5...@crane.rmq.cloudamqp.com/pcsrozek
 
 
 # Schedule periodic tasks.

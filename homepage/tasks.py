@@ -26,3 +26,7 @@ def run_matching_algorithm():
 @task(ignore_result=True)
 def send_match_feedback():
     run(["python", "feedback.py"], shell=False, stdout=PIPE)
+
+@task
+def add(x, y):
+    return x + y
