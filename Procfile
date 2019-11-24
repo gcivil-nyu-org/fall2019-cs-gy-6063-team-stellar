@@ -5,5 +5,5 @@ release: python datasource/dataprocess/database.py
 release: python manage.py makemigrations user_account
 release: python manage.py makemigrations homepage
 release: python manage.py migrate
-release: celery -A lunch-ninja worker -l info
+release: celery -A lunchNinja worker -l info
 web: gunicorn lunchNinja.wsgi --log-file -
