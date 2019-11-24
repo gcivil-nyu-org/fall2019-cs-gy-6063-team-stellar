@@ -78,4 +78,13 @@ def prepare_feedback():
         send_email(html_content2, to2)
 
 
-prepare_feedback()
+# prepare_feedback()
+
+# For testing feedback algorithm
+def send_test_email():
+    # lookup user by id and send them a message
+    email = EmailMessage("Random Check Feedback", "Checking Celery Feedback", to=["up293@nyu.edu"])
+    email.send()
+
+
+send_test_email()
