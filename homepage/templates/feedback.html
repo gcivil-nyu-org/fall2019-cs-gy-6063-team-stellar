@@ -36,6 +36,10 @@
     <script type ="text/javascript">
     function submitclick() {
         alert("Thank you for submitting your feedback!");
+        
+    }
+    function submitclose() {
+        location.href="/homepage";
     }
     </script>
 </head>
@@ -95,7 +99,7 @@
                   </div>
                </fieldset>
         <button type="submit" class="btn warning" onclick="submitclick()">Submit</button>
-        <button type="button" class="btn warning" data-dismiss="modal">Close</button>
+        <button type="button" class="btn warning" data-dismiss="modal" onclick="submitclose()">Close</button>
         <br>
         <br>
     </form>
