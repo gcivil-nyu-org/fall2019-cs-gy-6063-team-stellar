@@ -15,7 +15,7 @@
                         <h4>Step 1 of 5</h4>
                         <div class="dropdown col-md-12" >
                            Select preferred type of service:
-                           <select class="form-control" type="text" id="serviceSelect" name="serviceSelect">
+                           <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
                                {% if selected_type  == "Daily"  %}
                                   <option selected>Daily</option>
                                   <option>Weekly</option>
@@ -221,7 +221,7 @@
                            <div class="range-slider" id="department_slider" >
                               Select priority for department:
                               <input class="range-slider__range" id="department_slider_range" type="range" value="{{ selected_department_priority }}" min="1" max="10" step="1">
-                              <span class="range-slider__value" id="department_slider_value">{{ selected_department_priority }}</span>
+                              <span class="range-slider__value" id="department_slider_value" >{{ selected_department_priority }}</span>
                            </div>
                            <br>
                            <div class="range-slider" id="cuisine_slider" >
