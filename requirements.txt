@@ -10,3 +10,4 @@ Faker
 numpy
 Celery
 django-celerybeat-status
+redis
