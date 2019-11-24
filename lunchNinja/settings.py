@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-#import django_heroku
+import django_heroku
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -158,4 +158,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "teamstellarse@gmail.com"
 EMAIL_HOST_PASSWORD = "Stellar123!"
 
-#django_heroku.settings(locals(), test_runner=False)
+django_heroku.settings(locals(), test_runner=False)
