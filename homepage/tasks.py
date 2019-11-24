@@ -14,13 +14,15 @@
 
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
-from celery.task.schedules import crontab
-from celery.decorators import periodic_task
-from celery import task, shared_task
+from celery import task
 from subprocess import run, PIPE
 
-# @periodic_task(run_every=(crontab(minute="*/4")), name="run_every_1_minutes", ignore_result=True)
 
-@periodic_task(run_every=(crontab(minute=0, hour=18)), name="run_every_1_minutes", ignore_result=True)
-def add():
+@task(ignore_result=True)
+def run_matching_algorithm():
     run(["python", "match.py"], shell=False, stdout=PIPE)
+
+
+@task(ignore_result=True)
+def send_match_feedback():
+    run(["python", "feedback.py"], shell=False, stdout=PIPE)

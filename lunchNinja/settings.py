@@ -161,3 +161,6 @@ EMAIL_HOST_USER = "teamstellarse@gmail.com"
 EMAIL_HOST_PASSWORD = "Stellar123!"
 
 django_heroku.settings(locals(), test_runner=False)
+
+CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = "America/New_York"

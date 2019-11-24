@@ -565,7 +565,7 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        send_invitations(match, request_match)
+        # send_invitations(match, request_match)
 
 
 def find_match_user(available_set):
@@ -771,22 +771,23 @@ def match():
     return matched_user_request
 
 
-# matched_user_request = match()
-# userlist = UserRequest.objects.all()
-# for user in userlist:
-#     if user in matched_user_request:
-#         print("Matched")
-#     print(user.user.username)
-#     print(user.service_type)
-#     print(user.days.all())
-#     print(user.days.all())
-#     print(user.available_date)
+matched_user_request = match()
+userlist = UserRequest.objects.all()
+for user in userlist:
+    if user in matched_user_request:
+        print("Matched")
+    print(user.user.username)
+    print(user.service_type)
+    print(user.days.all())
+    print(user.days.all())
+    print(user.available_date)
 
 
-# For testing mathcing algorithm
-def send_test_email():
-    # lookup user by id and send them a message
-    email = EmailMessage("Random Check", "Hi", to=["up293@nyu.edu"])
-    email.send()
+# # For testing mathcing algorithm
+# def send_test_email():
+#     # lookup user by id and send them a message
+#     email = EmailMessage("Random Check", "Hi", to=["up293@nyu.edu"])
+#     email.send()
 
-send_test_email()
+
+# send_test_email()
