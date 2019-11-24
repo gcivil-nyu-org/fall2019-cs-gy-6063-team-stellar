@@ -165,7 +165,13 @@ $(document).on('submit', '#service_select_form', function (e) {
 })
 
 $(document).ready(function () {
-    $('#daysSelectContainer').hide();
+    if ($('#serviceSelect').name === "Daily"){
+        $('#daysSelectContainer').hide();
+    }
+    else{
+        $('#daysSelectContainer').show();
+    }
+
 });
 
 

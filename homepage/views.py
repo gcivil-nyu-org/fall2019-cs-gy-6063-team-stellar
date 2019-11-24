@@ -241,7 +241,6 @@ def handle_ajax(request):
 
 
 def user_service(request):
-
     if request.method == "POST":
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
@@ -262,7 +261,7 @@ def user_service(request):
                 [interest.name for interest in interests_objects]
             )
 
-            selected_days_ids = request.POST.getlist("day[]")
+            selected_days_ids = request.POST.getlist("days[]")
             selected_days_objects = Days.objects.filter(id__in=selected_days_ids)
             selected_days_names = ", ".join([day.day for day in selected_days_objects])
 

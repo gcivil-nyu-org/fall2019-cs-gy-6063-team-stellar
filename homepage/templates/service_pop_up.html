@@ -33,15 +33,16 @@
                                {% endif %}
                            </select> 
                         </div>
-                         <div id="daysSelectContainer" class="col-md-12"> 
+                         <div id="daysSelectContainer" class="col-md-12" name={{selected_type}}>
                            <br>
                            Select preferred day(if any):
                            <select id="daysSelect" placeholder="Select preferred days" multiple>
-                              {% for selected in selected_days %}
-                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
-                              {% endfor %}
                               {% for days in week_days %}
-                                 <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
+                                  {% if days in selected_days %}
+                                  <option selected="selected" value="{{ days.id }}" name="{{ days.day }}"> {{  days.day }} </option>
+                                    {% else %}
+                                      <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
+                                  {% endif %}
                               {% endfor %}
                            </select> 
                         </div>
