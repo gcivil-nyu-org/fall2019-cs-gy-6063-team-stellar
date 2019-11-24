@@ -67,6 +67,7 @@ var rangeSlider = function () {
         departmentValue = $('#department_slider_value');
 
     departmentSlider.each(function () {
+        service_request["department_priority"] = document.getElementById("department_slider_range").value;
 
         departmentValue.each(function () {
             var departmentValue = $(this).prev().attr('value');
@@ -89,6 +90,7 @@ var rangeSlider = function () {
         cuisineValue = $('#cuisine_slider_value');
 
     cuisineSlider.each(function () {
+        service_request["cuisines_priority"] = document.getElementById("cuisine_slider_range").value;
         cuisineValue.each(function () {
             var value = $(this).prev().attr('value');
             $(this).html(value);
@@ -105,6 +107,7 @@ var rangeSlider = function () {
         interestValue = $('#interest_slider_value');
 
     interestSlider.each(function () {
+        service_request["interests_priority"] = document.getElementById("interest_slider_range").value;
 
         interestValue.each(function () {
             var value = $(this).prev().attr('value');
