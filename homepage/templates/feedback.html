@@ -79,10 +79,10 @@
                             {% for question in latest_question_list %}
                                 <b>{{ forloop.counter }}) {{ question.question_text }}</b><br><br>
                                 {% if question.id == 2 or question.id == 3 %}
-                                        <pre>          No way                                                           Definitely</pre>
+                                        <pre>          <b>No way</b>                                                           <b>Definitely</b></pre>
                                     {% endif %}
                                 {% if question.id == 4 %}
-                                        <pre>I wish I had a different lunch partner                                     I would like to have lunch again with my lunch partner</pre>
+                                        <pre>           <b>Terrible</b>                                                        <b>Amazing</b></pre>
                                     {% endif %}
                                 {% for choice in question.choice_set.all%}
                                    <input type="radio" name={{question.label}} id={{choice.choice_text }} value="{{choice.choice_text }}">
