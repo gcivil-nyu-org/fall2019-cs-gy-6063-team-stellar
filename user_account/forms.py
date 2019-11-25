@@ -112,6 +112,7 @@ class UserSignUpForm(UserCreationForm):
         except Exception:
             raise forms.ValidationError("Please enter a Valid Phone Number")
         return data
+
     def clean_school(self):
 
         # valid phone numbers US number only
@@ -119,22 +120,24 @@ class UserSignUpForm(UserCreationForm):
         try:
             data = self.cleaned_data["school"]
 
-            if data=="select school":
+            if data == "select school":
                 raise forms.ValidationError("Please select department")
         except Exception:
             raise forms.ValidationError("Please select School")
         return data
+
     def clean_separtment(self):
 
         # valid phone numbers US number only
 
         try:
             data = self.cleaned_data["department"]
-            if data=="select department":
+            if data == "select department":
                 raise forms.ValidationError("Please select Department")
         except Exception:
             raise forms.ValidationError("Please select Department")
         return data
+
     def clean_email(self):
         data = self.cleaned_data["email"]
         domain = data.split("@")[1]

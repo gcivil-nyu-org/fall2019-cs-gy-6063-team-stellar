@@ -62,6 +62,8 @@ def check_ajax_school(request):
     ):
         return True
     return False
+
+
 def handle_ajax(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "GET" and "/ajax/load_departments" in request.path:
@@ -78,6 +80,7 @@ def handle_ajax(request):
             if not s == school or s == "select school":
                 response.append(s)
         return JsonResponse(response, safe=False)
+
 
 def usersignup(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()

@@ -126,7 +126,7 @@ def User_service_send_email_authenticated(
             "service_type": service_type,
             "cuisines_selected": cuisine_names,
             "selected_interests": interests_names,
-            "selected_days_names":selected_days_names,
+            "selected_days_names": selected_days_names,
             "school": school,
             "department": department,
         },
