@@ -31,7 +31,7 @@ class UserSignUpFormTest(TestCase):
     def test_email_is_not_nyu(self):
         data = {
             "username": "testUser",
-            "email": "up@usc.edu",
+            "email": "up0@usc.edu",
             "first_name": "donald",
             "last_name": "trump",
             "Phone": "1234567890",
@@ -46,7 +46,7 @@ class UserSignUpFormTest(TestCase):
     def test_school_is_valid(self):
         data = {
             "username": "testUser",
-            "email": "up@nyu.edu",
+            "email": "up1@nyu.edu",
             "first_name": "donald",
             "last_name": "trump",
             "Phone": "1234567890",
@@ -61,7 +61,7 @@ class UserSignUpFormTest(TestCase):
     def test_school_not_valid(self):
         data = {
             "username": "testUser",
-            "email": "up@nyu.edu",
+            "email": "up2@nyu.edu",
             "first_name": "donald",
             "last_name": "trump",
             "Phone": "1234567890",
@@ -76,7 +76,7 @@ class UserSignUpFormTest(TestCase):
     def test_department_is_valid(self):
         data = {
             "username": "testUser",
-            "email": "up@nyu.edu",
+            "email": "up3@nyu.edu",
             "first_name": "donald",
             "last_name": "trump",
             "Phone": "1234567890",
