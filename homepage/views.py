@@ -558,6 +558,13 @@ def feedback(request):
                 return render(request, "error.html", context=context)
 
 
+def about(request):
+    if check_login(request):  # no repeat log in
+        preference_model_data = getModelData(request.user)
+        return render(request, "about.html", Merge({}, preference_model_data))
+    return redirect("/login/")
+
+
 # def test(request):
 #     return render(request, "test.html")
 
