@@ -225,18 +225,14 @@ class UserserviceViewTest(TestCase):
     #     response = self.client.post("/serviceRequest/", requestObj)
     #     self.assertRedirects(response, "/")
 
-    def request_start(request):
-        return True
 
-    @mock.patch("homepage.views.check_ajax_department", side_effect=request_start)
-    def test_homepage_department_ajax(self, mock_head_chek):
+    def test_homepage_department_ajax(self):
         response = self.client.get(
             "/homepage/ajax/load_departments_homepage/?school_id=College%20of%20Dentistry"
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
-    @mock.patch("homepage.views.check_ajax_school", side_effect=request_start)
-    def test_homepage_school_ajax(self, mock_head_chek):
+    def test_homepage_school_ajax(self):
         response = self.client.get(
             "/homepage/ajax/load_school_homepage/?department_id=Musical%20Theatre"
         )
@@ -255,6 +251,8 @@ class IndexViewTest(TestCase):
     def test_repeat_login(self, mock_index_login):
         response = self.client.get("/homepage/")
         self.assertEqual(response.status_code, 200)
+
+
 
 
 class LogoutViewTest(TestCase):
@@ -727,7 +725,188 @@ class FeedbackViewTest(TestCase):
         response = self.client.post("/feedback/2-3", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 
-    def test_get_feedback(self):
+    def test_not_matched_feedback_(self):
 
+        response = self.client.get("/feedback/2-3")
+        self.assertEqual(response.status_code, 200)
+
+    def test_incorrect_get_feedback_link(self):
+
+        response = self.client.get("/feedback/2-3-4")
+        self.assertEqual(response.status_code, 200)
+
+
+
+
+    def mock_match_history_filter(id):
+        class match_history_for_mock:
+            def __init__(self):
+                pass
+            def count(id):
+                return 2
+        return match_history_for_mock()
+    def mock_match_history_get(id):
+        class match_history_for_mock:
+            def __init__(self):
+                self.user1=100000
+                self.user2=200000
+                pass
+            def count(id):
+                return 0
+        return match_history_for_mock()
+
+
+
+    def mock_lunchuser_filter(id):
+        class lunch_user_for_mock:
+            def __init__(self):
+                pass
+            def count(id):
+                return 0
+        return lunch_user_for_mock()
+
+    def mock_lunchuser_get(id):
+        class lunch_user_for_mock:
+            def __init__(self):
+                self.id=1
+                pass
+        return lunch_user_for_mock()
+    def mock_feedback_filter(self):
+        class feedback_for_mock:
+            def __init__(self):
+                self.id = 1
+                pass
+
+            def count(id):
+                return 0
+
+
+    @mock.patch("homepage.views.Feedback", side_effect=mock_feedback_filter)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser_get)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.filter", side_effect=mock_lunchuser_filter)
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.get", side_effect=mock_match_history_get
+    )
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.filter", side_effect=mock_match_history_filter
+    )
+    def test_incorrect_get_user_feedback(self, mock_matchlunchuser_filter,mock_matchlunchuser_get,mock_lunch_user_filter,mock_lunch_user_get,mock_feedback_filter):
+        response = self.client.get("/feedback/2-3")
+        self.assertEqual(response.status_code, 200)
+
+
+
+
+    def mock_match_history_filter(id):
+        class match_history_for_mock:
+            def __init__(self):
+                pass
+            def count(id):
+                return 2
+        return match_history_for_mock()
+    def mock_match_history_get(id):
+        class match_history_for_mock:
+            def __init__(self):
+                self.user1=100000
+                self.user2=200000
+                pass
+            def count(id):
+                return 0
+        return match_history_for_mock()
+
+
+
+    def mock_lunchuser_filter(id):
+        class lunch_user_for_mock:
+            def __init__(self):
+                pass
+            def count(id):
+                return 2
+        return lunch_user_for_mock()
+
+    def mock_lunchuser_get(id):
+        class lunch_user_for_mock:
+            def __init__(self):
+                self.id=1
+                pass
+        return lunch_user_for_mock()
+    def mock_feedback_filter(self):
+        class feedback_for_mock:
+            def __init__(self):
+                self.id = 1
+                pass
+
+            def count(id):
+                return 2
+
+
+    @mock.patch("homepage.views.Feedback", side_effect=mock_feedback_filter)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser_get)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.filter", side_effect=mock_lunchuser_filter)
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.get", side_effect=mock_match_history_get
+    )
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.filter", side_effect=mock_match_history_filter
+    )
+    def test_submitted_feedback(self, mock_matchlunchuser_filter,mock_matchlunchuser_get,mock_lunch_user_filter,mock_lunch_user_get,mock_feedback_filter):
+        response = self.client.get("/feedback/2-3")
+        self.assertEqual(response.status_code, 200)
+
+
+
+    def mock_match_history_filter(id):
+        class match_history_for_mock:
+            def __init__(self):
+                pass
+            def count(id):
+                return 2
+        return match_history_for_mock()
+    def mock_match_history_get(id):
+        class match_history_for_mock:
+            def __init__(self):
+                self.user1=1
+                self.user2=2
+                pass
+            def count(id):
+                return 0
+        return match_history_for_mock()
+
+
+
+    def mock_lunchuser_filter(id):
+        class lunch_user_for_mock:
+            def __init__(self):
+                pass
+            def count(id):
+                return 2
+        return lunch_user_for_mock()
+
+    def mock_lunchuser_get(id):
+        class lunch_user_for_mock:
+            def __init__(self):
+                self.id=1
+                pass
+        return lunch_user_for_mock()
+    def mock_feedback_filter(self):
+        class feedback_for_mock:
+            def __init__(self):
+                self.id = 1
+                pass
+
+            def count(id):
+                return 0
+
+
+    @mock.patch("homepage.views.Feedback", side_effect=mock_feedback_filter)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser_get)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.filter", side_effect=mock_lunchuser_filter)
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.get", side_effect=mock_match_history_get
+    )
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.filter", side_effect=mock_match_history_filter
+    )
+    def test_correct_get_feedback(self, mock_matchlunchuser_filter,mock_matchlunchuser_get,mock_lunch_user_filter,mock_lunch_user_get,mock_feedback_filter):
         response = self.client.get("/feedback/2-3")
         self.assertEqual(response.status_code, 200)

@@ -83,18 +83,6 @@ def merge():
 #         return "Sunday"
 
 
-def check_ajax_department(request):
-    if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
-        return True
-    return False
-
-
-def check_ajax_school(request):
-    if request.method == "GET" and "/ajax/load_school_homepage" in request.path:
-        return True
-    return False
-
-
 def check_login(request):
     if request.session.get("is_login", None):
         return True
@@ -152,7 +140,7 @@ def getModelData(user):
     school_list = []
     department_list = []
     try:
-        if not user.is_anonymous:
+        # if not user.is_anonymous:
             user_request_instance = UserRequest.objects.get(user=user)
             selected_school = user_request_instance.school
             selected_department = user_request_instance.department
@@ -166,23 +154,22 @@ def getModelData(user):
 
             school_list.append(selected_school)
             department_list.append(selected_department)
-        else:
-            for s in school_set:
-                school_list.append(s)
-            for d in department_set:
-                department_list.append(d)
+        # else:
+        #     for s in school_set:
+        #         school_list.append(s)
+        #     for d in department_set:
+        #         department_list.append(d)
     except Exception:
         for s in school_set:
             school_list.append(s)
         for d in department_set:
             department_list.append(d)
-
     return {
         "cuisines": Cuisine.objects.all(),
         "schools": school_list,
         "departments": department_list,
         "interests": Interests.objects.all(),
-        "week_days": Days.objects.all(),
+        "week_days": [Days.objects.get(id=0),Days.objects.get(id=1),Days.objects.get(id=2),Days.objects.get(id=3),Days.objects.get(id=4),Days.objects.get(id=5),Days.objects.get(id=6)],
         "username": user.username,
         "top_cuisines": most_frequent_cuisine,
         "top_interests": most_frequent_interest,
@@ -271,9 +258,6 @@ def user_service(request):
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
-            print(cuisines_priority)
-            print(department_priority)
-            print(interests_priority)
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
@@ -548,8 +532,6 @@ def feedback(request):
         user = LunchNinjaUser.objects.get(id=user_id)
 
         count = Feedback.objects.filter(match=match, user=user).count()
-        print("count is")
-        print(count)
         if count == 0 and (user.id == match_user1.id or user_id == match_user2.id):
             context = {"latest_question_list": Question.objects.all()}
             return render(request, "feedback.html", context=context)
