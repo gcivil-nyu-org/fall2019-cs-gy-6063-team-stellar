@@ -53,6 +53,8 @@ var customTemplates = new Choices('#interestSelect', {
 var multipleCancelButton = new Choices('#daysSelect', {
     //https://bbbootstrap.com/snippets/multiselect-dropdown-list-83601849
     removeItemButton: true,
+    shouldSort: false,
+    shouldSortItems: false,
 });
 
 let service_request = {
