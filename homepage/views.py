@@ -271,9 +271,6 @@ def user_service(request):
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
-            print(cuisines_priority)
-            print(department_priority)
-            print(interests_priority)
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
@@ -452,6 +449,7 @@ def settings(request):
             "username": user_info.username,
             "name": user_info.first_name + " " + user_info.last_name,
             "email": user_info.email,
+            "phone": user_info.Phone,
             "school": user_info.school,
             "department": user_info.department,
         }
@@ -548,8 +546,6 @@ def feedback(request):
         user = LunchNinjaUser.objects.get(id=user_id)
 
         count = Feedback.objects.filter(match=match, user=user).count()
-        print("count is")
-        print(count)
         if count == 0 and (user.id == match_user1.id or user_id == match_user2.id):
             context = {"latest_question_list": Question.objects.all()}
             return render(request, "feedback.html", context=context)

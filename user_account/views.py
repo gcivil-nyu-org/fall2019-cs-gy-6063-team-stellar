@@ -62,6 +62,8 @@ def check_ajax_school(request):
     ):
         return True
     return False
+
+
 def handle_ajax(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "GET" and "/ajax/load_departments" in request.path:
@@ -79,6 +81,7 @@ def handle_ajax(request):
                 response.append(s)
         return JsonResponse(response, safe=False)
 
+
 def usersignup(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "POST":
@@ -95,13 +98,13 @@ def usersignup(request):
         if signup_form.is_valid():
             user = signup_form.save(commit=False)
             user.is_active = False
-            user.save()
             school = signup_form.cleaned_data.get("school")
             department = signup_form.cleaned_data.get("department")
             Phone = signup_form.cleaned_data.get("Phone")
             user.school = school
             user.department = department
             user.Phone = Phone
+            user.save()
             current_site = get_current_site(request)
             email_subject = "Activate Your Account"
             message = render_to_string(
