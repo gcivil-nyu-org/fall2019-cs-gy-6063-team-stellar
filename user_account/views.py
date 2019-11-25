@@ -136,8 +136,8 @@ def usersignup(request):
 
 
 def userlogin(request):
-    # if request.session.get("is_login", None):  # no repeat log in
-    #     return redirect("/homepage/")
+    if request.session.get("is_login", None):  # no repeat log in
+        return redirect("/homepage/")
     login_form = UserSignInForm(request.POST)
 
     if login_form.is_valid():
