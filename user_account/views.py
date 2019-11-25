@@ -64,21 +64,47 @@ def check_ajax_school(request):
     return False
 
 
+def handle_ajax(request):
+    schoolist, departmentlist, school_departments, depatment_school = merge()
+    if request.method == "GET" and "/ajax/load_departments" in request.path:
+
+        school_id = request.GET.get("school_id", None)
+        response = school_departments[school_id]
+        return JsonResponse(response, safe=False)
+    elif request.method == "GET" and "/ajax/load_school" in request.path:
+        department_id = request.GET.get("department_id", None)
+        school = depatment_school[department_id][0]
+        response = []
+        response.append(school)
+        for s in schoolist:
+            if not s == school or s == "select school":
+                response.append(s)
+        return JsonResponse(response, safe=False)
+
+
 def usersignup(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "POST":
+        username = request.POST["username"]
+
+        if (
+            LunchNinjaUser.objects.filter(username=username).exists()
+            and not LunchNinjaUser.objects.get(username=username).is_active
+        ):
+            LunchNinjaUser.objects.filter(username=username).delete()
+
         signup_form = UserSignUpForm(request.POST)
         error = signup_form.errors.get_json_data()
         if signup_form.is_valid():
             user = signup_form.save(commit=False)
             user.is_active = False
-            user.save()
             school = signup_form.cleaned_data.get("school")
             department = signup_form.cleaned_data.get("department")
             Phone = signup_form.cleaned_data.get("Phone")
             user.school = school
             user.department = department
             user.Phone = Phone
+            user.save()
             current_site = get_current_site(request)
             email_subject = "Activate Your Account"
             message = render_to_string(
@@ -104,20 +130,6 @@ def usersignup(request):
             errordict[key] = messagetext
         errordict["signup_form"] = signup_form
         return render(request, "signup.html", errordict)
-    elif check_ajax_department(request):
-        school_id = request.GET.get("school_id", None)
-        response = school_departments[school_id]
-        return JsonResponse(response, safe=False)
-    elif check_ajax_school(request):
-        department_id = request.GET.get("department_id", None)
-        school = depatment_school[department_id][0]
-        response = []
-        response.append(school)
-        for s in schoolist:
-            if not s == school or s == "select school":
-                response.append(s)
-
-        return JsonResponse(response, safe=False)
     else:
         signup_form = UserSignUpForm()
         return render(request, "signup.html", {"signup_form": signup_form})

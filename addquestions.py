@@ -18,7 +18,7 @@ def addquestion():
     q.label = "attendance"
     q.save()
     q.choice_set.create(choice_text="Yes!")
-    q.choice_set.create(choice_text="I'd love to, but I got something emergency...")
+    q.choice_set.create(choice_text="No")
 
     q1 = Question(
         question_text="How likely are you to recommend LunchNinja to another NYU community member?",
