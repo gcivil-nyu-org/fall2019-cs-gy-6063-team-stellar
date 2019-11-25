@@ -418,6 +418,7 @@ class SettingViewTest(TestCase):
                 self.email = "2345@nyu.edu"
                 self.school = "Tandon school"
                 self.department = "Computer Science"
+                self.Phone = "1233454321"
 
         return lunchuser_for_mock()
 
@@ -437,6 +438,7 @@ class SettingViewTest(TestCase):
                 self.email = "2345@nyu.edu"
                 self.school = "Tandon school"
                 self.department = "Computer Science"
+                self.Phone = "1234554321"
 
         return lunchuser_for_mock()
 

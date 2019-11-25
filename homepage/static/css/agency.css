@@ -98,13 +98,13 @@ img::-moz-selection {
 }
 
 .btn-primary:active, .btn-primary:focus, .btn-primary:hover {
-  background-color: #fff !important;
-  border-color: #fff !important;
+  background-color: #fed136 !important;
+  border-color: #fed136 !important;
   color: blue;
 }
 
 .btn-primary:active, .btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(254, 209, 55, 0.5) !important;
+  box-shadow: 0 0 0 0.2rem rgba(254, 209, 100, 0.5) !important;
 }
 
 #mainNav {
@@ -173,12 +173,13 @@ img::-moz-selection {
 header.masthead {
   text-align: center;
   color: #fed136;
-  background-image: url("../img/header-bg.jpg");
+  background-image: url("../img/bg_4.jpg");
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
   background-size: cover;
 }
+
 
 header.masthead .intro-text {
   padding-top: 150px;
@@ -851,6 +852,7 @@ input:checked + .slider:before {
 }
 
 .fire-icon{
-  color:orangered;
+  color:#4169E1;
   font-size: 30px;
+  margin-bottom:20px;
 }

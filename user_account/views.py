@@ -98,13 +98,13 @@ def usersignup(request):
         if signup_form.is_valid():
             user = signup_form.save(commit=False)
             user.is_active = False
-            user.save()
             school = signup_form.cleaned_data.get("school")
             department = signup_form.cleaned_data.get("department")
             Phone = signup_form.cleaned_data.get("Phone")
             user.school = school
             user.department = department
             user.Phone = Phone
+            user.save()
             current_site = get_current_site(request)
             email_subject = "Activate Your Account"
             message = render_to_string(
@@ -136,8 +136,8 @@ def usersignup(request):
 
 
 def userlogin(request):
-    # if request.session.get("is_login", None):  # no repeat log in
-    #     return redirect("/homepage/")
+    if request.session.get("is_login", None):  # no repeat log in
+        return redirect("/homepage/")
     login_form = UserSignInForm(request.POST)
 
     if login_form.is_valid():
