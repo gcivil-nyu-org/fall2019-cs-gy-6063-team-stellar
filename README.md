@@ -7,10 +7,11 @@
 2) Login to your account and click on services to fill out your preferences.  
    Click on Services , and fill out your preferences.  
 3) We have selected random preferences for everyone, we request everyone to fill their actual preferences before 11:45 AM on the testing day i.e. 11/26.  
-4) We will run our matchmaking algorithm at 12pm 11/26/19. Please fill out your preferences before noon.
-5) Check the match history to check who you have been matched with.  
-6) Also, we will send an email with a google calendar invite and the details of the restaurants that have been selected based on your preferences.  
-7) After matching , you will get another email with a feedback form that you will need to fill out based on your experience with your match.  
+4) If u want to test the signup , use your NYU alias email, as your netid has already been registered.  
+5) We will run our matchmaking algorithm at 12pm 11/26/19. Please fill out your preferences before noon.
+6) Check the match history to check who you have been matched with.  
+7) Also, we will send an email with a google calendar invite and the details of the restaurants that have been selected based on your preferences.  
+8) After matching , you will get another email with a feedback form that you will need to fill out based on your experience with your match.  
 
 Matching algorithm flow chart
 ![Image](Lunchninja_Algorithm.png)
