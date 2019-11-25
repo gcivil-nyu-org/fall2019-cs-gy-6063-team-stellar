@@ -21,7 +21,7 @@
         input[type="radio"]{margin-left: 100px;}
             .btn {
         border: none;
-        color: white;
+        color: black;
         padding: 14px 28px;
         font-size: 16px;
         cursor: pointer;
@@ -29,7 +29,17 @@
 
         .warning {background-color: #ff9800;} /* Orange */
         .warning:hover {background: #e68a00;}
+        
     </style>
+    <script type ="text/javascript">
+    function submitclick() {
+        alert("Thank you for submitting your feedback!");
+        
+    }
+    function submitclose() {
+        location.href="/homepage";
+    }
+    </script>
 </head>
 <body id="page-top">
 	
@@ -67,10 +77,10 @@
                             {% for question in latest_question_list %}
                                 <b>{{ forloop.counter }}) {{ question.question_text }}</b><br><br>
                                 {% if question.id == 2 or question.id == 3 %}
-                                        <pre>          No way                                                           Definitely</pre>
+                                        <pre>          <b>No way</b>                                                           <b>Definitely</b></pre>
                                     {% endif %}
                                 {% if question.id == 4 %}
-                                        <pre>I wish I had a different lunch partner                                     I would like to have lunch again with my lunch partner</pre>
+                                        <pre>           <b>Terrible</b>                                                        <b>Amazing</b></pre>
                                     {% endif %}
                                 {% for choice in question.choice_set.all%}
                                    <input type="radio" name={{question.label}} id={{choice.choice_text }} value="{{choice.choice_text }}" required>
@@ -86,8 +96,8 @@
                      <br>
                   </div>
                </fieldset>
-        <button type="submit" class="btn warning">Submit</button>
-        <button type="button" class="btn warning" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn warning" onclick="submitclick()">Submit</button>
+        <button type="button" class="btn warning" data-dismiss="modal" onclick="submitclose()">Close</button>
         <br>
         <br>
     </form>
