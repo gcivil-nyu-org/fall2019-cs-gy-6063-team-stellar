@@ -165,8 +165,9 @@ $(document).on('submit', '#service_select_form', function (e) {
 })
 
 $(document).ready(function () {
-    $('#daysSelectContainer').hide();
+    $('#daysSelectContainer').show();
 });
+
 
 
 $('#serviceSelect').on('change', function () {
