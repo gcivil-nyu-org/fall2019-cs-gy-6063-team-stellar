@@ -556,29 +556,10 @@ def feedback(request):
         else:
             if not count == 0:
                 context = {"message": "You have already submitted the form"}
-                return render(request, "error.html", context= context)
+                return render(request, "error.html", context=context)
             else:
                 context = {"message": "We could not find a match history for you"}
                 return render(request, "error.html", context=context)
-
-
-        #
-        #
-        # try:
-        #     data = request.META.get("PATH_INFO").split("/")[-1].split("-")
-        #     match_id = int(data[0])
-        #     user_id = int(data[1])
-        #     match = UserRequestMatch.objects.filter(id=match_id)
-        #     match_user1 = match.user1
-        #     match_user2 = match.user2
-        #     user = LunchNinjaUser.objects.get(id=user_id)
-        #     if user.id == match_user1.id or user_id == match_user2.id:
-        #         context = {"latest_question_list": Question.objects.all()}
-        #         return render(request, "feedback.html", context=context)
-        #     else:
-        #         return render(request, "error.html")
-        # except UserRequestMatch.DoesNotExist:
-        #     return render(request, "error.html")
 
 
 # def test(request):
