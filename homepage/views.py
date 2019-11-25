@@ -531,23 +531,37 @@ def feedback(request):
     else:
         data = request.META.get("PATH_INFO").split("/")[-1].split("-")
         if not len(data) == 2:
-            return render(request, "error.html")
+            context = {"message": "We could not find a match history for you"}
+            return render(request, "error.html", context=context)
         match_id = int(data[0])
         user_id = int(data[1])
         if UserRequestMatch.objects.filter(id=match_id).count() == 0:
-            return render(request, "error.html")
+            context = {"message": "We could not find a match history for you"}
+            return render(request, "error.html", context=context)
 
         match = UserRequestMatch.objects.get(id=match_id)
         match_user1 = match.user1
         match_user2 = match.user2
         if LunchNinjaUser.objects.filter(id=user_id).count() == 0:
-            return render(request, "error.html")
+            context = {"message": "We could not find a match history for you"}
+            return render(request, "error.html", context=context)
         user = LunchNinjaUser.objects.get(id=user_id)
-        if user.id == match_user1.id or user_id == match_user2.id:
+
+        count = Feedback.objects.filter(match=match, user=user).count()
+        print("count is")
+        print(count)
+        if count == 0 and (user.id == match_user1.id or user_id == match_user2.id):
             context = {"latest_question_list": Question.objects.all()}
             return render(request, "feedback.html", context=context)
         else:
-            return render(request, "error.html")
+            if not count == 0:
+                context = {"message": "You have already submitted the form"}
+                return render(request, "error.html", context= context)
+            else:
+                context = {"message": "We could not find a match history for you"}
+                return render(request, "error.html", context=context)
+
+
         #
         #
         # try:
