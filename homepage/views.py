@@ -141,24 +141,24 @@ def getModelData(user):
     department_list = []
     try:
         # if not user.is_anonymous:
-            user_request_instance = UserRequest.objects.get(user=user)
-            selected_school = user_request_instance.school
-            selected_department = user_request_instance.department
+        user_request_instance = UserRequest.objects.get(user=user)
+        selected_school = user_request_instance.school
+        selected_department = user_request_instance.department
 
-            for s in school_set:
-                if not s == selected_school:
-                    school_list.append(s)
-            for d in department_set:
-                if not d == selected_department:
-                    department_list.append(d)
+        for s in school_set:
+            if not s == selected_school:
+                school_list.append(s)
+        for d in department_set:
+            if not d == selected_department:
+                department_list.append(d)
 
-            school_list.append(selected_school)
-            department_list.append(selected_department)
-        # else:
-        #     for s in school_set:
-        #         school_list.append(s)
-        #     for d in department_set:
-        #         department_list.append(d)
+        school_list.append(selected_school)
+        department_list.append(selected_department)
+    # else:
+    #     for s in school_set:
+    #         school_list.append(s)
+    #     for d in department_set:
+    #         department_list.append(d)
     except Exception:
         for s in school_set:
             school_list.append(s)
@@ -169,7 +169,15 @@ def getModelData(user):
         "schools": school_list,
         "departments": department_list,
         "interests": Interests.objects.all(),
-        "week_days": [Days.objects.get(id=0),Days.objects.get(id=1),Days.objects.get(id=2),Days.objects.get(id=3),Days.objects.get(id=4),Days.objects.get(id=5),Days.objects.get(id=6)],
+        "week_days": [
+            Days.objects.get(id=0),
+            Days.objects.get(id=1),
+            Days.objects.get(id=2),
+            Days.objects.get(id=3),
+            Days.objects.get(id=4),
+            Days.objects.get(id=5),
+            Days.objects.get(id=6),
+        ],
         "username": user.username,
         "top_cuisines": most_frequent_cuisine,
         "top_interests": most_frequent_interest,
