@@ -852,6 +852,7 @@ input:checked + .slider:before {
 }
 
 .fire-icon{
-  color:orangered;
+  color:#4169E1;
   font-size: 30px;
+  margin-bottom:20px;
 }

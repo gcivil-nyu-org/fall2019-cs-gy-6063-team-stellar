@@ -126,6 +126,7 @@ def User_service_send_email_authenticated(
             "service_type": service_type,
             "cuisines_selected": cuisine_names,
             "selected_interests": interests_names,
+            "selected_days_names": selected_days_names,
             "school": school,
             "department": department,
         },
@@ -423,7 +424,7 @@ def match_history(request):
                 past_lunch_macthes.append(match_dict)
 
         preference_model_data = getModelData(request.user)
-
+        selected_info = get_selected_data(request.user)
         return render(
             request,
             "match_history.html",
@@ -433,7 +434,7 @@ def match_history(request):
                     "past_lunch_macthes": past_lunch_macthes,
                 },
                 preference_model_data,
-                {},
+                selected_info,
             ),
         )
 
