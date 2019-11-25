@@ -16,7 +16,7 @@ var customTemplates = new Choices('#cuisineSelect', {
                   data-value="' + String(data.value) + '"\
                   ' + String(data.groupId > 0 ? 'role="treeitem"' : 'role="option"') + '\
                   >\
-                  <span style="margin-right:10px;">'+ String(data.label) + String(top_cuisines.includes(parseInt(data.value)) ? '<i class="fa fa-fire fire-icon"></i></span>' : '<div></div>') + '\
+                  <span style="margin-right:10px;">'+ String(data.label) + String(top_cuisines.includes(parseInt(data.value)) ? '<i class="fa fa fa-line-chart fire-icon"></i></span>' : '<div></div>') + '\
                 </div>\
               ');
             },
@@ -42,7 +42,7 @@ var customTemplates = new Choices('#interestSelect', {
                   data-value="' + String(data.value) + '"\
                   ' + String(data.groupId > 0 ? 'role="treeitem"' : 'role="option"') + '\
                   >\
-                  <span style="margin-right:10px;">'+ String(data.label) + String(top_interests.includes(parseInt(data.value)) ? '<i class="fa fa-fire fire-icon"></i></span>' : '<div></div>') + '\
+                  <span style="margin-right:10px;">'+ String(data.label) + String(top_interests.includes(parseInt(data.value)) ? '<i class="fa fa fa-line-chart fire-icon"></i></span>' : '<div></div>') + '\
                 </div>\
               ');
             },
