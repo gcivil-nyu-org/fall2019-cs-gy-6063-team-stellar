@@ -67,6 +67,14 @@ def check_ajax_school(request):
 def usersignup(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "POST":
+        username = request.POST["username"]
+
+        if (
+            LunchNinjaUser.objects.filter(username=username).exists()
+            and not LunchNinjaUser.objects.get(username=username).is_active
+        ):
+            LunchNinjaUser.objects.filter(username=username).delete()
+
         signup_form = UserSignUpForm(request.POST)
         error = signup_form.errors.get_json_data()
         if signup_form.is_valid():
