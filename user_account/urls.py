@@ -13,8 +13,8 @@ urlpatterns = [
     path("signup/", views.usersignup),
     path("login/", views.userlogin),
     path("logout/", views.userlogout),
-    re_path(r"^ajax/load_departments/$", views.usersignup),
-    re_path(r"^ajax/load_school/$", views.usersignup),
-    re_path(r"^signup/ajax/load_departments/$", views.usersignup),
-    re_path(r"^signup/ajax/load_school/$", views.usersignup),
+    re_path(r"^ajax/load_departments/$", views.handle_ajax),
+    re_path(r"^ajax/load_school/$", views.handle_ajax),
+    re_path(r"^signup/ajax/load_departments/$", views.handle_ajax),
+    re_path(r"^signup/ajax/load_school/$", views.handle_ajax),
 ]

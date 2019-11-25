@@ -56,10 +56,10 @@ var multipleCancelButton = new Choices('#daysSelect', {
 });
 
 let service_request = {
-    "cuisines_priority":"10",
-    "department_priority":"10",
-    "interests_priority":"10"
-}
+    "cuisines_priority":"5",
+    "department_priority":"5",
+    "interests_priority":"5"
+};
 
 var rangeSlider = function () {
     var departmentSlider = $('#department_slider'),
@@ -67,12 +67,18 @@ var rangeSlider = function () {
         departmentValue = $('#department_slider_value');
 
     departmentSlider.each(function () {
+        service_request["department_priority"] = document.getElementById("department_slider_range").value;
 
         departmentValue.each(function () {
             var departmentValue = $(this).prev().attr('value');
             $(this).html(departmentValue);
         });
 
+        // departmentRange.on('submit','#department_slider_range',function () {
+        //     alert(this.val());
+        //     service_request["department_priority"] = this.value;
+        //     $(this).next(departmentValue).html(this.value);
+        // });
         departmentRange.on('input', function () {
             service_request["department_priority"] = this.value;
             $(this).next(departmentValue).html(this.value);
@@ -84,6 +90,7 @@ var rangeSlider = function () {
         cuisineValue = $('#cuisine_slider_value');
 
     cuisineSlider.each(function () {
+        service_request["cuisines_priority"] = document.getElementById("cuisine_slider_range").value;
         cuisineValue.each(function () {
             var value = $(this).prev().attr('value');
             $(this).html(value);
@@ -100,6 +107,7 @@ var rangeSlider = function () {
         interestValue = $('#interest_slider_value');
 
     interestSlider.each(function () {
+        service_request["interests_priority"] = document.getElementById("interest_slider_range").value;
 
         interestValue.each(function () {
             var value = $(this).prev().attr('value');
@@ -162,11 +170,20 @@ $(document).on('submit', '#service_select_form', function (e) {
     e.preventDefault();
     service_request['service_type'] = $("#serviceSelect option:selected").val();
     service_request['days'] = $("#daysSelect").val();
-})
+});
 
 $(document).ready(function () {
-    $('#daysSelectContainer').hide();
+    var servicetype=document.getElementById("serviceSelect");
+    if (servicetype.name === "Daily"){
+        $('#daysSelectContainer').hide();
+    }
+    else{
+        $('#daysSelectContainer').show();
+    }
+
+
 });
+
 
 
 $('#serviceSelect').on('change', function () {
@@ -175,14 +192,14 @@ $('#serviceSelect').on('change', function () {
     }else{
         $('#daysSelectContainer').show();
     }
-})
+});
 
 //School and department request model data
 $(document).on('submit', '#school_select_form', function (e) {
     e.preventDefault();
     service_request['school'] = $("#schoolSelect option:selected").val();
     service_request['department'] = $("#departmentSelect option:selected").val();
-})
+});
 
 //Department select
 $("#departmentSelect").change(function () {
@@ -228,17 +245,19 @@ $("#schoolSelect").change(function () {
 $(document).on('submit', '#cuisine_select_form', function (e) {
     e.preventDefault();
     service_request['cuisine'] = $("#cuisineSelect").val();
-})
+});
 
 //Interest model data
 $(document).on('submit', '#interest_select_form', function (e) {
     e.preventDefault();
     service_request['interests'] = $("#interestSelect").val();
-})
+});
 
 //Priority model data
 $(document).on('submit', '#priority_select_form', function (e) {
     e.preventDefault();
+
+    // service_request["department_priority"] = $('#department_slider_range').value;
     service_request['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     $.ajax({
         type: 'POST',
@@ -249,4 +268,4 @@ $(document).on('submit', '#priority_select_form', function (e) {
             alert("Thank you for using Lunch Ninja! We'll send you a follow-up email when your matching is ready.");
         }
     })
-})
+});

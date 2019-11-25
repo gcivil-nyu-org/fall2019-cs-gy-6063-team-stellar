@@ -172,6 +172,17 @@ def compose_email(
             + "<p><b> Common interests: </b> You don't have any common interests.</p>"
         )
 
+    html_content = (
+        html_content
+        + "<br><h3><b> Restaurant recommendations</h3>"
+        + "<p> NYU offers a wide variety of dining options on campus. To check it out, click "
+        + "<a href='"
+        + "https://www.nyu.edu/students/student-information-and-resources/housing-and-dining/dining/locations-and-menus.html"
+        + "'>"
+        + "NYU On-campus Dining"
+        + "</a></p><br>"
+    )
+
     # Add restaurant near school1
     if not len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
@@ -216,8 +227,10 @@ def compose_email(
                     html_content = html_content + "<div>" + link_short + "</div>"
 
                 prevname = restaurant.name
-    if not len(restaurants1) == 0:
-        html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
+    if not len(restaurants2) == 0:
+        html_content = (
+            html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
+        )
         for resturant in restaurants2:
             prevname = ""
 
@@ -250,7 +263,7 @@ def compose_email(
                 prevname = restaurant.name
 
     html_content = (
-        html_content + "<p><b>" + "Not satisfied with the result?" + "</b></p>"
+        html_content + "<br><p><b>" + "Not satisfied with the result?" + "</b></p>"
     )
     html_content = (
         html_content
@@ -319,7 +332,8 @@ def send_invitations(userRequest, userMatch):
 
     CRLF = "\r\n"
     # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
-    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"
 
     dur = datetime.timedelta(hours=1)
 
@@ -366,6 +380,7 @@ def send_invitations(userRequest, userMatch):
         + CRLF
     )
     ical += (
+        # "METHOD:REQUEST"
         "METHOD:REQUEST"
         + CRLF
         + "BEGIN:VEVENT"
@@ -379,8 +394,8 @@ def send_invitations(userRequest, userMatch):
         + "DTSTAMP:"
         + dtstamp
         + CRLF
-        + organizer
-        + CRLF
+        # + organizer
+        # + CRLF
     )
     ical += "UID:FIXMEUID" + dtstamp + CRLF
     ical += (
