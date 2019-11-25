@@ -11,7 +11,14 @@
 5) We will run our matchmaking algorithm at 12pm 11/26/19. Please fill out your preferences before noon.
 6) Check the match history to check who you have been matched with.  
 7) Also, we will send an email with a google calendar invite and the details of the restaurants that have been selected based on your preferences.  
-8) After matching , you will get another email with a feedback form that you will need to fill out based on your experience with your match.  
+8) After matching, you will get another email with a feedback form at 3 pm that you will need to fill out based on your experience with your match.
+
+#Timeline for Testing on Test day 26/11/19
+
+1) 9:00 AM to 11:45 AM Select and change preferences for test users.
+2) 12:00 PM Users will get matched and sent out emails with Lunch Mate information and restaurant recommendation.
+3) 3:00 PM Users, will get a feeback from . 
+
 
 Matching algorithm flow chart
 ![Image](Lunchninja_Algorithm.png)
