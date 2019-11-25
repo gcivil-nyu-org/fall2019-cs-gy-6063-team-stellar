@@ -448,10 +448,15 @@ def settings(request):
     if check_login(request):
 
         user_info = LunchNinjaUser.objects.get(id=request.user.id)
+        print("phone is")
+        print(user_info.Phone)
+        print("department is")
+        print(user_info.department)
         user_profile = {
             "username": user_info.username,
             "name": user_info.first_name + " " + user_info.last_name,
             "email": user_info.email,
+            "phone": user_info.Phone,
             "school": user_info.school,
             "department": user_info.department,
         }
