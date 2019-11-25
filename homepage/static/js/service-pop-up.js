@@ -181,7 +181,9 @@ $(document).ready(function () {
         $('#daysSelectContainer').show();
     }
 
+
 });
+
 
 
 $('#serviceSelect').on('change', function () {

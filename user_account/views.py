@@ -62,7 +62,22 @@ def check_ajax_school(request):
     ):
         return True
     return False
+def handle_ajax(request):
+    schoolist, departmentlist, school_departments, depatment_school = merge()
+    if request.method == "GET" and "/ajax/load_departments" in request.path:
 
+        school_id = request.GET.get("school_id", None)
+        response = school_departments[school_id]
+        return JsonResponse(response, safe=False)
+    elif request.method == "GET" and "/ajax/load_school" in request.path:
+        department_id = request.GET.get("department_id", None)
+        school = depatment_school[department_id][0]
+        response = []
+        response.append(school)
+        for s in schoolist:
+            if not s == school or s == "select school":
+                response.append(s)
+        return JsonResponse(response, safe=False)
 
 def usersignup(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
@@ -112,20 +127,6 @@ def usersignup(request):
             errordict[key] = messagetext
         errordict["signup_form"] = signup_form
         return render(request, "signup.html", errordict)
-    elif check_ajax_department(request):
-        school_id = request.GET.get("school_id", None)
-        response = school_departments[school_id]
-        return JsonResponse(response, safe=False)
-    elif check_ajax_school(request):
-        department_id = request.GET.get("department_id", None)
-        school = depatment_school[department_id][0]
-        response = []
-        response.append(school)
-        for s in schoolist:
-            if not s == school or s == "select school":
-                response.append(s)
-
-        return JsonResponse(response, safe=False)
     else:
         signup_form = UserSignUpForm()
         return render(request, "signup.html", {"signup_form": signup_form})
