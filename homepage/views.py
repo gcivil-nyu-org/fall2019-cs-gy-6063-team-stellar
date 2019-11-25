@@ -529,21 +529,42 @@ def feedback(request):
         fb.choices.add(c4)
         return redirect("/homepage/")
     else:
-        try:
-            data = request.META.get("PATH_INFO").split("/")[-1].split("-")
-            match_id = int(data[0])
-            user_id = int(data[1])
-            match = UserRequestMatch.objects.get(id=match_id)
-            match_user1 = match.user1
-            match_user2 = match.user2
-            user = LunchNinjaUser.objects.get(id=user_id)
-            if user.id == match_user1.id or user_id == match_user2.id:
-                context = {"latest_question_list": Question.objects.all()}
-                return render(request, "feedback.html", context=context)
-            else:
-                return render(request, "error.html")
-        except UserRequestMatch.DoesNotExist:
+        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        if not len(data) == 2:
             return render(request, "error.html")
+        match_id = int(data[0])
+        user_id = int(data[1])
+        if UserRequestMatch.objects.filter(id=match_id).count() == 0:
+            return render(request, "error.html")
+
+        match = UserRequestMatch.objects.get(id=match_id)
+        match_user1 = match.user1
+        match_user2 = match.user2
+        if LunchNinjaUser.objects.filter(id=user_id).count() == 0:
+            return render(request, "error.html")
+        user = LunchNinjaUser.objects.get(id=user_id)
+        if user.id == match_user1.id or user_id == match_user2.id:
+            context = {"latest_question_list": Question.objects.all()}
+            return render(request, "feedback.html", context=context)
+        else:
+            return render(request, "error.html")
+        #
+        #
+        # try:
+        #     data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        #     match_id = int(data[0])
+        #     user_id = int(data[1])
+        #     match = UserRequestMatch.objects.filter(id=match_id)
+        #     match_user1 = match.user1
+        #     match_user2 = match.user2
+        #     user = LunchNinjaUser.objects.get(id=user_id)
+        #     if user.id == match_user1.id or user_id == match_user2.id:
+        #         context = {"latest_question_list": Question.objects.all()}
+        #         return render(request, "feedback.html", context=context)
+        #     else:
+        #         return render(request, "error.html")
+        # except UserRequestMatch.DoesNotExist:
+        #     return render(request, "error.html")
 
 
 # def test(request):

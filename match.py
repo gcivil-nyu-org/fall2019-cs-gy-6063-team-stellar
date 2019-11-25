@@ -332,7 +332,7 @@ def send_invitations(userRequest, userMatch):
 
     CRLF = "\r\n"
     # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
-    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + "@outlook.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
     # organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"
 
     dur = datetime.timedelta(hours=1)
@@ -394,8 +394,8 @@ def send_invitations(userRequest, userMatch):
         + "DTSTAMP:"
         + dtstamp
         + CRLF
-        + organizer
-        + CRLF
+        # + organizer
+        # + CRLF
     )
     ical += "UID:FIXMEUID" + dtstamp + CRLF
     ical += (
