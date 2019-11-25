@@ -66,23 +66,6 @@ def merge():
     return school, department, school_department, department_school
 
 
-# def get_weekday(date):
-#     if date.weekday() == 0:
-#         return "Monday"
-#     elif date.weekday() == 1:
-#         return "Tuesday"
-#     elif date.weekday() == 2:
-#         return "Wednesday"
-#     elif date.weekday() == 3:
-#         return "Thursday"
-#     elif date.weekday() == 4:
-#         return "Friday"
-#     elif date.weekday() == 5:
-#         return "Saturday"
-#     elif date.weekday() == 6:
-#         return "Sunday"
-
-
 def check_ajax_department(request):
     if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
         return True
@@ -126,6 +109,7 @@ def User_service_send_email_authenticated(
             "service_type": service_type,
             "cuisines_selected": cuisine_names,
             "selected_interests": interests_names,
+            "selected_days_names": selected_days_names,
             "school": school,
             "department": department,
         },
@@ -423,7 +407,7 @@ def match_history(request):
                 past_lunch_macthes.append(match_dict)
 
         preference_model_data = getModelData(request.user)
-
+        selected_info = get_selected_data(request.user)
         return render(
             request,
             "match_history.html",
@@ -433,7 +417,7 @@ def match_history(request):
                     "past_lunch_macthes": past_lunch_macthes,
                 },
                 preference_model_data,
-                {},
+                selected_info,
             ),
         )
 
@@ -561,7 +545,8 @@ def feedback(request):
 def about(request):
     if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
-        return render(request, "about.html", Merge({}, preference_model_data, {}))
+        selected_info = get_selected_data(request.user)
+        return render(request, "about.html", Merge({}, preference_model_data,selected_info))
     return redirect("/login/")
 
 
