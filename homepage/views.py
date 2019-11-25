@@ -147,12 +147,12 @@ def getModelData(user):
         x for x, _ in Counter(all_selected_interests).most_common(5)
     ]
 
-    school_set=School.objects.all()
-    department_set=Department.objects.all()
+    school_set = School.objects.all()
+    department_set = Department.objects.all()
     school_list = []
     department_list = []
     try:
-        if user.is_anonymous == False:
+        if not user.is_anonymous:
             user_request_instance = UserRequest.objects.get(user=user)
             selected_school = user_request_instance.school
             selected_department = user_request_instance.department
@@ -177,7 +177,6 @@ def getModelData(user):
         for d in department_set:
             department_list.append(d)
 
-
     return {
         "cuisines": Cuisine.objects.all(),
         "schools": school_list,
@@ -193,6 +192,8 @@ def getModelData(user):
 def Merge(dict1, dict2, dict3):
     res = {**dict1, **dict2, **dict3}
     return res
+
+
 def get_selected_data(user):
     try:
         user_request_instance = UserRequest.objects.get(user=user)
@@ -219,23 +220,28 @@ def get_selected_data(user):
             "selected_department_priority": selected_department_priority,
             "selected_cuisine_priority": selected_cuisine_priority,
             "selected_interest_priority": selected_interest_priority,
-
         }
     except Exception:
-        selected_info={"selected_type": "Daily",
-                       "selected_department_priority": 5,
-                       "selected_cuisine_priority": 5,
-                       "selected_interest_priority": 5,
-
-                       }
+        selected_info = {
+            "selected_type": "Daily",
+            "selected_department_priority": 5,
+            "selected_cuisine_priority": 5,
+            "selected_interest_priority": 5,
+        }
 
     return selected_info
+
+
 def index(request):
     if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
-        return render(request, "homepage.html", Merge({}, preference_model_data,selected_info))
+        return render(
+            request, "homepage.html", Merge({}, preference_model_data, selected_info)
+        )
     return redirect("/login/")
+
+
 def handle_ajax(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
@@ -265,7 +271,7 @@ def user_service(request):
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
-            print(cuisines_priority )
+            print(cuisines_priority)
             print(department_priority)
             print(interests_priority)
             cuisine_ids = request.POST.getlist("cuisine[]")
@@ -429,7 +435,8 @@ def match_history(request):
                     "next_lunch_matches": next_lunch_matches,
                     "past_lunch_macthes": past_lunch_macthes,
                 },
-                preference_model_data,{}
+                preference_model_data,
+                {},
             ),
         )
 
@@ -486,7 +493,8 @@ def settings(request):
             "settings.html",
             Merge(
                 {"user_request": user_request, "user_profile": user_profile},
-                preference_model_data,selected_info
+                preference_model_data,
+                selected_info,
             ),
         )
     return redirect("/login/")

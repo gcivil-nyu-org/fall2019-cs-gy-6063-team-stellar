@@ -172,17 +172,15 @@ def compose_email(
             + "<p><b> Common interests: </b> You don't have any common interests.</p>"
         )
 
-
-
     html_content = (
-            html_content
-            + "<br><h3><b> Restaurant recommendations</h3>"
-            + "<p> NYU offers a wide variety of dining options on campus. To check it out, click "
-            + "<a href='"
-            + "https://www.nyu.edu/students/student-information-and-resources/housing-and-dining/dining/locations-and-menus.html"
-            + "'>"
-            + "NYU On-campus Dining"
-            + "</a></p><br>"
+        html_content
+        + "<br><h3><b> Restaurant recommendations</h3>"
+        + "<p> NYU offers a wide variety of dining options on campus. To check it out, click "
+        + "<a href='"
+        + "https://www.nyu.edu/students/student-information-and-resources/housing-and-dining/dining/locations-and-menus.html"
+        + "'>"
+        + "NYU On-campus Dining"
+        + "</a></p><br>"
     )
 
     # Add restaurant near school1
@@ -230,7 +228,9 @@ def compose_email(
 
                 prevname = restaurant.name
     if not len(restaurants2) == 0:
-        html_content = html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
+        html_content = (
+            html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
+        )
         for resturant in restaurants2:
             prevname = ""
 
