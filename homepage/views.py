@@ -241,7 +241,6 @@ def handle_ajax(request):
 
 
 def user_service(request):
-
     if request.method == "POST":
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
@@ -252,6 +251,9 @@ def user_service(request):
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
+            print(cuisines_priority )
+            print(department_priority)
+            print(interests_priority)
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
@@ -262,7 +264,7 @@ def user_service(request):
                 [interest.name for interest in interests_objects]
             )
 
-            selected_days_ids = request.POST.getlist("day[]")
+            selected_days_ids = request.POST.getlist("days[]")
             selected_days_objects = Days.objects.filter(id__in=selected_days_ids)
             selected_days_names = ", ".join([day.day for day in selected_days_objects])
 
@@ -413,7 +415,7 @@ def match_history(request):
                     "next_lunch_matches": next_lunch_matches,
                     "past_lunch_macthes": past_lunch_macthes,
                 },
-                preference_model_data,
+                preference_model_data,{}
             ),
         )
 
