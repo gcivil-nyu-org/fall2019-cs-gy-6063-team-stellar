@@ -1,4 +1,12 @@
-Issue tracker is **ONLY** used for reporting bugs. New features should be discussed in its own thread on the #general channel of slack.
+---
+name: Bug
+about: Add an issue for a Bug
+title: <general summary of issue>
+labels: ''
+assignees: ''
+---
+
+Issue tracker is ONLY used for reporting bugs. New features should be discussed in its own thread on the #general channel of slack.
 
 <!--- Provide a general summary of the issue in the Title above -->
 
