@@ -467,6 +467,10 @@ def feedback(request):
             return render(request, "error.html")
 
 
+def about(request):
+    return render(request, "about.html")
+
+
 # def test(request):
 #     return render(request, "test.html")
 
