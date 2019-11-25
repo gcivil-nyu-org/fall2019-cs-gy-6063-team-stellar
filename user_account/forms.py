@@ -143,6 +143,9 @@ class UserSignUpForm(UserCreationForm):
         domain = data.split("@")[1]
         if domain != "nyu.edu":
             raise forms.ValidationError("Please enter a NYU Email Address")
+
+        if not LunchNinjaUser.objects.filter(email=data).count() == 0:
+            raise forms.ValidationError("This email has already been registered")
         return data
 
     def save(self, commit=True):
