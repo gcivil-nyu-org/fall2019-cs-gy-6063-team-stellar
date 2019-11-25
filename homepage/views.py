@@ -151,26 +151,31 @@ def getModelData(user):
     department_set=Department.objects.all()
     school_list = []
     department_list = []
-    if user.is_anonymous==False:
-        user_request_instance = UserRequest.objects.get(user=user)
-        selected_school = user_request_instance.school
-        selected_department = user_request_instance.department
+    try:
+        if user.is_anonymous == False:
+            user_request_instance = UserRequest.objects.get(user=user)
+            selected_school = user_request_instance.school
+            selected_department = user_request_instance.department
 
-        for s in school_set:
-            if not s == selected_school:
+            for s in school_set:
+                if not s == selected_school:
+                    school_list.append(s)
+            for d in department_set:
+                if not d == selected_department:
+                    department_list.append(d)
+
+            school_list.append(selected_school)
+            department_list.append(selected_department)
+        else:
+            for s in school_set:
                 school_list.append(s)
-        for d in department_set:
-            if not d == selected_department:
+            for d in department_set:
                 department_list.append(d)
-
-        school_list.append(selected_school)
-        department_list.append(selected_department)
-    else:
+    except Exception:
         for s in school_set:
-             school_list.append(s)
+            school_list.append(s)
         for d in department_set:
-             department_list.append(d)
-
+            department_list.append(d)
 
 
     return {
@@ -189,32 +194,41 @@ def Merge(dict1, dict2, dict3):
     res = {**dict1, **dict2, **dict3}
     return res
 def get_selected_data(user):
-    user_request_instance = UserRequest.objects.get(user=user)
-    preffered_cuisines_instances = user_request_instance.cuisines.all()
-    preffered_interests_instances = user_request_instance.interests.all()
-    preffered_days_instances = user_request_instance.days.all()
-    selected_type = user_request_instance.service_type
-    selected_school = user_request_instance.school
-    selected_department = user_request_instance.department
-    selected_cuisine = preffered_cuisines_instances
-    selected_interest = preffered_interests_instances
-    selected_days=preffered_days_instances
+    try:
+        user_request_instance = UserRequest.objects.get(user=user)
+        preffered_cuisines_instances = user_request_instance.cuisines.all()
+        preffered_interests_instances = user_request_instance.interests.all()
+        preffered_days_instances = user_request_instance.days.all()
+        selected_type = user_request_instance.service_type
+        selected_school = user_request_instance.school
+        selected_department = user_request_instance.department
+        selected_cuisine = preffered_cuisines_instances
+        selected_interest = preffered_interests_instances
+        selected_days = preffered_days_instances
 
-    selected_department_priority = user_request_instance.department_priority
-    selected_cuisine_priority = user_request_instance.cuisines_priority
-    selected_interest_priority = user_request_instance.interests_priority
-    selected_info = {
-        "selected_type": selected_type,
-        "selected_school": selected_school,
-        "selected_department": selected_department,
-        "selected_cuisine": selected_cuisine,
-        "selected_interest": selected_interest,
-        "selected_days":selected_days,
-        "selected_department_priority": selected_department_priority,
-        "selected_cuisine_priority": selected_cuisine_priority,
-        "selected_interest_priority": selected_interest_priority,
+        selected_department_priority = user_request_instance.department_priority
+        selected_cuisine_priority = user_request_instance.cuisines_priority
+        selected_interest_priority = user_request_instance.interests_priority
+        selected_info = {
+            "selected_type": selected_type,
+            "selected_school": selected_school,
+            "selected_department": selected_department,
+            "selected_cuisine": selected_cuisine,
+            "selected_interest": selected_interest,
+            "selected_days": selected_days,
+            "selected_department_priority": selected_department_priority,
+            "selected_cuisine_priority": selected_cuisine_priority,
+            "selected_interest_priority": selected_interest_priority,
 
-    }
+        }
+    except Exception:
+        selected_info={"selected_type": "Daily",
+                       "selected_department_priority": 5,
+                       "selected_cuisine_priority": 5,
+                       "selected_interest_priority": 5,
+
+                       }
+
     return selected_info
 def index(request):
     if check_login(request):  # no repeat log in
