@@ -73,7 +73,7 @@
                                         <pre>I wish I had a different lunch partner                                     I would like to have lunch again with my lunch partner</pre>
                                     {% endif %}
                                 {% for choice in question.choice_set.all%}
-                                   <input type="radio" name={{question.label}} id={{choice.choice_text }} value="{{choice.choice_text }}">
+                                   <input type="radio" name={{question.label}} id={{choice.choice_text }} value="{{choice.choice_text }}" required>
                                     <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
                                    {% endfor %}
                                 <br><br>

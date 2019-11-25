@@ -56,9 +56,9 @@ var multipleCancelButton = new Choices('#daysSelect', {
 });
 
 let service_request = {
-    "cuisines_priority":"10",
-    "department_priority":"10",
-    "interests_priority":"10"
+    "cuisines_priority":"5",
+    "department_priority":"5",
+    "interests_priority":"5"
 };
 
 var rangeSlider = function () {
@@ -173,8 +173,8 @@ $(document).on('submit', '#service_select_form', function (e) {
 });
 
 $(document).ready(function () {
-
-    if ($('#serviceSelect').name === "Daily"){
+    var servicetype=document.getElementById("serviceSelect");
+    if (servicetype.name === "Daily"){
         $('#daysSelectContainer').hide();
     }
     else{

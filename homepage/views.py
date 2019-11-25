@@ -147,31 +147,35 @@ def getModelData(user):
         x for x, _ in Counter(all_selected_interests).most_common(5)
     ]
 
-    school_set=School.objects.all()
-    department_set=Department.objects.all()
+    school_set = School.objects.all()
+    department_set = Department.objects.all()
     school_list = []
     department_list = []
-    if user.is_anonymous==False:
-        user_request_instance = UserRequest.objects.get(user=user)
-        selected_school = user_request_instance.school
-        selected_department = user_request_instance.department
+    try:
+        if not user.is_anonymous:
+            user_request_instance = UserRequest.objects.get(user=user)
+            selected_school = user_request_instance.school
+            selected_department = user_request_instance.department
 
-        for s in school_set:
-            if not s == selected_school:
+            for s in school_set:
+                if not s == selected_school:
+                    school_list.append(s)
+            for d in department_set:
+                if not d == selected_department:
+                    department_list.append(d)
+
+            school_list.append(selected_school)
+            department_list.append(selected_department)
+        else:
+            for s in school_set:
                 school_list.append(s)
-        for d in department_set:
-            if not d == selected_department:
+            for d in department_set:
                 department_list.append(d)
-
-        school_list.append(selected_school)
-        department_list.append(selected_department)
-    else:
+    except Exception:
         for s in school_set:
-             school_list.append(s)
+            school_list.append(s)
         for d in department_set:
-             department_list.append(d)
-
-
+            department_list.append(d)
 
     return {
         "cuisines": Cuisine.objects.all(),
@@ -188,40 +192,56 @@ def getModelData(user):
 def Merge(dict1, dict2, dict3):
     res = {**dict1, **dict2, **dict3}
     return res
+
+
 def get_selected_data(user):
-    user_request_instance = UserRequest.objects.get(user=user)
-    preffered_cuisines_instances = user_request_instance.cuisines.all()
-    preffered_interests_instances = user_request_instance.interests.all()
-    preffered_days_instances = user_request_instance.days.all()
-    selected_type = user_request_instance.service_type
-    selected_school = user_request_instance.school
-    selected_department = user_request_instance.department
-    selected_cuisine = preffered_cuisines_instances
-    selected_interest = preffered_interests_instances
-    selected_days=preffered_days_instances
+    try:
+        user_request_instance = UserRequest.objects.get(user=user)
+        preffered_cuisines_instances = user_request_instance.cuisines.all()
+        preffered_interests_instances = user_request_instance.interests.all()
+        preffered_days_instances = user_request_instance.days.all()
+        selected_type = user_request_instance.service_type
+        selected_school = user_request_instance.school
+        selected_department = user_request_instance.department
+        selected_cuisine = preffered_cuisines_instances
+        selected_interest = preffered_interests_instances
+        selected_days = preffered_days_instances
 
-    selected_department_priority = user_request_instance.department_priority
-    selected_cuisine_priority = user_request_instance.cuisines_priority
-    selected_interest_priority = user_request_instance.interests_priority
-    selected_info = {
-        "selected_type": selected_type,
-        "selected_school": selected_school,
-        "selected_department": selected_department,
-        "selected_cuisine": selected_cuisine,
-        "selected_interest": selected_interest,
-        "selected_days":selected_days,
-        "selected_department_priority": selected_department_priority,
-        "selected_cuisine_priority": selected_cuisine_priority,
-        "selected_interest_priority": selected_interest_priority,
+        selected_department_priority = user_request_instance.department_priority
+        selected_cuisine_priority = user_request_instance.cuisines_priority
+        selected_interest_priority = user_request_instance.interests_priority
+        selected_info = {
+            "selected_type": selected_type,
+            "selected_school": selected_school,
+            "selected_department": selected_department,
+            "selected_cuisine": selected_cuisine,
+            "selected_interest": selected_interest,
+            "selected_days": selected_days,
+            "selected_department_priority": selected_department_priority,
+            "selected_cuisine_priority": selected_cuisine_priority,
+            "selected_interest_priority": selected_interest_priority,
+        }
+    except Exception:
+        selected_info = {
+            "selected_type": "Daily",
+            "selected_department_priority": 5,
+            "selected_cuisine_priority": 5,
+            "selected_interest_priority": 5,
+        }
 
-    }
     return selected_info
+
+
 def index(request):
     if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
-        return render(request, "homepage.html", Merge({}, preference_model_data,selected_info))
+        return render(
+            request, "homepage.html", Merge({}, preference_model_data, selected_info)
+        )
     return redirect("/login/")
+
+
 def handle_ajax(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
@@ -251,7 +271,7 @@ def user_service(request):
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
-            print(cuisines_priority )
+            print(cuisines_priority)
             print(department_priority)
             print(interests_priority)
             cuisine_ids = request.POST.getlist("cuisine[]")
@@ -415,7 +435,8 @@ def match_history(request):
                     "next_lunch_matches": next_lunch_matches,
                     "past_lunch_macthes": past_lunch_macthes,
                 },
-                preference_model_data,{}
+                preference_model_data,
+                {},
             ),
         )
 
@@ -472,7 +493,8 @@ def settings(request):
             "settings.html",
             Merge(
                 {"user_request": user_request, "user_profile": user_profile},
-                preference_model_data,selected_info
+                preference_model_data,
+                selected_info,
             ),
         )
     return redirect("/login/")
@@ -507,21 +529,37 @@ def feedback(request):
         fb.choices.add(c4)
         return redirect("/homepage/")
     else:
-        try:
-            data = request.META.get("PATH_INFO").split("/")[-1].split("-")
-            match_id = int(data[0])
-            user_id = int(data[1])
-            match = UserRequestMatch.objects.get(id=match_id)
-            match_user1 = match.user1
-            match_user2 = match.user2
-            user = LunchNinjaUser.objects.get(id=user_id)
-            if user.id == match_user1.id or user_id == match_user2.id:
-                context = {"latest_question_list": Question.objects.all()}
-                return render(request, "feedback.html", context=context)
+        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        if not len(data) == 2:
+            context = {"message": "We could not find a match history for you"}
+            return render(request, "error.html", context=context)
+        match_id = int(data[0])
+        user_id = int(data[1])
+        if UserRequestMatch.objects.filter(id=match_id).count() == 0:
+            context = {"message": "We could not find a match history for you"}
+            return render(request, "error.html", context=context)
+
+        match = UserRequestMatch.objects.get(id=match_id)
+        match_user1 = match.user1
+        match_user2 = match.user2
+        if LunchNinjaUser.objects.filter(id=user_id).count() == 0:
+            context = {"message": "We could not find a match history for you"}
+            return render(request, "error.html", context=context)
+        user = LunchNinjaUser.objects.get(id=user_id)
+
+        count = Feedback.objects.filter(match=match, user=user).count()
+        print("count is")
+        print(count)
+        if count == 0 and (user.id == match_user1.id or user_id == match_user2.id):
+            context = {"latest_question_list": Question.objects.all()}
+            return render(request, "feedback.html", context=context)
+        else:
+            if not count == 0:
+                context = {"message": "You have already submitted the form"}
+                return render(request, "error.html", context=context)
             else:
-                return render(request, "error.html")
-        except UserRequestMatch.DoesNotExist:
-            return render(request, "error.html")
+                context = {"message": "We could not find a match history for you"}
+                return render(request, "error.html", context=context)
 
 
 # def test(request):
