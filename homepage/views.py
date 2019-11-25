@@ -552,7 +552,9 @@ def about(request):
     if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
-        return render(request, "about.html", Merge({}, preference_model_data,selected_info))
+        return render(
+            request, "about.html", Merge({}, preference_model_data, selected_info)
+        )
     return redirect("/login/")
 
 
