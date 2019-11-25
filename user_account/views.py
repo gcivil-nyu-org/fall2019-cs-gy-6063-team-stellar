@@ -105,8 +105,6 @@ def usersignup(request):
             user.department = department
             user.Phone = Phone
             user.save()
-            print("user.department is")
-            print(user.department)
             current_site = get_current_site(request)
             email_subject = "Activate Your Account"
             message = render_to_string(
