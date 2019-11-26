@@ -48,6 +48,7 @@ def getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2):
 def deg2rad(deg):
     return deg * (math.pi / 180)
 
+
 # send_unmatch_email send emails to user that did not get matched
 def send_unmatch_email(userrequest):
     user = LunchNinjaUser.objects.get(id=userrequest.user_id)

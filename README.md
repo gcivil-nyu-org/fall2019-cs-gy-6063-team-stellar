@@ -15,9 +15,9 @@
 
 #Timeline for Testing on Test day 26/11/19
 
-1) 9:00 AM to 11:45 AM Select and change preferences for test users.
-2) 12:00 PM Users will get matched and sent out emails with Lunch Mate information and restaurant recommendation.
-3) 3:00 PM Users, will get a feeback from . 
+1) 9:00 AM to 4:45 PM Select and change preferences for test users.
+2) 5:00 PM Users will get matched and sent out emails with Lunch Mate information and restaurant recommendation.
+3) 5:30 PM Users, will get a feedback from . 
 
 
 Matching algorithm flow chart

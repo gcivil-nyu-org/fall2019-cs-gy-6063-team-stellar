@@ -135,7 +135,7 @@ def in_one_day():
 
     # For Software enginnering testing day, create event on the same day
     next_day = timezone.localtime(timezone.now())
-    new_period = next_day.replace(hour=13, minute=00)
+    new_period = next_day.replace(hour=17, minute=00)
     return new_period
 
 
