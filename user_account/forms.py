@@ -104,6 +104,7 @@ class UserSignUpForm(UserCreationForm):
 
         # valid phone numbers US number only
         data = self.cleaned_data["Phone"]
+
         try:
             int(data)
             if not len(data) == 10:
@@ -112,11 +113,39 @@ class UserSignUpForm(UserCreationForm):
             raise forms.ValidationError("Please enter a Valid Phone Number")
         return data
 
+    def clean_school(self):
+
+        # valid phone numbers US number only
+
+        try:
+            data = self.cleaned_data["school"]
+
+            if data == "select school":
+                raise forms.ValidationError("Please select department")
+        except Exception:
+            raise forms.ValidationError("Please select School")
+        return data
+
+    def clean_separtment(self):
+
+        # valid phone numbers US number only
+
+        try:
+            data = self.cleaned_data["department"]
+            if data == "select department":
+                raise forms.ValidationError("Please select Department")
+        except Exception:
+            raise forms.ValidationError("Please select Department")
+        return data
+
     def clean_email(self):
         data = self.cleaned_data["email"]
         domain = data.split("@")[1]
         if domain != "nyu.edu":
             raise forms.ValidationError("Please enter a NYU Email Address")
+
+        if not LunchNinjaUser.objects.filter(email=data).count() == 0:
+            raise forms.ValidationError("This email has already been registered")
         return data
 
     def save(self, commit=True):
