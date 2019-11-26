@@ -1,8 +1,6 @@
 from django.db import models
 from django.conf import settings
-from datetime import datetime
-
-# ,timedelta
+from datetime import datetime, timedelta
 from django.utils import timezone
 
 m_state = False
@@ -131,11 +129,9 @@ class UserRequest(models.Model):
 
 def in_one_day():
     # next_day = timezone.now() + timedelta(days=1)
-    # next_day = timezone.localtime(timezone.now()) + timedelta(days=1)
-
-    # For Software enginnering testing day, create event on the same day
-    next_day = timezone.localtime(timezone.now())
-    new_period = next_day.replace(hour=17, minute=00)
+    next_day = timezone.localtime(timezone.now()) + timedelta(days=1)
+    # next_day = timezone.localtime(timezone.now())
+    new_period = next_day.replace(hour=12, minute=00)
     return new_period
 
 
