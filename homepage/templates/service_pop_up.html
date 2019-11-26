@@ -40,7 +40,7 @@
                            <select id="daysSelect" placeholder="Select preferred days" multiple>
                               {% for days in week_days %}
                                   {% if days in selected_days %}
-                                  <option selected="selected" value="{{ days.id }}" name="{{ days.day }}"> {{  days.day }} </option>
+                                      <option selected="selected" value="{{ days.id }}" name="{{ days.day }}"> {{  days.day }} </option>
                                     {% else %}
                                       <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
                                   {% endif %}
@@ -126,7 +126,7 @@
                   <div class="form-top">
                      <div class="form-top-left">
                         <h4>Step 3 of 5</h4>
-                        <p>Select preferred Cuisine:</p>
+                        <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
                                       
                         <div class="col-md-12"> 
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
@@ -134,7 +134,9 @@
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
                               {% endfor %}
                               {% for cuisine in cuisines %}
-                                    <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>
+                                    {% if not cuisine in selected_cuisine %}
+                                      <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>
+                                    {% endif %}
                               {% endfor %}
 
                            </select> 
@@ -170,7 +172,7 @@
                   <div class="form-top">
                      <div class="form-top-left">
                         <h4>Step 4 of 5</h4>
-                        <p>Select preferred conversation type:</p>
+                        <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
                         
                         <div class="col-md-12"> 
                            <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
@@ -178,7 +180,9 @@
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
                               {% endfor %}
                               {% for interest in interests %}
+                                  {% if not interest in selected_interest %}
                                     <option value="{{ interest.id }}" name="{{ interest.name }}">{{ interest.name }}</option>
+                                  {% endif %}
                               {% endfor %}
                            </select> 
                         </div>
@@ -252,6 +256,12 @@
          </div>
       </div>
    </div>
+</div>
+
+<div id="overlay" style="display:none">
+    <div class="spinner"></div>
+    <br/>
+    Loading...
 </div>
 
 <link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006288/BBBootstrap/choices.min.css?version=7.0.0">

@@ -216,7 +216,7 @@ def compose_email(
 
     html_content = (
         html_content
-        + "<br><h3><b> Restaurant recommendations</h3>"
+        + "<br><h3><b> Restaurant recommendations(Based on your common cuisines, location and NYC health department inspections report)</h3>"
         + "<p> NYU offers a wide variety of dining options on campus. To check it out, click "
         + "<a href='"
         + "https://www.nyu.edu/students/student-information-and-resources/housing-and-dining/dining/locations-and-menus.html"

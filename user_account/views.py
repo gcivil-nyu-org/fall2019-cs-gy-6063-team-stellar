@@ -46,22 +46,7 @@ def index(request):
     return render(request, "index.html")
 
 
-def check_ajax_department(request):
-    if request.method == "GET" and (
-        request.path.startswith("/ajax/load_departments")
-        or request.path.startswith("/signup/ajax/load_departments")
-    ):
-        return True
-    return False
 
-
-def check_ajax_school(request):
-    if request.method == "GET" and (
-        request.path.startswith("/ajax/load_school")
-        or request.path.startswith("/signup/ajax/load_school")
-    ):
-        return True
-    return False
 
 
 def handle_ajax(request):
@@ -144,7 +129,6 @@ def userlogin(request):
         username = login_form.cleaned_data.get("username")
         password = login_form.cleaned_data.get("password")
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
             login(request, user)
             request.session["is_login"] = True
