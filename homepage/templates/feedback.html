@@ -31,14 +31,15 @@
         .warning:hover {background: #e68a00;}
         
     </style>
-    <script type ="text/javascript">
-    function submitclick() {
-        alert("Thank you for submitting your feedback!");
-        
-    }
-    function submitclose() {
-        location.href="/homepage";
-    }
+    <script>
+        function promptalert() {
+            alert( "Thank you for submitting your feedback!" );
+            return true;
+        }
+
+        function submitclose() {
+            location.href="/homepage";
+        }
     </script>
 </head>
 <body id="page-top">
@@ -65,7 +66,7 @@
 	<!-- Body -->
 	<div class="container">
         <br>
-		<form role="form" id="feedback_form" class="registration-form" method="post">
+		<form role="form" id="feedback_form" class="registration-form" method="post" onsubmit="promptalert()">
                 {% csrf_token %}
                <fieldset style="display: block;">
                   <div class="form-top">
@@ -83,7 +84,7 @@
                                         <pre>           <b>Terrible</b>                                                        <b>Amazing</b></pre>
                                     {% endif %}
                                 {% for choice in question.choice_set.all%}
-                                   <input type="radio" name={{question.label}} id={{choice.choice_text }} value="{{choice.choice_text }}" required>
+                                   <input type="radio" name={{question.label}} id={{choice.id }} value="{{choice.choice_text }}" required>
                                     <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
                                    {% endfor %}
                                 <br><br>
@@ -96,7 +97,7 @@
                      <br>
                   </div>
                </fieldset>
-        <button type="submit" class="btn warning" onclick="submitclick()">Submit</button>
+        <button type="submit" class="btn warning" id="submitbutton">Submit</button>
         <button type="button" class="btn warning" data-dismiss="modal" onclick="submitclose()">Close</button>
         <br>
         <br>
