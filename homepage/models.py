@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
-from datetime import timedelta, datetime
+from datetime import datetime
+
+# ,timedelta
 from django.utils import timezone
 
 m_state = False

@@ -36,7 +36,7 @@ team_stellar = [
         "email": "bv640@nyu.edu",
         "first_name": "Bhaskar",
         "last_name": "V",
-    }
+    },
 ]
 
 software_engineering = [
