@@ -373,8 +373,8 @@ def send_invitations(userRequest, userMatch):
 
     CRLF = "\r\n"
     # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
-    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
-    # organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"
+    organizer = "ORGANIZER;CN=Lunch Ninja:mailto:teamstellarse@outlook.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"ca
 
     dur = datetime.timedelta(hours=1)
 
@@ -400,9 +400,10 @@ def send_invitations(userRequest, userMatch):
     attendee = ""
     for att in attendees:
         attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE"
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;"
             + CRLF
-            + " ;CN="
+            + "RSVP=TRUE;"
+            + "CN="
             + att
             + ";X-NUM-GUESTS=0:"
             + CRLF
@@ -435,8 +436,8 @@ def send_invitations(userRequest, userMatch):
         + "DTSTAMP:"
         + dtstamp
         + CRLF
-        # + organizer
-        # + CRLF
+        + organizer
+        + CRLF
     )
     ical += "UID:FIXMEUID" + dtstamp + CRLF
     ical += (
@@ -452,7 +453,7 @@ def send_invitations(userRequest, userMatch):
         + CRLF
         + "SEQUENCE:0"
         + CRLF
-        + "STATUS:CONFIRMED"
+        + "STATUS:TENTATIVE"
         + CRLF
     )
     ical += (
