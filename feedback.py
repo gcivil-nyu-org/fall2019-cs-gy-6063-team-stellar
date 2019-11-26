@@ -5,7 +5,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from datetime import date
-    # , timedelta
+
+# , timedelta
 
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
@@ -23,6 +24,8 @@ def compose_email(user1, user2, match):
         + "Thank you for using Lunch Ninja!<br>"
         + "Please take a moment to complete our short survey about your most recent lunch experience with <b>"
         + user2.first_name
+        + "</b> on <b>"
+        + str(match.match_time.date())
         + "</b>.<br>"
         + "http://lunch-ninja.herokuapp.com/"
         + "feedback"
