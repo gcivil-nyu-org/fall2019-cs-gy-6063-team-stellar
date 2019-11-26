@@ -46,9 +46,6 @@ def index(request):
     return render(request, "index.html")
 
 
-
-
-
 def handle_ajax(request):
     schoolist, departmentlist, school_departments, depatment_school = merge()
     if request.method == "GET" and "/ajax/load_departments" in request.path:
