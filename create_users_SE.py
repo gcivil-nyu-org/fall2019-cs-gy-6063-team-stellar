@@ -37,12 +37,6 @@ team_stellar = [
         "first_name": "Bhaskar",
         "last_name": "V",
     },
-    # {
-    #     "username": "random_guy",
-    #     "email": "random@nyu.edu",
-    #     "first_name": "Random",
-    #     "last_name": "Guy",
-    # },
 ]
 
 software_engineering = [

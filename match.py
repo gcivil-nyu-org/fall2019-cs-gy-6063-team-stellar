@@ -49,6 +49,48 @@ def deg2rad(deg):
     return deg * (math.pi / 180)
 
 
+def send_unmatch_email(userrequest):
+    user = LunchNinjaUser.objects.get(id=userrequest.user_id)
+    html_content = (
+        "<p>Hi "
+        + user.first_name
+        + ",</p>"
+        + "Thank you for using Lunch Ninja!<br><br>"
+        + "We are working on finding a perfect match for you, but we could not find a match based on your service selection at this time.<br>"  # noqa: E501
+        + "We will try again in next match cycle. You can update your preferences "
+        + "<a href='"
+        + "http://lunch-ninja.herokuapp.com/settings/"
+        + "'>"
+        + "here"
+        + "</a>."
+        + "<br><br>"
+        + "Best,<br>"
+        + "LunchNinja"
+    )
+    html_content = html_content + '<p><img src="cid:myimage3" /></p>'
+    img_data = open("homepage/static/img/sad_cat.jpg", "rb").read()
+    html_part = MIMEMultipart(_subtype="related")
+    # body = MIMEText('<p>Hello <img src="cid:myimage" /></p>', _subtype='html')
+    body = MIMEText(html_content, _subtype="html")
+    html_part.attach(body)
+    # Now create the MIME container for the image
+    img = MIMEImage(img_data, "jpg")
+    img.add_header("Content-Id", "<myimage3>")  # angle brackets are important
+    img.add_header("Content-Disposition", "inline", filename="myimage3")
+    html_part.attach(img)
+    msg = EmailMessage(
+        "Sorry, we could not find a match",
+        None,
+        "teamstellarse@gmail.com",
+        [user.email],
+    )
+    msg.attach(
+        html_part
+    )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
+    print("sending out unmatched email")
+    msg.send()
+
+
 def recommend_restaurants(user1, user2, cuisinelist):
     school1 = School.objects.get(name=user1.school)
     school2 = School.objects.get(name=user2.school)
@@ -314,8 +356,6 @@ def send_invitations(userRequest, userMatch):
     cuisine_names = ", ".join(
         [cuisine.name for cuisine in (user1Cuisines & user2Cuisines)]
     )
-    print("cuisine_names is")
-    print(cuisine_names)
 
     user1Interests = userRequest[0].interests.all()
     user2Interests = userRequest[0].interests.all()
@@ -772,16 +812,21 @@ def match():
                 )
                 user.save()
                 fake_not_matched_user.append(user)
+
     real_not_matched_user = []
     for user in not_matched_user:
         if user not in fake_not_matched_user:
             real_not_matched_user.append(user)
+
     print("matched user")
     print(matched_user_request)
     print("fake not matched user")
     print(fake_not_matched_user)
-    print("real_matched_user")
+    print("real_not_matched_user")
     print(real_not_matched_user)
+
+    for each in fake_not_matched_user + real_not_matched_user:
+        send_unmatch_email(each)
 
     return matched_user_request
 

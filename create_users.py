@@ -88,4 +88,4 @@ if __name__ == "__main__":
     )
     user2.set_password("Stellar123!")
     user2.save()
-    generateuser(1)
+    # generateuser(1)
