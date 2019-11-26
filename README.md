@@ -13,13 +13,23 @@
 7) Also, we will send an email with a google calendar invite to your matched meeting at 5pm (we decided to make it at 5 pm so that users have plenty of time to click on "Yes", "Maybe" or "No" for the event invitation; therefore technically this event won't be a "lunch"). The details of the restaurants that have been selected based on your preferences will also be displayed in the email message.  
 8) After matching, you will get another email with a feedback form at 5:30 pm that you will need to fill out based on your experience with your match.
 
-#Timeline for Testing on Test day 26/11/19
+# Timeline for Testing on Test day 26/11/19
 
 1) 9:00 AM to 11:45 AM Select and change preferences for test users.
 2) 12:00 PM Users will get matched and sent out emails with Lunch Mate information and restaurant recommendation.
-3) 5:30 PM Users will get a feedback from . 
+3) 5:00 PM Second round of matching.
+3) 5:30 PM Users will get a feedback form regarding their first matched meetings. 
+
+# Updates
+
+As many of the users were not able to update their preferences, a second round of matching algorithm will be run at 5pm, we urge everyone to select their preference by that time(the new lunch event will be from tomorrow at 12pm).
+
+You will only receive feedback form for the first match at 5:30pm, as according to our logic feedback can be sent only for past events. So people who didn't get matched in first round wont receive feedback form till tomorrow. 
+
+Also according to our algorithm people who already got matched and are not changing their preference are less likely to get matched with the same person(with unchanged preferences). So this time the total number of matches will be less if not many people change their preferences.
 
 
-Matching algorithm flow chart
+
+# Matching algorithm flow chart
 ![Image](Lunchninja_Algorithm.png)
 
