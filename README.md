@@ -21,6 +21,7 @@
 3) 5:30 PM Users will get a feedback form regarding their first matched meetings. 
 
 #Updates
+
 As many of the users were not able to update their preferences, a second round of matching algorithm will be run at 5pm, we urge everyone to select their preference by that time(the new lunch event will be from tomorrow at 12pm).
 
 You will only receive feedback form for the first match at 5:30pm, as according to our logic feedback can be sent only for past events. So people who didn't get matched in first round wont receive feedback form till tomorrow. 
