@@ -55,14 +55,12 @@ class SignupViewTest(TestCase):
     def request_start(request):
         return True
 
-
     def test_first_signup_department_ajax(self):
         # response1 = self.client.get(" ")
         response = self.client.get(
             "/ajax/load_departments/?school_id=Steinhardt%20School%20of%20Culture%20Education%20and%20Human%20Development"
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
-
 
     def test_second_signup_department_ajax(self):
         # response1 = self.client.get("/")
@@ -71,12 +69,10 @@ class SignupViewTest(TestCase):
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
-
     def test_first_signup_school_ajax(self):
         # response1 = self.client.get("/signup/")
         response = self.client.get("/ajax/load_school/?department_id=Biology")
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
-
 
     def test_second_signup_school_ajax(self):
         # response1 = self.client.get("/signup/")
@@ -99,14 +95,15 @@ class LoginViewTest(TestCase):
         response = self.client.post("/login/", loginObj)
         self.assertEqual(response.status_code, 200)
 
-    def mock_login(self,p1,p2):
+    def mock_login(self, p1, p2):
         return True
 
-    def not_none(self,p1,p2,p3):
+    def not_none(self, p1, p2, p3):
         return 1
-    @mock.patch('django.contrib.auth.login',side_effect=mock_login)
-    @mock.patch('django.contrib.auth.authenticate',side_effect=not_none)
-    def test_login_authenticate(self,mock_aut,mock_login):
+
+    @mock.patch("django.contrib.auth.login", side_effect=mock_login)
+    @mock.patch("django.contrib.auth.authenticate", side_effect=not_none)
+    def test_login_authenticate(self, mock_aut, mock_login):
         loginObj = {"username": "testUser", "password": "password12345"}
         response = self.client.post("/login/", loginObj)
         self.assertEqual(response.status_code, 200)

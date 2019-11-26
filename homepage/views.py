@@ -77,6 +77,7 @@ def check_ajax_school(request):
         return True
     return False
 
+
 def check_login(request):
     if request.session.get("is_login", None):
         return True
