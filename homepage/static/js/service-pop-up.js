@@ -206,6 +206,7 @@ $(document).on('submit', '#school_select_form', function (e) {
 //Department select
 $("#departmentSelect").change(function () {
     var department_id = $(this).val();
+    $("#overlay").show();
     $.ajax({
         url: 'ajax/load_school_homepage/',
         data: {
@@ -214,18 +215,24 @@ $("#departmentSelect").change(function () {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
+            $("#overlay").hide();
             var content = '';
             $.each(data, function (i, item) {
                 content += '<option value=' + '\"' + item + '\"' + '>' + item + '</option>'
             });
             $('#schoolSelect').html(content)
         },
+        error: function () {
+            $("#overlay").hide();
+            alert('Unknown error ');
+        } 
     });
 });
 
 //School Select
 $("#schoolSelect").change(function () {
     var school_id = $(this).val();
+    $("#overlay").show();
     $.ajax({
         url: 'ajax/load_departments_homepage/',
         data: {
@@ -234,12 +241,17 @@ $("#schoolSelect").change(function () {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
+            $("#overlay").hide();
             var content = '';
             $.each(data, function (i, item) {
                 content += '<option value=' + '\"' + item + '\"' + '>' + item + '</option>'
             });
             $('#departmentSelect').html(content)
         },
+        error: function () {
+            $("#overlay").hide();
+            alert('Unknown error ');
+        } 
     });
 });
 
@@ -258,7 +270,7 @@ $(document).on('submit', '#interest_select_form', function (e) {
 //Priority model data
 $(document).on('submit', '#priority_select_form', function (e) {
     e.preventDefault();
-
+    $("#overlay").show();
     // service_request["department_priority"] = $('#department_slider_range').value;
     service_request['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     $.ajax({
@@ -266,8 +278,13 @@ $(document).on('submit', '#priority_select_form', function (e) {
         url: '/serviceRequest/',
         data: service_request,
         success: function () {
+            $("#overlay").hide();
             window.location.href = "/settings/";
             alert("Thank you for using Lunch Ninja! We'll send you a follow-up email when your matching is ready.");
-        }
+        },
+        error: function () {
+            $("#overlay").hide();
+            alert('Unknown error ');
+        }    
     })
 });
