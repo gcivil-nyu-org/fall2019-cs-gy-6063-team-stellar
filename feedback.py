@@ -60,7 +60,9 @@ def send_email(html_content, attendee):
 
 
 def prepare_feedback():
-    tomorrow = date.today() + timedelta(days=1)
+    # tomorrow = date.today() + timedelta(days=1)
+    # Change feedback sending day to today for SE testing day
+    tomorrow = date.today()
     # (tz=timezone.get_current_timezone()) + timedelta(1)
     print(tomorrow)
     # yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
