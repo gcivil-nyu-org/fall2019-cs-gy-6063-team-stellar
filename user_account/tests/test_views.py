@@ -95,18 +95,22 @@ class LoginViewTest(TestCase):
         response = self.client.post("/login/", loginObj)
         self.assertEqual(response.status_code, 200)
 
-    def mock_login(self, p1, p2):
+    def mock_login(p1, p2):
         return True
 
-    def not_none(self, p1, p2, p3):
-        return 1
+    def user_not_none(request, username, password):
+        class user_for_mock:
+            def __init__(self):
+                self.id=1
+                self.first_name="abc"
+        return user_for_mock()
 
-    @mock.patch("django.contrib.auth.login", side_effect=mock_login)
-    @mock.patch("django.contrib.auth.authenticate", side_effect=not_none)
+    @mock.patch("user_account.views.login", side_effect=mock_login)
+    @mock.patch("user_account.views.authenticate", side_effect=user_not_none)
     def test_login_authenticate(self, mock_aut, mock_login):
-        loginObj = {"username": "testUser", "password": "password12345"}
+        loginObj = {"username": "testUser", "password": "password12345","session":{"islogin":True,"user_id":1,"user_name":'abc'}}
         response = self.client.post("/login/", loginObj)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
 
 class LogoutViewTest(TestCase):

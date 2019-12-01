@@ -33,7 +33,8 @@ from collections import Counter
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
-
+def get_user(request):
+    return request.user
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
@@ -96,7 +97,7 @@ def User_service_send_email_authenticated(
     message = render_to_string(
         "service_confirmation.html",
         {
-            "user": request.user.first_name,
+            "user": get_user(request).first_name,
             "service_type": service_type,
             "cuisines_selected": cuisine_names,
             "selected_interests": interests_names,
@@ -105,7 +106,7 @@ def User_service_send_email_authenticated(
             "department": department,
         },
     )
-    to_email = request.user.email
+    to_email = get_user(request).email
     email = EmailMessage(email_subject, message, to=[to_email])
     email.send()
 
@@ -129,11 +130,14 @@ def getModelData(user):
     try:
 
         user_request_instance = UserRequest.objects.get(user=user)
+        # print(user_request_instance)
         selected_school = user_request_instance.school
         selected_department = user_request_instance.department
 
+
         # When user selected preference school show all departments in that school
         new_department_set=Department.objects.filter(school=selected_school)
+
         for s in school_set:
             if not s == selected_school:
                 school_list.append(s)
@@ -150,7 +154,6 @@ def getModelData(user):
     #         department_list.append(d)
     except Exception:
         for s in school_set:
-            print(s)
             school_list.append(s)
         for d in department_set:
             department_list.append(d)
@@ -271,6 +274,7 @@ def user_service(request):
             selected_days_names = ", ".join([day.day for day in selected_days_objects])
 
             logged_user = request.user
+
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
