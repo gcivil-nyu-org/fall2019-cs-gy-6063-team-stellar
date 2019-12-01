@@ -66,16 +66,7 @@ def merge():
     return school, department, school_department, department_school
 
 
-def check_ajax_department(request):
-    if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
-        return True
-    return False
 
-
-def check_ajax_school(request):
-    if request.method == "GET" and "/ajax/load_school_homepage" in request.path:
-        return True
-    return False
 
 
 def check_login(request):
@@ -136,15 +127,17 @@ def getModelData(user):
     school_list = []
     department_list = []
     try:
-        # if not user.is_anonymous:
+
         user_request_instance = UserRequest.objects.get(user=user)
         selected_school = user_request_instance.school
         selected_department = user_request_instance.department
 
+        # When user selected preference school show all departments in that school
+        new_department_set=Department.objects.filter(school=selected_school)
         for s in school_set:
             if not s == selected_school:
                 school_list.append(s)
-        for d in department_set:
+        for d in new_department_set:
             if not d == selected_department:
                 department_list.append(d)
 
@@ -157,6 +150,7 @@ def getModelData(user):
     #         department_list.append(d)
     except Exception:
         for s in school_set:
+            print(s)
             school_list.append(s)
         for d in department_set:
             department_list.append(d)
@@ -290,18 +284,6 @@ def user_service(request):
                 req.interests.clear()
                 req.days.clear()
 
-                # match_his = UserRequestMatch.objects.filter(Q(user1=req.user) | Q(user2=req.user)).order_by(
-                #     "-match_time")
-                # print(match_his[0])
-
-                # available_weekday=[]
-                # for i in req.days.all():
-                #     available_weekday.append(i.id)
-                # for d in range(0,7):
-                #    next_availabe_day=date.today()+timedelta(days=d)
-                #    if next_availabe_day.weekday() in available_weekday:
-                #        break
-                # print(next_availabe_day)
 
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
