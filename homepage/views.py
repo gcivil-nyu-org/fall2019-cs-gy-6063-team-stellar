@@ -576,6 +576,11 @@ def about(request):
     return redirect("/login/")
 
 
+def error_404_view(request, exception):
+    context = {"message": "We could not find the page"}
+    return render(request, "error.html", context=context)
+
+
 # def test(request):
 #     return render(request, "test.html")
 

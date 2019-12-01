@@ -17,3 +17,5 @@ urlpatterns = [
     re_path(r"^[a-zA-Z]*/ajax/load_departments_homepage/$", views.handle_ajax),
     re_path(r"^[a-zA-Z]*/ajax/load_school_homepage/$", views.handle_ajax),
 ]
+
+handler404 = "homepage.views.error_404_view"
