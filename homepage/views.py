@@ -79,7 +79,7 @@ def check_ajax_school(request):
 
 
 def check_login(request):
-    if request.session.get("is_login", None):
+    if request.session.get("is_login", None) and not request.user.is_anonymous:
         return True
     else:
         return False
@@ -224,7 +224,7 @@ def get_selected_data(user):
 
 
 def index(request):
-    if check_login(request) and not request.user.is_anonymous:  # no repeat log in
+    if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
         return render(
