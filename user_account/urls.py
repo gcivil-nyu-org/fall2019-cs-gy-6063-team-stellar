@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from . import views
 
 
@@ -17,4 +17,5 @@ urlpatterns = [
     re_path(r"^ajax/load_school/$", views.handle_ajax),
     re_path(r"^signup/ajax/load_departments/$", views.handle_ajax),
     re_path(r"^signup/ajax/load_school/$", views.handle_ajax),
+    url("^", include("django.contrib.auth.urls")),
 ]
