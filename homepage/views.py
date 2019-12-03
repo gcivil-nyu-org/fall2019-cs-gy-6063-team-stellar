@@ -80,7 +80,7 @@ def check_ajax_school(request):
 
 
 def check_login(request):
-    if request.session.get("is_login", None):
+    if request.session.get("is_login", None) and not request.user.is_anonymous:
         return True
     else:
         return False
@@ -330,11 +330,6 @@ def user_service(request):
                 req.interests.add(*interests_objects)
                 req.days.add(*selected_days_objects)
 
-                # days = Days_left(user=logged_user, days=Service_days[req.service_type])
-                # days.save()
-
-            # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
-            # daysleft.save()
             User_service_send_email_authenticated(
                 request,
                 service_type,
@@ -344,12 +339,6 @@ def user_service(request):
                 school,
                 department,
             )
-        # else:
-        #     email_subject = "Service Confirmation"
-        #     message = "Service selected"
-        #     to_email = request.user.email
-        #     email = EmailMessage(email_subject, message, to=[to_email])
-        #     email.send()
         return redirect("/")
 
     else:
