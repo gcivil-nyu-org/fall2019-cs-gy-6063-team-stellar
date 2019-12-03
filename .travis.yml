@@ -1,11 +1,14 @@
+language: python
+
+python:
+  - "3.7"
+
 env:
   - DJANGO_VERSION=2.2.5
-  
-language: python
 
 install:
   # Get all of the dependencies you need
-  - pip install --upgrade pip
+  - pip install -q Django==$DJANGO_VERSION
   - pip install -r requirements.txt
 
 before_script:
@@ -21,6 +24,7 @@ before_script:
   - black .
 
 
+
 script:
   # Execute all of the commands which
   # should make the build pass or fail
@@ -31,6 +35,4 @@ script:
 
 after_script:
   - coveralls
-
-
 
