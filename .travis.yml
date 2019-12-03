@@ -9,7 +9,6 @@ env:
 install:
   # Get all of the dependencies you need
   - pip install -q Django==$DJANGO_VERSION
-  - python setup.py -q install
   - pip install -r requirements.txt
 
 before_script:
