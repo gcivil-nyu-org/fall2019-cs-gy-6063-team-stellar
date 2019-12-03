@@ -2,7 +2,6 @@ from django.conf.urls import url
 from django.urls import path, re_path, include
 from . import views
 
-
 urlpatterns = [
     url(r"^$", views.userlogin, name="login_user"),
     url(
@@ -19,3 +18,5 @@ urlpatterns = [
     re_path(r"^signup/ajax/load_school/$", views.handle_ajax),
     url("^", include("django.contrib.auth.urls")),
 ]
+
+handler404 = "homepage.views.error_404_view"
