@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+import base64
 
 
 from .models import (
@@ -71,7 +72,7 @@ def merge():
 
 
 def check_login(request):
-    if request.session.get("is_login", None):
+    if request.session.get("is_login", None) and not request.user.is_anonymous:
         return True
     else:
         return False
@@ -315,11 +316,6 @@ def user_service(request):
                 req.interests.add(*interests_objects)
                 req.days.add(*selected_days_objects)
 
-                # days = Days_left(user=logged_user, days=Service_days[req.service_type])
-                # days.save()
-
-            # daysleft = Days_left(user=logged_user, days=Service_days[service_type])
-            # daysleft.save()
             User_service_send_email_authenticated(
                 request,
                 service_type,
@@ -329,12 +325,6 @@ def user_service(request):
                 school,
                 department,
             )
-        # else:
-        #     email_subject = "Service Confirmation"
-        #     message = "Service selected"
-        #     to_email = request.user.email
-        #     email = EmailMessage(email_subject, message, to=[to_email])
-        #     email.send()
         return redirect("/")
 
     else:
@@ -476,8 +466,24 @@ def settings(request):
 
 
 def feedback(request):
+    if len(request.META.get("PATH_INFO").split("/")) != 3:
+        context = {"message": "We could not find a match history for you"}
+        return render(request, "error.html", context=context)
+    raw1 = request.META.get("PATH_INFO").split("/")[-1]
+    if len(raw1.split("'")) < 2:
+        context = {"message": "We could not find a match history for you"}
+        return render(request, "error.html", context=context)
+    raw2 = raw1.split("'")[1]
+    try:
+        pair = str(base64.b64decode(bytes(raw2.encode())))[1:]
+    except ValueError:
+        context = {"message": "We could not find a match history for you"}
+        return render(request, "error.html", context=context)
+    matchpair = pair.split("'")[1]
+    data = matchpair.split("-")
+    print(matchpair)
     if request.method == "POST":
-        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        # data = request.META.get("PATH_INFO")[1:].split("/")[-1].split("-")
         match_id = int(data[0])
         user_id = int(data[1])
         match = UserRequestMatch.objects.get(id=match_id)
@@ -504,7 +510,7 @@ def feedback(request):
         fb.choices.add(c4)
         return redirect("/homepage/")
     else:
-        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        # data = request.META.get("PATH_INFO").split("/")[-1].split("-")
         if not len(data) == 2:
             context = {"message": "We could not find a match history for you"}
             return render(request, "error.html", context=context)
@@ -543,6 +549,11 @@ def about(request):
             request, "about.html", Merge({}, preference_model_data, selected_info)
         )
     return redirect("/login/")
+
+
+def error_404_view(request, exception):
+    context = {"message": "We could not find the page"}
+    return render(request, "error.html", context=context)
 
 
 # def test(request):

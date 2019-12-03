@@ -22,3 +22,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("captcha/", include("captcha.urls")),
 ]
+
+handler404 = "homepage.views.error_404_view"

@@ -753,11 +753,11 @@ class FeedbackViewTest(TestCase):
             "partner": 1,
             "comment": " hahaha",
         }
-        response = self.client.post("/feedback/2-3", service_type_Obj)
+        response = self.client.post("/feedback/b'Mi0z'", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 
     def test_not_matched_feedback_(self):
-        response = self.client.get("/feedback/2-3")
+        response = self.client.get("/feedback/b'Mi0z'")
         self.assertEqual(response.status_code, 200)
 
     def test_incorrect_get_feedback_link(self):
