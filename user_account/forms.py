@@ -8,7 +8,7 @@ def creat_school_tuple():
 
     read_school = School.objects.all()
     schoollist = []
-    # read_school = retrieveschool()
+
     schoollist.append(("select school", "select school"))
     for s in read_school:
         schoollist.append((s.name, s.name))
@@ -19,7 +19,7 @@ def creat_department_tuple():
     read_department = Department.objects.all()
 
     departmentlist = []
-    # read_department = retrievedepartment()
+
     departmentlist.append(("select department", "select department"))
     for d in read_department:
         departmentlist.append((d.name, d.name))
@@ -29,8 +29,7 @@ def creat_department_tuple():
 class UserSignUpForm(UserCreationForm):
     SchoolChoice = creat_school_tuple()
     DepartmentChoice = creat_department_tuple()
-    # SchoolChoice =((),())
-    # DepartmentChoice = ((),())
+
     username = forms.CharField(
         label="username",
         max_length=128,
@@ -115,7 +114,7 @@ class UserSignUpForm(UserCreationForm):
 
     def clean_school(self):
 
-        # valid phone numbers US number only
+        # valid school
 
         try:
             data = self.cleaned_data["school"]
@@ -126,9 +125,9 @@ class UserSignUpForm(UserCreationForm):
             raise forms.ValidationError("Please select School")
         return data
 
-    def clean_separtment(self):
+    def clean_department(self):
 
-        # valid phone numbers US number only
+        # valid department
 
         try:
             data = self.cleaned_data["department"]

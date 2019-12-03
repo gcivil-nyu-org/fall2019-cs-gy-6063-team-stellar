@@ -34,7 +34,8 @@ from collections import Counter
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
-
+def get_user(request):
+    return request.user
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
@@ -67,16 +68,7 @@ def merge():
     return school, department, school_department, department_school
 
 
-def check_ajax_department(request):
-    if request.method == "GET" and "/ajax/load_departments_homepage" in request.path:
-        return True
-    return False
 
-
-def check_ajax_school(request):
-    if request.method == "GET" and "/ajax/load_school_homepage" in request.path:
-        return True
-    return False
 
 
 def check_login(request):
@@ -106,7 +98,7 @@ def User_service_send_email_authenticated(
     message = render_to_string(
         "service_confirmation.html",
         {
-            "user": request.user.first_name,
+            "user": get_user(request).first_name,
             "service_type": service_type,
             "cuisines_selected": cuisine_names,
             "selected_interests": interests_names,
@@ -115,7 +107,7 @@ def User_service_send_email_authenticated(
             "department": department,
         },
     )
-    to_email = request.user.email
+    to_email = get_user(request).email
     email = EmailMessage(email_subject, message, to=[to_email])
     email.send()
 
@@ -137,15 +129,20 @@ def getModelData(user):
     school_list = []
     department_list = []
     try:
-        # if not user.is_anonymous:
+
         user_request_instance = UserRequest.objects.get(user=user)
+        # print(user_request_instance)
         selected_school = user_request_instance.school
         selected_department = user_request_instance.department
+
+
+        # When user selected preference school show all departments in that school
+        new_department_set=Department.objects.filter(school=selected_school)
 
         for s in school_set:
             if not s == selected_school:
                 school_list.append(s)
-        for d in department_set:
+        for d in new_department_set:
             if not d == selected_department:
                 department_list.append(d)
 
@@ -278,6 +275,7 @@ def user_service(request):
             selected_days_names = ", ".join([day.day for day in selected_days_objects])
 
             logged_user = request.user
+
             # if request already exist then update the request otherwise update it
             try:
                 req = UserRequest.objects.get(pk=logged_user)
@@ -291,18 +289,6 @@ def user_service(request):
                 req.interests.clear()
                 req.days.clear()
 
-                # match_his = UserRequestMatch.objects.filter(Q(user1=req.user) | Q(user2=req.user)).order_by(
-                #     "-match_time")
-                # print(match_his[0])
-
-                # available_weekday=[]
-                # for i in req.days.all():
-                #     available_weekday.append(i.id)
-                # for d in range(0,7):
-                #    next_availabe_day=date.today()+timedelta(days=d)
-                #    if next_availabe_day.weekday() in available_weekday:
-                #        break
-                # print(next_availabe_day)
 
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()

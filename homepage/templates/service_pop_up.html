@@ -29,8 +29,8 @@
                                {% endif %}
                                {% if selected_type  == "Monthly"  %}
                                   <option>Daily</option>
-                                  <option selected>Weekly</option>
-                                  <option>Monthly</option>
+                                  <option >Weekly</option>
+                                  <option selected>Monthly</optionselected>
                                {% endif %}
                            </select> 
                         </div>
@@ -80,6 +80,7 @@
                             <div class="col-md-6">
                                  Select preferred school:
                                  <select class="form-control" type="text" id="schoolSelect" name="schoolSelect" placehoder="{{ school.name }}" >
+                                    <option selected="selected" value="{{ selected_school.name }}" name="{{ selected_school.name }}"> {{ selected_school.name }} </option>
                                     {% for school in schools %}
                                           <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
                                     {% endfor %}
