@@ -368,13 +368,11 @@ def send_invitations(userRequest, userMatch):
     restaurants1, restaurants2 = recommend_restaurants(
         userRequest[0].user, userRequest[1].user, commonCuisines
     )
-    print("restaurants1 is")
-    print(restaurants1)
 
     CRLF = "\r\n"
-    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
-    organizer = "ORGANIZER;CN=Lunch Ninja:mailto:teamstellarse@outlook.com"
-    # organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"ca
+    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@gmail.com"
+    # organizer = "ORGANIZER;CN=Lunch Ninja:mailto:teamstellarse@outlook.com"
+    organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"
 
     dur = datetime.timedelta(hours=1)
 
@@ -400,9 +398,7 @@ def send_invitations(userRequest, userMatch):
     attendee = ""
     for att in attendees:
         attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;"
-            + CRLF
-            + "RSVP=TRUE;"
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;"
             + "CN="
             + att
             + ";X-NUM-GUESTS=0:"
@@ -453,7 +449,7 @@ def send_invitations(userRequest, userMatch):
         + CRLF
         + "SEQUENCE:0"
         + CRLF
-        + "STATUS:TENTATIVE"
+        + "STATUS:CONFIRMED"
         + CRLF
     )
     ical += (
@@ -632,7 +628,6 @@ def find_match_user(available_set):
 
 
 today = datetime.date.today() + datetime.timedelta(days=1)
-
 
 def get_matchpool():
     matchpool = set()
