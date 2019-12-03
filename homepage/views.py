@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+import base64
 
 
 from .models import (
@@ -490,8 +491,24 @@ def settings(request):
 
 
 def feedback(request):
+    if len(request.META.get("PATH_INFO").split("/")) != 3:
+        context = {"message": "We could not find a match history for you"}
+        return render(request, "error.html", context=context)
+    raw1 = request.META.get("PATH_INFO").split("/")[-1]
+    if len(raw1.split("'")) < 2:
+        context = {"message": "We could not find a match history for you"}
+        return render(request, "error.html", context=context)
+    raw2 = raw1.split("'")[1]
+    try:
+        pair = str(base64.b64decode(bytes(raw2.encode())))[1:]
+    except ValueError:
+        context = {"message": "We could not find a match history for you"}
+        return render(request, "error.html", context=context)
+    matchpair = pair.split("'")[1]
+    data = matchpair.split("-")
+    print(matchpair)
     if request.method == "POST":
-        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        # data = request.META.get("PATH_INFO")[1:].split("/")[-1].split("-")
         match_id = int(data[0])
         user_id = int(data[1])
         match = UserRequestMatch.objects.get(id=match_id)
@@ -518,7 +535,7 @@ def feedback(request):
         fb.choices.add(c4)
         return redirect("/homepage/")
     else:
-        data = request.META.get("PATH_INFO").split("/")[-1].split("-")
+        # data = request.META.get("PATH_INFO").split("/")[-1].split("-")
         if not len(data) == 2:
             context = {"message": "We could not find a match history for you"}
             return render(request, "error.html", context=context)
@@ -557,6 +574,11 @@ def about(request):
             request, "about.html", Merge({}, preference_model_data, selected_info)
         )
     return redirect("/login/")
+
+
+def error_404_view(request, exception):
+    context = {"message": "We could not find the page"}
+    return render(request, "error.html", context=context)
 
 
 # def test(request):
