@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import django_heroku
+#import django_heroku
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,9 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "k@d#ygg4htxk_illoz_68#9znhi(%k2l_^hadld236cdw%7&4^"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','lunch-ninja.herokuapp.com','127.0.0.1']
 
 
 # Application definition
@@ -134,7 +134,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = False
 
 # extension user
 AUTH_USER_MODEL = "user_account.LunchNinjaUser"
@@ -162,4 +161,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "teamstellarse@gmail.com"
 EMAIL_HOST_PASSWORD = "Stellar123!"
 
-django_heroku.settings(locals(), test_runner=False)
+#django_heroku.settings(locals(), test_runner=False)
