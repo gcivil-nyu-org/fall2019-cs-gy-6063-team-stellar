@@ -1,5 +1,8 @@
 language: python
 
+env:
+  - DJANGO=2.2.5
+
 install:
   # Get all of the dependencies you need
   - pip install -r requirements.txt
