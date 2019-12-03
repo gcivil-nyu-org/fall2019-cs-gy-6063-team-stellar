@@ -9,3 +9,4 @@ coveralls
 Faker
 numpy
 django-background-tasks
+six
