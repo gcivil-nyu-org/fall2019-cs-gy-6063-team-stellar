@@ -47,7 +47,7 @@
                      <div class="form-top-left">
                         <h4>Step 1 of 5</h4>
                         <div class="dropdown col-md-6 center-page">
-                           Select preferred type of service:
+                        Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
                                {% if selected_type  == "Daily"  %}
                                   <option selected>Daily</option>
@@ -107,9 +107,8 @@
                      <br><br>
 
                      <h4>Step 3 of 5</h4>
-                        <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
-
                         <div class="col-md-6 center-page">
+                        <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
                               {% for selected in selected_cuisine %}
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
@@ -125,9 +124,8 @@
                         <br><br>
 
                      <h4>Step 4 of 5</h4>
-                        <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
-
                         <div class="col-md-6 center-page">
+                        <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
                            <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
                                {% for selected in selected_interest %}
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
@@ -143,9 +141,8 @@
 
 
                      <h4>Step 5 of 5</h4>
-                        <p>Select preferred priority of each preference selected:</p>
+                     <p>Select preferred priority of each preference selected:</p>
                         <div class="col-md-6 center-page">
-
                            <div class="range-slider" id="department_slider" >
                               Select priority for school/department:
                               <input class="range-slider__range" id="department_slider_range" type="range" value="{{ selected_department_priority }}" min="1" max="10" step="1">
@@ -169,10 +166,10 @@
                      <br>
                   </div>
                </fieldset>
-                <div class="center-page">
+                <div class="center-page" style="text-align: center">
                     <button type="submit" class="btn btn-warning">Submit</button>
                 </div>
-
+                <br>
             </form>
     </div>
 </body>
