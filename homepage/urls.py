@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns = [
     path("homepage/", views.index),
-    path("serviceRequest/", views.user_service),
+    # path("serviceRequest/", views.user_service),
+    path("service/", views.service),
     path("matchHistory/", views.match_history),
     # path("homepage/test/", views.test),
     path("settings/", views.settings),
@@ -17,3 +18,5 @@ urlpatterns = [
     re_path(r"^[a-zA-Z]*/ajax/load_departments_homepage/$", views.handle_ajax),
     re_path(r"^[a-zA-Z]*/ajax/load_school_homepage/$", views.handle_ajax),
 ]
+
+handler404 = "homepage.views.error_404_view"

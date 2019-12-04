@@ -126,6 +126,7 @@ def userlogin(request):
         username = login_form.cleaned_data.get("username")
         password = login_form.cleaned_data.get("password")
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
             request.session["is_login"] = True

@@ -1,0 +1,196 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Lunch Ninja</title>
+	<!-- Custom fonts for this template -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+	<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+	<!-- Custom styles for this template -->
+	<link href="{% static 'css/agency.css'%}" rel="stylesheet">
+	<!-- Bootstrap and Jquery CSS and JS-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style type="text/css">
+            .btn {
+        border: none;
+        color: black;
+        padding: 14px 28px;
+        font-size: 16px;
+        cursor: pointer;
+        }
+
+        .warning {background-color: #ff9800;} /* Orange */
+        .warning:hover {background: #e68a00;}
+    </style>
+    <link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006288/BBBootstrap/choices.min.css?version=7.0.0">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
+</head>
+
+<body id="page-top">
+
+	<!-- Navigation -->
+	{% include "nav_bar.html" %}
+    <div class="container">
+    <form role="form" id="service_select_form" class="registration-form">
+               {% csrf_token %}
+                <br>
+               <fieldset style="display: block;">
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <h4>Step 1 of 5</h4>
+                        <div class="dropdown col-md-6 center-page">
+                        Select preferred type of service:
+                           <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
+                               {% if selected_type  == "Daily"  %}
+                                  <option selected>Daily</option>
+                                  <option>Weekly</option>
+                                  <option>Monthly</option>
+                               {% endif %}
+                               {% if selected_type  == "Weekly"  %}
+                                  <option>Daily</option>
+                                  <option selected>Weekly</option>
+                                  <option>Monthly</option>
+                               {% endif %}
+                               {% if selected_type  == "Monthly"  %}
+                                  <option>Daily</option>
+                                  <option >Weekly</option>
+                                  <option selected>Monthly</optionselected>
+                               {% endif %}
+                           </select>
+                        </div>
+                        <div id="daysSelectContainer" class="col-md-6 center-page" name={{selected_type}}>
+                           <br>
+                           Select preferred day(if any):
+                           <select id="daysSelect" placeholder="Select preferred days" multiple>
+                              {% for days in week_days %}
+                                  {% if days in selected_days %}
+                                      <option selected="selected" value="{{ days.id }}" name="{{ days.day }}"> {{  days.day }} </option>
+                                    {% else %}
+                                      <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
+                                  {% endif %}
+                              {% endfor %}
+                           </select>
+                        </div>
+                        <br><br>
+
+                        <h4>Step 2 of 5</h4>
+                        <div class="dropdown">
+                            <div class="col-md-6 center-page">
+                                 Select preferred school:
+                                 <select class="form-control" type="text" id="schoolSelect" name="schoolSelect" placehoder="{{ school.name }}" >
+                                    <option selected="selected" value="{{ selected_school.name }}" name="{{ selected_school.name }}"> {{ selected_school.name }} </option>
+                                    {% for school in schools %}
+                                          <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
+                                    {% endfor %}
+                                 </select>
+                            </div>
+                            <br>
+                            <div class="col-md-6 center-page">
+                                 Select preferred department:
+                                 <select class="form-control" type="text" id="departmentSelect" name="departmentSelect" >
+                                     <option selected="selected" value="{{ selected_department.name }}" name="{{ selected_department.name }}"> {{ selected_department.name }} </option>
+
+                                    {% for department in departments %}
+                                        <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
+                                    {% endfor %}
+                                 </select>
+                            </div>
+                        </div>
+                     <br><br>
+
+                     <h4>Step 3 of 5</h4>
+                        <div class="col-md-6 center-page">
+                        <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
+                           <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
+                              {% for selected in selected_cuisine %}
+                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
+                              {% endfor %}
+                              {% for cuisine in cuisines %}
+                                    {% if not cuisine in selected_cuisine %}
+                                      <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>
+                                    {% endif %}
+                              {% endfor %}
+
+                           </select>
+                        </div>
+                        <br><br>
+
+                     <h4>Step 4 of 5</h4>
+                        <div class="col-md-6 center-page">
+                        <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
+                           <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
+                               {% for selected in selected_interest %}
+                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
+                              {% endfor %}
+                              {% for interest in interests %}
+                                  {% if not interest in selected_interest %}
+                                    <option value="{{ interest.id }}" name="{{ interest.name }}">{{ interest.name }}</option>
+                                  {% endif %}
+                              {% endfor %}
+                           </select>
+                        </div>
+                        <br><br>
+
+
+                     <h4>Step 5 of 5</h4>
+                     <p>Select preferred priority of each preference selected:</p>
+                        <div class="col-md-6 center-page">
+                           <div class="range-slider" id="department_slider" >
+                              Select priority for school/department:
+                              <input class="range-slider__range" id="department_slider_range" type="range" value="{{ selected_department_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="department_slider_value" >{{ selected_department_priority }}</span>
+                           </div>
+                           <br>
+                           <div class="range-slider" id="cuisine_slider" >
+                              Select priority for cuisines:
+                              <input class="range-slider__range" id="cuisine_slider_range" type="range" value="{{ selected_cuisine_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="cuisine_slider_value">{{ selected_cuisine_priority }}</span>
+                           </div>
+                           <br>
+                           <div class="range-slider" id="interest_slider" >
+                              Select priority for conversation interests:
+                              <input class="range-slider__range" id="interest_slider_range" type="range" value="{{ selected_interest_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="interest_slider_value">{{ selected_interest_priority }}</span>
+                           </div>
+                        </div>
+                        <br>
+                     </div>
+                     <br>
+                  </div>
+               </fieldset>
+                <div class="center-page" style="text-align: center">
+                    <button type="submit" class="btn btn-warning">Submit</button>
+                </div>
+                <br>
+            </form>
+    </div>
+</body>
+
+<div id="overlay" style="display:none">
+    <div class="spinner"></div>
+    <br/>
+    Loading...
+</div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/multiselect/2.2.9/js/multiselect.min.js"></script>
+    <script type="text/javascript">
+	var top_cuisines = {{top_cuisines}}
+   var top_interests = {{top_interests}}
+    var service_status = {{ service_status }}
+    </script>
+    <script type="text/javascript" src="{% static 'js/service.js' %}"></script>
+
+</html>
+
+
+

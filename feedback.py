@@ -4,9 +4,8 @@ from django.core.mail import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
-from datetime import date
-
-# , timedelta
+from datetime import date, timedelta
+import base64
 
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
@@ -30,9 +29,7 @@ def compose_email(user1, user2, match):
         + "http://lunch-ninja.herokuapp.com/"
         + "feedback"
         + "/"
-        + str(match.id)
-        + "-"
-        + str(user1.id)
+        + str(base64.b64encode(("%s-%s" % (str(match.id), str(user1.id))).encode()))
         # + " <button href\"http://127.0.0.1:8000/feedback\" class=\"btn btn-warning\">Take the survey</button><br>"
         + "<br><br>"
         + "Best,<br>"
@@ -64,10 +61,7 @@ def send_email(html_content, attendee):
 
 
 def prepare_feedback():
-    # tomorrow = date.today() + timedelta(days=1)
-    # Change feedback sending day to today for SE testing day
-    tomorrow = date.today()
-    # (tz=timezone.get_current_timezone()) + timedelta(1)
+    tomorrow = date.today() + timedelta(days=1)
     print(tomorrow)
     # yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
     # matches = UserRequestMatch.objects.filer(match_time = yesterday)
@@ -85,3 +79,4 @@ def prepare_feedback():
 
 
 prepare_feedback()
+# print(base64.b64encode(("2-3").encode()))
