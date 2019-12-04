@@ -71,6 +71,7 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertFalse(form.is_valid())
+
     def test_school_not_selected(self):
         data = {
             "username": "testUser",
@@ -114,6 +115,7 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertFalse(form.is_valid())
+
     def test_department_not_selected(self):
         data = {
             "username": "testUser",
@@ -143,6 +145,7 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertFalse(form.is_valid())
+
     def test_phonelength_not_valid(self):
         data = {
             "username": "testUser",
@@ -157,8 +160,6 @@ class UserSignUpFormTest(TestCase):
         }
         form = UserSignUpForm(data=data)
         self.assertFalse(form.is_valid())
-
-
 
 
 class UserSignInFormTest(TestCase):

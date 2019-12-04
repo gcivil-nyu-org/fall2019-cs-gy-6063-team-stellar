@@ -34,8 +34,11 @@ from collections import Counter
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
+
 def get_user(request):
     return request.user
+
+
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
@@ -66,9 +69,6 @@ def merge():
     school_department["select school"] = department
 
     return school, department, school_department, department_school
-
-
-
 
 
 def check_login(request):
@@ -135,9 +135,8 @@ def getModelData(user):
         selected_school = user_request_instance.school
         selected_department = user_request_instance.department
 
-
         # When user selected preference school show all departments in that school
-        new_department_set=Department.objects.filter(school=selected_school)
+        new_department_set = Department.objects.filter(school=selected_school)
 
         for s in school_set:
             if not s == selected_school:
@@ -289,7 +288,6 @@ def user_service(request):
                 req.interests.clear()
                 req.days.clear()
 
-
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
                 req.save()
@@ -391,6 +389,16 @@ def match_history(request):
 
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
+
+        preference_selected_status = 0
+        if UserRequest.objects.filter(user=request.user).exists():
+            preference_selected_status = 1
+
+        next_lunch_status = 0
+        if len(next_lunch_matches) == 1 and preference_selected_status == 1:
+            if UserRequest.objects.get(user=request.user).service_status:
+                next_lunch_status = 1
+
         return render(
             request,
             "match_history.html",
@@ -398,6 +406,8 @@ def match_history(request):
                 {
                     "next_lunch_matches": next_lunch_matches,
                     "past_lunch_macthes": past_lunch_macthes,
+                    "preference_selected_status": preference_selected_status,
+                    "next_lunch_status": next_lunch_status,
                 },
                 preference_model_data,
                 selected_info,
