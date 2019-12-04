@@ -27,7 +27,7 @@
 	<div class="container">
 		<br>
 		<h3 id="active_service_header">Active Service</h3>
-		<a id="change_service_button" type="button" class="btn btn-warning" data-toggle="modal"  data-target="#myModal1" href="#myModal1">Change Service Preferences</a>
+{#		<a id="change_service_button" type="button" class="btn btn-warning" data-toggle="modal"  data-target="#myModal1" href="#myModal1">Change Service Preferences</a>#}
 		{% if user_request%}
 			<table id="service_table" class="table">
 				<thead>
@@ -126,9 +126,6 @@
 			</table>
 	</div>
 
-	<!-- Pop-up models -->
-	{% include "service_pop_up.html" %}
-	
 	<!-- Footer -->
 	{% comment %} {% include "footer.html" %} {% endcomment %}
 </body>

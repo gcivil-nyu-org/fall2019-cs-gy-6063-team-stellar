@@ -9,8 +9,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("user_account", "__first__"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ("user_account", "__first__"),
     ]
 
     operations = [

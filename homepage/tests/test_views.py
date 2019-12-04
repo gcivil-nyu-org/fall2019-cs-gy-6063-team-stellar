@@ -121,7 +121,7 @@ class UserserviceViewTest(TestCase):
                 "mail": "2345@nyu.edu",
             },
         }
-        response = self.client.post("/serviceRequest/", service_type_Obj)
+        response = self.client.post("/service/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 
     def User_request_Obj_raise_error(**kargs):
@@ -235,7 +235,7 @@ class UserserviceViewTest(TestCase):
             "department": "Computer Science",
             "user": {"first_name": "donald", "last_name": "trump"},
         }
-        response = self.client.post("/serviceRequest/", service_type_Obj)
+        response = self.client.post("/service/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 
     def test_view_url_exists_at_desired_location(self):
@@ -255,8 +255,8 @@ class UserserviceViewTest(TestCase):
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     def test_not_post(self):
-        response = self.client.get("/serviceRequest/")
-        self.assertEqual(response.status_code, 302)
+        response = self.client.get("/service/")
+        self.assertEqual(response.status_code, 200)
 
 
 class IndexViewTest(TestCase):

@@ -16,6 +16,7 @@
                         <div class="dropdown col-md-12" >
                            Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
+
                                {% if selected_type  == "Daily"  %}
                                   <option selected>Daily</option>
                                   <option>Weekly</option>
@@ -31,7 +32,7 @@
                                   <option >Weekly</option>
                                   <option selected>Monthly</optionselected>
                                {% endif %}
-                           </select> 
+                           </select>
                         </div>
                          <div id="daysSelectContainer" class="col-md-12" name={{selected_type}}>
                            <br>
@@ -44,7 +45,7 @@
                                       <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
                                   {% endif %}
                               {% endfor %}
-                           </select> 
+                           </select>
                         </div>
                      </div>
                      <br>
@@ -83,7 +84,7 @@
                                     {% for school in schools %}
                                           <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
                                     {% endfor %}
-                                 </select> 
+                                 </select>
                             </div>
                             <div class="col-md-6">
                                  Select preferred department:
@@ -93,7 +94,7 @@
                                     {% for department in departments %}
                                         <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
                                     {% endfor %}
-                                 </select> 
+                                 </select>
                             </div>
                         </div>
                      </div>
@@ -128,8 +129,8 @@
                      <div class="form-top-left">
                         <h4>Step 3 of 5</h4>
                         <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
-                                      
-                        <div class="col-md-12"> 
+
+                        <div class="col-md-12">
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
                               {% for selected in selected_cuisine %}
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
@@ -140,7 +141,7 @@
                                     {% endif %}
                               {% endfor %}
 
-                           </select> 
+                           </select>
                         </div>
                         <br>
                      </div>
@@ -175,8 +176,8 @@
                      <div class="form-top-left">
                         <h4>Step 4 of 5</h4>
                         <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
-                        
-                        <div class="col-md-12"> 
+
+                        <div class="col-md-12">
                            <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
                                {% for selected in selected_interest %}
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
@@ -186,7 +187,7 @@
                                     <option value="{{ interest.id }}" name="{{ interest.name }}">{{ interest.name }}</option>
                                   {% endif %}
                               {% endfor %}
-                           </select> 
+                           </select>
                         </div>
                         <br>
 
@@ -223,8 +224,8 @@
                      <div class="form-top-left">
                         <h4>Step 5 of 5</h4>
                         <p>Select preferred priority of each preference selected:</p>
-                        <div class="col-md-8"> 
-                           
+                        <div class="col-md-8">
+
                            <div class="range-slider" id="department_slider" >
                               Select priority for school/department:
                               <input class="range-slider__range" id="department_slider_range" type="range" value="{{ selected_department_priority }}" min="1" max="10" step="1">
@@ -272,5 +273,4 @@
 <script type="text/javascript">
 	var top_cuisines = {{top_cuisines}}
    var top_interests = {{top_interests}}
-    var service_status = {{ service_status }}
 </script>
