@@ -117,6 +117,7 @@ class UserserviceViewTest(TestCase):
         response = self.client.post("/serviceRequest/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 
+
     def User_request_Obj_raise_error(**kargs):
         class cuisine_for_mock:
             def __init__(self):
@@ -762,6 +763,10 @@ class FeedbackViewTest(TestCase):
 
     def test_incorrect_get_feedback_link(self):
         response = self.client.get("/feedback/2-3-4")
+        self.assertEqual(response.status_code, 200)
+
+    def test_incorrect_get_feedback_link2(self):
+        response = self.client.get("/feedback/2-3-4/3232")
         self.assertEqual(response.status_code, 200)
 
     def mock_match_history_filter(id):
