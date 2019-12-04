@@ -505,6 +505,16 @@ def match_history(request):
 
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
+        user = get_user(request)
+        preference_selected_status = 0
+        if UserRequest.objects.filter(user=user).exists():
+            preference_selected_status = 1
+
+        next_lunch_status = 0
+        if len(next_lunch_matches) == 1 and preference_selected_status == 1:
+            if UserRequest.objects.get(user=user).service_status:
+                next_lunch_status = 1
+
         return render(
             request,
             "match_history.html",
@@ -512,6 +522,8 @@ def match_history(request):
                 {
                     "next_lunch_matches": next_lunch_matches,
                     "past_lunch_macthes": past_lunch_macthes,
+                    "preference_selected_status": preference_selected_status,
+                    "next_lunch_status": next_lunch_status,
                 },
                 preference_model_data,
                 selected_info,
