@@ -34,8 +34,11 @@ from collections import Counter
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
+
 def get_user(request):
     return request.user
+
+
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
@@ -66,9 +69,6 @@ def merge():
     school_department["select school"] = department
 
     return school, department, school_department, department_school
-
-
-
 
 
 def check_login(request):
@@ -135,9 +135,8 @@ def getModelData(user):
         selected_school = user_request_instance.school
         selected_department = user_request_instance.department
 
-
         # When user selected preference school show all departments in that school
-        new_department_set=Department.objects.filter(school=selected_school)
+        new_department_set = Department.objects.filter(school=selected_school)
 
         for s in school_set:
             if not s == selected_school:
@@ -288,7 +287,6 @@ def user_service(request):
                 req.cuisines.clear()
                 req.interests.clear()
                 req.days.clear()
-
 
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
