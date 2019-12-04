@@ -49,6 +49,49 @@ def deg2rad(deg):
     return deg * (math.pi / 180)
 
 
+# send_unmatch_email send emails to user that did not get matched
+def send_unmatch_email(userrequest):
+    user = LunchNinjaUser.objects.get(id=userrequest.user_id)
+    html_content = (
+        "<p>Hi "
+        + user.first_name
+        + ",</p>"
+        + "Thank you for using Lunch Ninja!<br><br>"
+        + "We are working on finding a perfect match for you, but we could not find a match based on your service selection at this time.<br>"  # noqa: E501
+        + "We will try again in next match cycle. You can update your preferences "
+        + "<a href='"
+        + "http://lunch-ninja.herokuapp.com/settings/"
+        + "'>"
+        + "here"
+        + "</a>."
+        + "<br><br>"
+        + "Best,<br>"
+        + "LunchNinja"
+    )
+    html_content = html_content + '<p><img src="cid:myimage3" /></p>'
+    img_data = open("homepage/static/img/sad_cat.jpg", "rb").read()
+    html_part = MIMEMultipart(_subtype="related")
+    # body = MIMEText('<p>Hello <img src="cid:myimage" /></p>', _subtype='html')
+    body = MIMEText(html_content, _subtype="html")
+    html_part.attach(body)
+    # Now create the MIME container for the image
+    img = MIMEImage(img_data, "jpg")
+    img.add_header("Content-Id", "<myimage3>")  # angle brackets are important
+    img.add_header("Content-Disposition", "inline", filename="myimage3")
+    html_part.attach(img)
+    msg = EmailMessage(
+        "Sorry, we could not find a match",
+        None,
+        "teamstellarse@gmail.com",
+        [user.email],
+    )
+    msg.attach(
+        html_part
+    )  # Attach the raw MIMEBase descendant. This is a public method on EmailMessage
+    print("sending out unmatched email")
+    msg.send()
+
+
 def recommend_restaurants(user1, user2, cuisinelist):
     school1 = School.objects.get(name=user1.school)
     school2 = School.objects.get(name=user2.school)
@@ -172,6 +215,17 @@ def compose_email(
             + "<p><b> Common interests: </b> You don't have any common interests.</p>"
         )
 
+    html_content = (
+        html_content
+        + "<br><h3><b> Restaurant recommendations(Based on your common cuisines, location and NYC health department inspections report)</h3>"
+        + "<p> NYU offers a wide variety of dining options on campus. To check it out, click "
+        + "<a href='"
+        + "https://www.nyu.edu/students/student-information-and-resources/housing-and-dining/dining/locations-and-menus.html"
+        + "'>"
+        + "NYU On-campus Dining"
+        + "</a></p><br>"
+    )
+
     # Add restaurant near school1
     if not len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
@@ -216,8 +270,10 @@ def compose_email(
                     html_content = html_content + "<div>" + link_short + "</div>"
 
                 prevname = restaurant.name
-    if not len(restaurants1) == 0:
-        html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
+    if not len(restaurants2) == 0:
+        html_content = (
+            html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
+        )
         for resturant in restaurants2:
             prevname = ""
 
@@ -250,7 +306,7 @@ def compose_email(
                 prevname = restaurant.name
 
     html_content = (
-        html_content + "<p><b>" + "Not satisfied with the result?" + "</b></p>"
+        html_content + "<br><p><b>" + "Not satisfied with the result?" + "</b></p>"
     )
     html_content = (
         html_content
@@ -301,8 +357,6 @@ def send_invitations(userRequest, userMatch):
     cuisine_names = ", ".join(
         [cuisine.name for cuisine in (user1Cuisines & user2Cuisines)]
     )
-    print("cuisine_names is")
-    print(cuisine_names)
 
     user1Interests = userRequest[0].interests.all()
     user2Interests = userRequest[0].interests.all()
@@ -314,12 +368,11 @@ def send_invitations(userRequest, userMatch):
     restaurants1, restaurants2 = recommend_restaurants(
         userRequest[0].user, userRequest[1].user, commonCuisines
     )
-    print("restaurants1 is")
-    print(restaurants1)
 
     CRLF = "\r\n"
-    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse" + CRLF + " @gmail.com"
-    organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@outlook.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@gmail.com"
+    # organizer = "ORGANIZER;CN=Lunch Ninja:mailto:teamstellarse@outlook.com"
+    organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"
 
     dur = datetime.timedelta(hours=1)
 
@@ -345,9 +398,8 @@ def send_invitations(userRequest, userMatch):
     attendee = ""
     for att in attendees:
         attendee += (
-            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE"
-            + CRLF
-            + " ;CN="
+            "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;"
+            + "CN="
             + att
             + ";X-NUM-GUESTS=0:"
             + CRLF
@@ -366,6 +418,7 @@ def send_invitations(userRequest, userMatch):
         + CRLF
     )
     ical += (
+        # "METHOD:REQUEST"
         "METHOD:REQUEST"
         + CRLF
         + "BEGIN:VEVENT"
@@ -757,16 +810,21 @@ def match():
                 )
                 user.save()
                 fake_not_matched_user.append(user)
+
     real_not_matched_user = []
     for user in not_matched_user:
         if user not in fake_not_matched_user:
             real_not_matched_user.append(user)
+
     print("matched user")
     print(matched_user_request)
     print("fake not matched user")
     print(fake_not_matched_user)
-    print("real_matched_user")
+    print("real_not_matched_user")
     print(real_not_matched_user)
+
+    for each in fake_not_matched_user + real_not_matched_user:
+        send_unmatch_email(each)
 
     return matched_user_request
 

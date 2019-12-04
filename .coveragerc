@@ -15,3 +15,4 @@ omit =
     user_account/tests/test_views.py
     homepage/tests/test_forms.py
     homepage/tests/test_views.py
+    homepage/tasks.py

@@ -1,5 +1,5 @@
 <!--Service Select Modal-->
-<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal1" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
@@ -15,18 +15,35 @@
                         <h4>Step 1 of 5</h4>
                         <div class="dropdown col-md-12" >
                            Select preferred type of service:
-                           <select class="form-control" type="text" id="serviceSelect" name="serviceSelect">
-                              <option selected>Daily</option>
-                              <option>Weekly</option>
-                              <option>Monthly</option>
+                           <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
+
+                               {% if selected_type  == "Daily"  %}
+                                  <option selected>Daily</option>
+                                  <option>Weekly</option>
+                                  <option>Monthly</option>
+                               {% endif %}
+                               {% if selected_type  == "Weekly"  %}
+                                  <option>Daily</option>
+                                  <option selected>Weekly</option>
+                                  <option>Monthly</option>
+                               {% endif %}
+                               {% if selected_type  == "Monthly"  %}
+                                  <option>Daily</option>
+                                  <option >Weekly</option>
+                                  <option selected>Monthly</optionselected>
+                               {% endif %}
                            </select> 
                         </div>
-                         <div id="daysSelectContainer" class="col-md-12"> 
+                         <div id="daysSelectContainer" class="col-md-12" name={{selected_type}}>
                            <br>
                            Select preferred day(if any):
                            <select id="daysSelect" placeholder="Select preferred days" multiple>
                               {% for days in week_days %}
-                                 <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
+                                  {% if days in selected_days %}
+                                      <option selected="selected" value="{{ days.id }}" name="{{ days.day }}"> {{  days.day }} </option>
+                                    {% else %}
+                                      <option value="{{ days.id }}" name="{{ days.day }}">{{ days.day }}</option>
+                                  {% endif %}
                               {% endfor %}
                            </select> 
                         </div>
@@ -45,7 +62,7 @@
 </div>
 
 <!-- School and department select Modal -->
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal2" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
@@ -62,7 +79,8 @@
                         <div class="dropdown row">
                             <div class="col-md-6">
                                  Select preferred school:
-                                 <select class="form-control" type="text" id="schoolSelect" name="schoolSelect">
+                                 <select class="form-control" type="text" id="schoolSelect" name="schoolSelect" placehoder="{{ school.name }}" >
+                                    <option selected="selected" value="{{ selected_school.name }}" name="{{ selected_school.name }}"> {{ selected_school.name }} </option>
                                     {% for school in schools %}
                                           <option value="{{ school.name }}" name="{{ school.name }}" selected>{{ school.name }}</option>
                                     {% endfor %}
@@ -70,9 +88,11 @@
                             </div>
                             <div class="col-md-6">
                                  Select preferred department:
-                                 <select class="form-control" type="text" id="departmentSelect" name="departmentSelect">
+                                 <select class="form-control" type="text" id="departmentSelect" name="departmentSelect" >
+                                     <option selected="selected" value="{{ selected_department.name }}" name="{{ selected_department.name }}"> {{ selected_department.name }} </option>
+
                                     {% for department in departments %}
-                                          <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
+                                        <option value="{{ department.name }}" name="{{ department.name }}" selected>{{ department.name }}</option>
                                     {% endfor %}
                                  </select> 
                             </div>
@@ -93,7 +113,7 @@
 </div>
 
 <!-- Cuisine select Modal -->
-<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal3" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
@@ -107,13 +127,19 @@
                   <div class="form-top">
                      <div class="form-top-left">
                         <h4>Step 3 of 5</h4>
-                        <p>Select preferred Cuisine:</p>
+                        <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
                                       
                         <div class="col-md-12"> 
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
-                              {% for cuisine in cuisines %}
-                                    <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>         
+                              {% for selected in selected_cuisine %}
+                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
                               {% endfor %}
+                              {% for cuisine in cuisines %}
+                                    {% if not cuisine in selected_cuisine %}
+                                      <option value="{{ cuisine.id }}" name="{{ cuisine.name }}"> {{ cuisine.name }} </option>
+                                    {% endif %}
+                              {% endfor %}
+
                            </select> 
                         </div>
                         <br>
@@ -133,7 +159,7 @@
 </div>
 
 <!-- Interest select Modal -->
-<div class="modal fade"  id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade"  id="myModal4" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
@@ -147,12 +173,17 @@
                   <div class="form-top">
                      <div class="form-top-left">
                         <h4>Step 4 of 5</h4>
-                        <p>Select preferred conversation type:</p>
+                        <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
                         
                         <div class="col-md-12"> 
                            <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
+                               {% for selected in selected_interest %}
+                                  <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
+                              {% endfor %}
                               {% for interest in interests %}
+                                  {% if not interest in selected_interest %}
                                     <option value="{{ interest.id }}" name="{{ interest.name }}">{{ interest.name }}</option>
+                                  {% endif %}
                               {% endfor %}
                            </select> 
                         </div>
@@ -176,7 +207,7 @@
 </div>
 
 <!-- Preference priority modal -->
-<div class="modal fade" data-backdrop="static" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="static" data-backdrop="static" data-keyboard="false" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
          <div class="modal-header">
@@ -194,21 +225,21 @@
                         <div class="col-md-8"> 
                            
                            <div class="range-slider" id="department_slider" >
-                              Select priority for department:
-                              <input class="range-slider__range" id="department_slider_range" type="range" value="10" min="1" max="10" step="1">
-                              <span class="range-slider__value" id="department_slider_value">10</span>
+                              Select priority for school/department:
+                              <input class="range-slider__range" id="department_slider_range" type="range" value="{{ selected_department_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="department_slider_value" >{{ selected_department_priority }}</span>
                            </div>
                            <br>
                            <div class="range-slider" id="cuisine_slider" >
                               Select priority for cuisines:
-                              <input class="range-slider__range" id="cuisine_slider_range" type="range" value="10" min="1" max="10" step="1">
-                              <span class="range-slider__value" id="cuisine_slider_value">10</span>
+                              <input class="range-slider__range" id="cuisine_slider_range" type="range" value="{{ selected_cuisine_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="cuisine_slider_value">{{ selected_cuisine_priority }}</span>
                            </div>
                            <br>
                            <div class="range-slider" id="interest_slider" >
                               Select priority for conversation interests:
-                              <input class="range-slider__range" id="interest_slider_range" type="range" value="10" min="1" max="10" step="1">
-                              <span class="range-slider__value" id="interest_slider_value">10</span>
+                              <input class="range-slider__range" id="interest_slider_range" type="range" value="{{ selected_interest_priority }}" min="1" max="10" step="1">
+                              <span class="range-slider__value" id="interest_slider_value">{{ selected_interest_priority }}</span>
                            </div>
                         </div>
                         <br>
@@ -226,6 +257,12 @@
          </div>
       </div>
    </div>
+</div>
+
+<div id="overlay" style="display:none">
+    <div class="spinner"></div>
+    <br/>
+    Loading...
 </div>
 
 <link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006288/BBBootstrap/choices.min.css?version=7.0.0">

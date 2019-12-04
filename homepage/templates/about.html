@@ -1,0 +1,114 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Lunch Ninja</title>
+	<!-- Custom fonts for this template -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+	<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+	<!-- Custom styles for this template -->
+	<link href="{% static 'css/agency.css'%}" rel="stylesheet">
+	<!-- Bootstrap and Jquery CSS and JS-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body id="page-top">
+
+	<!-- Navigation -->
+	{% include "nav_bar.html" %}
+	<!-- Header -->
+
+    <header class="bg-primary text-center py-5 mb-4">
+        <div class="container">
+            <h3 class="font-weight-light text-white">About Us</h3>
+            <p class="font-weight-light text-white">Lunch Ninja connects the NYU community. The vision behind Lunch Ninja is to give NYU students and staff the opportunity to be able to go on lunches with other NYU students with their choice of NYU School and Departments. The users even get to select their preferred type of cuisine, conversation interests and Voila, the algorithm will find the best Lunch mate for you! </p>
+
+        </div>
+    </header>
+
+    <!--<header class="bg-primary text-center py-5 mb-4">
+        <div class="container">
+            <h3 class="font-weight-light text-white">Meet the team</h3>
+        </div>
+    </header>-->
+
+    <div class="container">
+  <div class="row">
+    <!-- Team Member 1 -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-0 shadow">
+        <img src={% static 'img/Utkarsh.jpg'%} class="card-img-top" alt="..." width:250px;height:250px;>
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0">Utkarsh Prakash</h5>
+          <div class="card-text text-black-50"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Team Member 2 -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-0 shadow">
+        <img src={% static 'img/Yixin.jpg'%} class="card-img-top" alt="...">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0">Yixin Hu</h5>
+          <div class="card-text text-black-50"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Team Member 3 -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-0 shadow">
+        <img src={% static 'img/Xinchi.jpg'%} class="card-img-top" alt="...">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0">Xinchi Huang</h5>
+          <div class="card-text text-black-50"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Team Member 4 -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-0 shadow">
+        <img src={% static 'img/Shaurya.jpg'%} class="card-img-top" alt="...">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0">Shaurya Sethi</h5>
+          <div class="card-text text-black-50"></div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Team Member 5 -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-0 shadow">
+            <img src={% static 'img/Bhaskar.jpg'%} class="card-img-top" alt="...">
+            <div class="card-body text-center">
+            <h5 class="card-title mb-0">Bhaskar Venkatraman</h5>
+            <div class="card-text text-black-50"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /.row -->
+
+
+</div>
+<!-- /.container -->
+
+<!-- Footer -->
+	{% include "footer.html" %}
+
+
+
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/multiselect/2.2.9/js/multiselect.min.js"></script>
+<script type="text/javascript" src="{% static 'js/service-pop-up.js' %}"></script>
+</html>

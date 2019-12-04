@@ -47,7 +47,7 @@
                         {% if username %}
                           <div class="alert alert-warning">{{ username }}</div>
                         {% endif %}
-                    <div class="wrap-input100  m-b-16" data-validate = "Valid email is required: ex@abc.xyz">
+                    <div class="wrap-input100  m-b-16" data-validate = "Valid email is required: ex@nyu.edu">
 {#						<input class="input100" type="text" name="email" placeholder="Email">#}
                         {{signup_form.email}}
 						<span class="focus-input100"></span>
@@ -140,13 +140,7 @@
                          {% if password2 %}
                           <div class="alert alert-warning">{{ password2 }}</div>
                         {% endif %}
-					<div class="contact100-form-checkbox m-l-4">
-						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-						<label class="label-checkbox100" for="ckb1">
-							Remember me
-						</label>
-					</div>
-
+						
 					<div class="container-login100-form-btn p-t-25">
 						<button type='submit' class="login100-form-btn">
 							Signup
@@ -182,7 +176,12 @@
 			</div>
 		</div>
 	</div>
-
+	
+	<div id="overlay" style="display:none !important">
+		<div class="spinner"></div>
+		<br/>
+		Loading...
+	</div>
 
 <!--===============================================================================================-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -194,30 +193,37 @@
 <!--===============================================================================================-->
 	<script src="{% static 'Signup_Signin/Signup_Signin/js/main.js'%}"></script>
 
-                      <script>
+                    <script>
                       $("#id_school").change(function() {
-                      var school_id = $(this).val();
-                      $.ajax({
-                        url: 'ajax/load_departments/',
-                        data: {
-                          'school_id': school_id
-                        },
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            var content='';
-                            $.each(data, function(i, item){
-                                  content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
-                                });
-                            $('#id_department').html(content)
-                        },
-                      });
+						$("#overlay").show();
+						var school_id = $(this).val();
+						$.ajax({
+							url: 'ajax/load_departments/',
+							data: {
+							'school_id': school_id
+							},
+							type: 'GET',
+							dataType: 'json',
+							success: function (data) {
+								$("#overlay").hide();
+								var content='';
+								$.each(data, function(i, item){
+									content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
+									});
+								$('#id_department').html(content)
+							},
+							error: function () {
+								$("#overlay").hide();
+								alert('Unknown error ');
+							} 
+						});
                     });
                   </script>
 
 
                   <script>
-                      $("#id_department").change(function() {
+                    $("#id_department").change(function() {
+					  $("#overlay").show();	  
                       var department_id = $(this).val();
                       $.ajax({
                         url: 'ajax/load_school/',
@@ -227,12 +233,17 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
+							$("#overlay").hide();
                             var content='';
                             $.each(data, function(i, item){
                                   content+='<option value='+'\"'+item+'\"'+'>'+item+'</option>'
                                 });
                             $('#id_school').html(content)
                         },
+						error: function () {
+							$("#overlay").hide();
+							alert('Unknown error ');
+						} 
                       });
                     });
                   </script>

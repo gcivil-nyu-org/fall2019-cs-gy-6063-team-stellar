@@ -8,7 +8,7 @@ def creat_school_tuple():
 
     read_school = School.objects.all()
     schoollist = []
-    # read_school = retrieveschool()
+
     schoollist.append(("select school", "select school"))
     for s in read_school:
         schoollist.append((s.name, s.name))
@@ -19,7 +19,7 @@ def creat_department_tuple():
     read_department = Department.objects.all()
 
     departmentlist = []
-    # read_department = retrievedepartment()
+
     departmentlist.append(("select department", "select department"))
     for d in read_department:
         departmentlist.append((d.name, d.name))
@@ -29,8 +29,7 @@ def creat_department_tuple():
 class UserSignUpForm(UserCreationForm):
     SchoolChoice = creat_school_tuple()
     DepartmentChoice = creat_department_tuple()
-    # SchoolChoice =((),())
-    # DepartmentChoice = ((),())
+
     username = forms.CharField(
         label="username",
         max_length=128,
@@ -104,6 +103,7 @@ class UserSignUpForm(UserCreationForm):
 
         # valid phone numbers US number only
         data = self.cleaned_data["Phone"]
+
         try:
             int(data)
             if not len(data) == 10:
@@ -112,11 +112,39 @@ class UserSignUpForm(UserCreationForm):
             raise forms.ValidationError("Please enter a Valid Phone Number")
         return data
 
+    def clean_school(self):
+
+        # valid school
+
+        try:
+            data = self.cleaned_data["school"]
+
+            if data == "select school":
+                raise forms.ValidationError("Please select department")
+        except Exception:
+            raise forms.ValidationError("Please select School")
+        return data
+
+    def clean_department(self):
+
+        # valid department
+
+        try:
+            data = self.cleaned_data["department"]
+            if data == "select department":
+                raise forms.ValidationError("Please select Department")
+        except Exception:
+            raise forms.ValidationError("Please select Department")
+        return data
+
     def clean_email(self):
         data = self.cleaned_data["email"]
         domain = data.split("@")[1]
         if domain != "nyu.edu":
             raise forms.ValidationError("Please enter a NYU Email Address")
+
+        if not LunchNinjaUser.objects.filter(email=data).count() == 0:
+            raise forms.ValidationError("This email has already been registered")
         return data
 
     def save(self, commit=True):

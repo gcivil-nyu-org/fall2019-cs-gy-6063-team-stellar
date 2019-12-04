@@ -23,3 +23,5 @@ urlpatterns = [
     path("captcha/", include("captcha.urls")),
     # path(r'^admin/statuscheck/', include('celerybeat_status.urls'))
 ]
+
+handler404 = "homepage.views.error_404_view"

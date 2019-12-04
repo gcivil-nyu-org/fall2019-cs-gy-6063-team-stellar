@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from datetime import date, timedelta
+import base64
 
 
 api_key = "K5_zpUoEf7tPJvKRp6e8UrGB5lLzW6Ik5iFZ4E9xn6PnqafYRSHFGac6QOfdLLw67bj66fDkaZEXXNiHMm65nujAFr3SBNu7PcupsYc8_gXI59fsGkH__Z04L-3IXXYx"
@@ -22,13 +23,13 @@ def compose_email(user1, user2, match):
         + "Thank you for using Lunch Ninja!<br>"
         + "Please take a moment to complete our short survey about your most recent lunch experience with <b>"
         + user2.first_name
+        + "</b> on <b>"
+        + str(match.match_time.date())
         + "</b>.<br>"
         + "http://lunch-ninja.herokuapp.com/"
         + "feedback"
         + "/"
-        + str(match.id)
-        + "-"
-        + str(user1.id)
+        + str(base64.b64encode(("%s-%s" % (str(match.id), str(user1.id))).encode()))
         # + " <button href\"http://127.0.0.1:8000/feedback\" class=\"btn btn-warning\">Take the survey</button><br>"
         + "<br><br>"
         + "Best,<br>"
@@ -61,7 +62,6 @@ def send_email(html_content, attendee):
 
 def prepare_feedback():
     tomorrow = date.today() + timedelta(days=1)
-    # (tz=timezone.get_current_timezone()) + timedelta(1)
     print(tomorrow)
     # yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
     # matches = UserRequestMatch.objects.filer(match_time = yesterday)
@@ -78,15 +78,4 @@ def prepare_feedback():
         send_email(html_content2, to2)
 
 
-# prepare_feedback()
-
-# For testing feedback algorithm
-# def send_test_email():
-#     # lookup user by id and send them a message
-#     email = EmailMessage(
-#         "Random Check Feedback", "Checking Celery Feedback", to=["up293@nyu.edu"]
-#     )
-#     email.send()
-
-
-# send_test_email()
+prepare_feedback()
