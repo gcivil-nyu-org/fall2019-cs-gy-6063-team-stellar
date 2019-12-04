@@ -70,8 +70,8 @@ var rangeSlider = function () {
 
     departmentSlider.each(function () {
         service_request["department_priority"] = document.getElementById("department_slider_range").value;
-
         departmentValue.each(function () {
+
             var departmentValue = $(this).prev().attr('value');
             $(this).html(departmentValue);
         });
@@ -110,7 +110,6 @@ var rangeSlider = function () {
 
     interestSlider.each(function () {
         service_request["interests_priority"] = document.getElementById("interest_slider_range").value;
-
         interestValue.each(function () {
             var value = $(this).prev().attr('value');
             $(this).html(value);
@@ -255,6 +254,31 @@ $("#schoolSelect").change(function () {
     });
 });
 
+function skipschool(){
+    var skipschoolflag = true;
+    alert(skipschoolflag)
+    service_request['school'] = $("#schoolSelect option:selected").val();
+    service_request['department'] = $("#departmentSelect option:selected").val();
+    service_request["department_priority"] = 0;
+    return skipschoolflag;
+};
+
+function skipcuisine(){
+    var skipcuisineflag = true;
+    alert(skipcuisineflag)
+    service_request['cuisine'] = $("#cuisineSelect").val();
+    service_request["cuisine_priority"] = 0;
+    return skipcuisineflag;
+};
+
+function skipinterest(){
+    var skipinterstflag = true;
+    alert(skipinterstflag)
+    service_request['interests'] = $("#interestSelect").val();
+    service_request["interests_priority "] = 0;
+    return skipinterstflag;
+};
+
 //Cuisine model data
 $(document).on('submit', '#cuisine_select_form', function (e) {
     e.preventDefault();
@@ -271,7 +295,6 @@ $(document).on('submit', '#interest_select_form', function (e) {
 $(document).on('submit', '#priority_select_form', function (e) {
     e.preventDefault();
     $("#overlay").show();
-    // service_request["department_priority"] = $('#department_slider_range').value;
     service_request['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     $.ajax({
         type: 'POST',
@@ -280,9 +303,7 @@ $(document).on('submit', '#priority_select_form', function (e) {
         success: function () {
             $("#overlay").hide();
             window.location.href = "/settings/";
-            console.log("service_status is")
-            console.log(service_status)
-            if(service_status == 0){
+            if(service_status === 0){
                 alert("Thank you for using Lunch Ninja! Your Lunch Ninja service has been switched on. We'll send you a follow-up email when your matching is ready.");
             }
             else {

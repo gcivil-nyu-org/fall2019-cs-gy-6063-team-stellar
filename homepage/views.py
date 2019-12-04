@@ -270,16 +270,23 @@ def handle_ajax(request):
 
 
 def user_service(request):
+    print("gun ni ma bi")
     if request.method == "POST":
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
+            print(service_type)
             school = request.POST["school"]
+            print(school)
             school_object = School.objects.get(name=school)
             department = request.POST["department"]
+            print(department)
             department_object = school_object.department_set.get(name=department)
             cuisines_priority = request.POST.get("cuisines_priority")
             department_priority = request.POST.get("department_priority")
             interests_priority = request.POST.get("interests_priority")
+            print( department_priority)
+            print(cuisines_priority)
+            print(interests_priority )
             cuisine_ids = request.POST.getlist("cuisine[]")
             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
