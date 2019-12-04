@@ -886,6 +886,10 @@ button {
     border-radius: 50%;
 }
 
+.center-page{
+  margin: 0 auto;
+}
+
 @keyframes rotate {
     0% {
         transform: rotate(0deg);

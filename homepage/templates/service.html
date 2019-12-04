@@ -38,14 +38,15 @@
 
 	<!-- Navigation -->
 	{% include "nav_bar.html" %}
-
+    <div class="container">
     <form role="form" id="service_select_form" class="registration-form">
                {% csrf_token %}
+                <br>
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
                         <h4>Step 1 of 5</h4>
-                        <div class="dropdown col-md-6">
+                        <div class="dropdown col-md-6 center-page">
                            Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
                                {% if selected_type  == "Daily"  %}
@@ -65,7 +66,7 @@
                                {% endif %}
                            </select>
                         </div>
-                        <div id="daysSelectContainer" class="col-md-6" name={{selected_type}}>
+                        <div id="daysSelectContainer" class="col-md-6 center-page" name={{selected_type}}>
                            <br>
                            Select preferred day(if any):
                            <select id="daysSelect" placeholder="Select preferred days" multiple>
@@ -82,7 +83,7 @@
 
                         <h4>Step 2 of 5</h4>
                         <div class="dropdown">
-                            <div class="col-md-6">
+                            <div class="col-md-6 center-page">
                                  Select preferred school:
                                  <select class="form-control" type="text" id="schoolSelect" name="schoolSelect" placehoder="{{ school.name }}" >
                                     <option selected="selected" value="{{ selected_school.name }}" name="{{ selected_school.name }}"> {{ selected_school.name }} </option>
@@ -92,7 +93,7 @@
                                  </select>
                             </div>
                             <br>
-                            <div class="col-md-6">
+                            <div class="col-md-6 center-page">
                                  Select preferred department:
                                  <select class="form-control" type="text" id="departmentSelect" name="departmentSelect" >
                                      <option selected="selected" value="{{ selected_department.name }}" name="{{ selected_department.name }}"> {{ selected_department.name }} </option>
@@ -108,7 +109,7 @@
                      <h4>Step 3 of 5</h4>
                         <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
 
-                        <div class="col-md-6">
+                        <div class="col-md-6 center-page">
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
                               {% for selected in selected_cuisine %}
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
@@ -126,7 +127,7 @@
                      <h4>Step 4 of 5</h4>
                         <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
 
-                        <div class="col-md-6">
+                        <div class="col-md-6 center-page">
                            <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
                                {% for selected in selected_interest %}
                                   <option selected="selected" value="{{ selected.id }}" name="{{ selected.name }}"> {{ selected.name }} </option>
@@ -143,7 +144,7 @@
 
                      <h4>Step 5 of 5</h4>
                         <p>Select preferred priority of each preference selected:</p>
-                        <div class="col-md-6">
+                        <div class="col-md-6 center-page">
 
                            <div class="range-slider" id="department_slider" >
                               Select priority for school/department:
@@ -168,8 +169,12 @@
                      <br>
                   </div>
                </fieldset>
-                <button type="submit" class="btn btn-warning">Submit</button>
+                <div class="center-page">
+                    <button type="submit" class="btn btn-warning">Submit</button>
+                </div>
+
             </form>
+    </div>
 </body>
 
 <div id="overlay" style="display:none">
