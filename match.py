@@ -371,8 +371,8 @@ def send_invitations(userRequest, userMatch):
 
     CRLF = "\r\n"
     # organizer = "ORGANIZER;CN=organiser:mailto:teamstellarse@gmail.com"
-    # organizer = "ORGANIZER;CN=Lunch Ninja:mailto:teamstellarse@outlook.com"
-    organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"
+    organizer = "ORGANIZER;CN=Lunch Ninja:mailto:teamstellarse@outlook.com"
+    # organizer = "ORGANIZER;CN=organiser:mailto:491759343@qq.com"
 
     dur = datetime.timedelta(hours=1)
 

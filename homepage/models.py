@@ -130,7 +130,7 @@ class UserRequest(models.Model):
 def in_one_day():
     # next_day = timezone.now() + timedelta(days=1)
     next_day = timezone.localtime(timezone.now()) + timedelta(days=1)
-    new_period = next_day.replace(hour=17, minute=00)
+    new_period = next_day.replace(hour=12, minute=00)
     return new_period
 
 
