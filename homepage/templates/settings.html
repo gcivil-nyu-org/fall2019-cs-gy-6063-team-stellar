@@ -92,7 +92,8 @@
 	<br>
 		<h3 id="active_service_header">User Profile</h3>
 		<a id="change_service_button" type="button" class="btn btn-warning"  href="/password_reset/">Change Password</a>
-
+        <>
+        <a id="change_service_button" type="button" class="btn btn-warning" onclick="editprofile()">Edit Profile</a>
 			<table id="service_table" class="table">
 				<thead>
 					<tr>
@@ -138,5 +139,10 @@
 </script>
 <script type="text/javascript" src="{% static 'js/settings.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/service-pop-up.js' %}"></script>
+<script>
+    function editprofile(){
+        alert("Thank you for using Lunch Ninja. If your information is registered wrong, please contact teamstellarse@outlook.com.")
+    }
+</script>>
 
 </html>

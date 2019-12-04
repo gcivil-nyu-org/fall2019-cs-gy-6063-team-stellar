@@ -566,12 +566,24 @@ def settings(request):
 
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
+        if not UserRequest.objects.filter(user_id=request.user.id).count() == 0:
 
+            ur = UserRequest.objects.get(user_id=request.user.id).service_status
+            if ur is True:
+                service_status = 1
+            else:
+                service_status = 0
+        else:
+            service_status = 0
         return render(
             request,
             "settings.html",
             Merge(
-                {"user_request": user_request, "user_profile": user_profile},
+                {
+                    "user_request": user_request,
+                    "user_profile": user_profile,
+                    "service_status": service_status,
+                },
                 preference_model_data,
                 selected_info,
             ),
