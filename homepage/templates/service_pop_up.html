@@ -16,7 +16,6 @@
                         <div class="dropdown col-md-12" >
                            Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
-
                                {% if selected_type  == "Daily"  %}
                                   <option selected>Daily</option>
                                   <option>Weekly</option>
@@ -104,6 +103,7 @@
                <div class="modal-footer">
                   <button type="button" class="btn btn-warning btn-prev">Prev</button>
                   <button type="submit" class="btn btn-warning btn-next">Next</button>
+                   <button type="button" class="btn btn-warning btn-next" onclick="skipschool()">Skip</button>
                   <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                </div>
             </form>
@@ -148,6 +148,7 @@
                   <div class="modal-footer">
                      <button type="button" class="btn btn-warning btn-prev">Prev</button>
                      <button type="submit" class="btn btn-warning btn-next">Next</button>
+                      <button type="button" class="btn btn-warning btn-next" onclick="skipcuisine()">Skip</button>
                      <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                   </div>
                </fieldset>
@@ -194,7 +195,7 @@
                    <div class="modal-footer">
                      <button type="button" class="btn btn-warning btn-prev">Prev</button>
                      <button type="submit" class="btn btn-warning btn-next">Next</button>
-
+                    <button type="button" class="btn btn-warning btn-next" onclick="skipinterest()">Skip</button>
                      {% comment %} <button type="submit" class="btn btn-warning">Submit</button> {% endcomment %}
                      <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                   </div>
@@ -271,4 +272,5 @@
 <script type="text/javascript">
 	var top_cuisines = {{top_cuisines}}
    var top_interests = {{top_interests}}
+    var service_status = {{ service_status }}
 </script>

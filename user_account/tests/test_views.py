@@ -101,14 +101,19 @@ class LoginViewTest(TestCase):
     def user_not_none(request, username, password):
         class user_for_mock:
             def __init__(self):
-                self.id=1
-                self.first_name="abc"
+                self.id = 1
+                self.first_name = "abc"
+
         return user_for_mock()
 
     @mock.patch("user_account.views.login", side_effect=mock_login)
     @mock.patch("user_account.views.authenticate", side_effect=user_not_none)
     def test_login_authenticate(self, mock_aut, mock_login):
-        loginObj = {"username": "testUser", "password": "password12345","session":{"islogin":True,"user_id":1,"user_name":'abc'}}
+        loginObj = {
+            "username": "testUser",
+            "password": "password12345",
+            "session": {"islogin": True, "user_id": 1, "user_name": "abc"},
+        }
         response = self.client.post("/login/", loginObj)
         self.assertEqual(response.status_code, 302)
 
