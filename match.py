@@ -778,7 +778,7 @@ def match():
     print(match_score_list)
     for user_tuple in match_score_list:
 
-        if user_tuple[2] < 0:
+        if user_tuple[2] < -100:
             continue
         user_num1 = user_tuple[0]
         user_num2 = user_tuple[1]
