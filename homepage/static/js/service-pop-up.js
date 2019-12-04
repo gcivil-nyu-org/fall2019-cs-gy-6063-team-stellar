@@ -143,13 +143,13 @@ $("div[id^='myModal']").each(function () {
     currentModal.find('.btn-next').click(function () {
         if (currentModal[0].id == "myModal3"){
             if(! $("#cuisineSelect").val().length){
-                alert("Please select atleast 1 cuisine");
+                alert("Please select at least 1 cuisine");
             }else{
                 showNextModal();
             }
         } else if (currentModal[0].id == "myModal4"){
             if (!$("#interestSelect").val().length) {
-                alert("Please select atleast 1 conversation interest");
+                alert("Please select at least 1 conversation interest");
             } else {
                 showNextModal();
             }
@@ -280,7 +280,14 @@ $(document).on('submit', '#priority_select_form', function (e) {
         success: function () {
             $("#overlay").hide();
             window.location.href = "/settings/";
-            alert("Thank you for using Lunch Ninja! We'll send you a follow-up email when your matching is ready.");
+            console.log("service_status is")
+            console.log(service_status)
+            if(service_status == 0){
+                alert("Thank you for using Lunch Ninja! Your Lunch Ninja service has been switched on. We'll send you a follow-up email when your matching is ready.");
+            }
+            else {
+                alert("Thank you for using Lunch Ninja! We'll send you a follow-up email to inform you about your match based on your new preferences.");
+            }
         },
         error: function () {
             $("#overlay").hide();

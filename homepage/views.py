@@ -198,6 +198,12 @@ def get_selected_data(user):
         selected_department_priority = user_request_instance.department_priority
         selected_cuisine_priority = user_request_instance.cuisines_priority
         selected_interest_priority = user_request_instance.interests_priority
+        # if not UserRequest.objects.filter(user = user).count() == 0:
+        #     print(UserRequest.objects.get(user = user).service_status)
+        #     service_status = UserRequest.objects.get(user = user).service_status
+        # else:
+        #     service_status = False
+
         selected_info = {
             "selected_type": selected_type,
             "selected_school": selected_school,
@@ -208,6 +214,7 @@ def get_selected_data(user):
             "selected_department_priority": selected_department_priority,
             "selected_cuisine_priority": selected_cuisine_priority,
             "selected_interest_priority": selected_interest_priority,
+            # "servcie_status":
         }
     except Exception:
         selected_info = {
@@ -224,8 +231,22 @@ def index(request):
     if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
+        if not UserRequest.objects.filter(user_id=request.user.id).count() == 0:
+
+            ur = UserRequest.objects.get(user_id=request.user.id).service_status
+            if ur is True:
+                service_status = 1
+            else:
+                service_status = 0
+        else:
+            service_status = 0
+        # context = Merge({"service_status": service_status}, preference_model_data, selected_info)
         return render(
-            request, "homepage.html", Merge({}, preference_model_data, selected_info)
+            request,
+            "homepage.html",
+            Merge(
+                {"service_status": service_status}, preference_model_data, selected_info
+            ),
         )
     return redirect("/login/")
 
@@ -287,9 +308,9 @@ def user_service(request):
                 req.cuisines.clear()
                 req.interests.clear()
                 req.days.clear()
-
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
+                req.service_status = True
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
@@ -306,6 +327,7 @@ def user_service(request):
                     interests_priority=interests_priority,
                     available_date=date.today() + timedelta(days=1),
                 )
+                req.service_status = True
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
