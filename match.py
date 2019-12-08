@@ -153,7 +153,8 @@ def get_yelp_link(restaurant):
         return -1
     yelp_link = yelp_result["businesses"][0]["url"]
     return yelp_link
-
+def my_len (somthing):
+    return len(somthing)
 
 def compose_email(
     userRequest1,
@@ -227,7 +228,7 @@ def compose_email(
     )
 
     # Add restaurant near school1
-    if not len(restaurants1) == 0:
+    if not my_len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
         prevname = ""
 
@@ -270,7 +271,7 @@ def compose_email(
                     html_content = html_content + "<div>" + link_short + "</div>"
 
                 prevname = restaurant.name
-    if not len(restaurants2) == 0:
+    if not my_len(restaurants2) == 0:
         html_content = (
             html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
         )
