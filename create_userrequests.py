@@ -74,8 +74,6 @@ def generateuser(N):
         else:
             p_days = Days.objects.all()[0]
 
-
-
         user["prefered days"] = p_days
         user["meet history"] = []
         user["cuisines_priority"] = random.randint(1, 10)

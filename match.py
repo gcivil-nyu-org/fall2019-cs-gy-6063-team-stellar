@@ -569,14 +569,20 @@ def next_available_day(user1):
     day = datetime.timedelta(days=1)
     ur1 = user1
     if ur1.service_type == "monthly":
-        ur1.available_date = begining_of_week(today + month) + datetime.timedelta(days=first_day_prefer(ur1))
+        ur1.available_date = begining_of_week(today + month) + datetime.timedelta(
+            days=first_day_prefer(ur1)
+        )
     elif ur1.service_type == "weekly":
-        ur1.available_date = begining_of_week(today + week) + datetime.timedelta(days=first_day_prefer(ur1))
+        ur1.available_date = begining_of_week(today + week) + datetime.timedelta(
+            days=first_day_prefer(ur1)
+        )
     elif ur1.service_type == "daily":
         ur1.available_date = today + day
 
     ur1.save()
     return
+
+
 def next_available_day_same_week(user1):
     day = datetime.timedelta(days=1)
     today = datetime.date.today() + datetime.timedelta(days=1)
@@ -587,10 +593,13 @@ def next_available_day_same_week(user1):
     else:
         for d in weekdays:
             if d.id > today.weekday():
-                ur1.available_date = today + datetime.timedelta(days=(d.id - today.weekday()))
+                ur1.available_date = today + datetime.timedelta(
+                    days=(d.id - today.weekday())
+                )
                 break
     ur1.save()
     return
+
 
 def save_matches(matches):
     # save matches to user_request_match table
@@ -625,9 +634,6 @@ def find_match_user(available_set):
 
     match_request = random.choice(list(available_set))
     return match_request
-
-
-
 
 
 def get_matchpool():
@@ -831,9 +837,10 @@ def match_user():
     # for each in next_turn_match_user + real_not_matched_user:
     #     send_unmatch_email(each)
     #
-        # next_available_day(u[1])
+    # next_available_day(u[1])
 
     return matched_user_request
+
 
 match_user()
 # if __name__ == "__main__":
