@@ -66,10 +66,15 @@ def generateuser(N):
         user["interests"] = p_interests
 
         # days
-        days = Days.objects.all()
-        p_days_number = random.randint(1, 3)
+        if not user["service_type"] == "Daily":
+            days = Days.objects.all()
+            p_days_number = random.randint(1, 3)
 
-        p_days = random.sample(list(days), p_days_number)
+            p_days = random.sample(list(days), p_days_number)
+        else:
+            p_days = Days.objects.all()[0]
+
+
 
         user["prefered days"] = p_days
         user["meet history"] = []
