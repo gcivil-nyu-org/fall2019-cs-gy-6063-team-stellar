@@ -3,6 +3,10 @@ omit =
     manage.py
     create_userrequests.py
     create_users.py
+    create_userrequests_test.py
+    create_users_test.py
+    prepare.py
+    prepare_test.py
     lunchNinja/wsgi.py
     feedback.py
     addquestions.py

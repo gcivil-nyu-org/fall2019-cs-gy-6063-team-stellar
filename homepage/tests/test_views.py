@@ -254,9 +254,9 @@ class UserserviceViewTest(TestCase):
         )
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
-    # def test_not_post(self):
-    #     response = self.client.get("/service/")
-    #     self.assertEqual(response.status_code, 200)
+    def test_not_post(self):
+        response = self.client.get("/service/")
+        self.assertEqual(response.status_code, 200)
 
 
 class IndexViewTest(TestCase):
@@ -689,105 +689,176 @@ class MatchHistoryTest(TestCase):
         response = self.client.get("/matchHistory/")
         self.assertEqual(response.status_code, 302)
 
-    # def User_match_Obj(a):
-    #     class username:
-    #         def __init__(self):
-    #             self.first_name = "donald"
-    #             self.last_name = "trump"
-    #             self.email = "1234@nyu.edu"
-    #             self.school = "Tandon School of Engineering"
-    #             self.department = "Electrical Engineering"
+    def User_match_Obj(a):
+        class username:
+            def __init__(self):
+                self.first_name = "donald"
+                self.last_name = "trump"
+                self.email = "1234@nyu.edu"
+                self.school = "Tandon School of Engineering"
+                self.department = "Electrical Engineering"
 
-    #     class restaurant_for_mock:
-    #         def __init__(self, name):
-    #             self.name = name
-    #             pass
+        class restaurant_for_mock:
+            def __init__(self, name):
+                self.name = name
+                pass
 
-    #     class restaurants_for_mock:
-    #         def __init__(self):
-    #             pass
+        class restaurants_for_mock:
+            def __init__(self):
+                pass
 
-    #         def all(**kargs):
-    #             return [
-    #                 restaurant_for_mock("McDonald's"),
-    #                 restaurant_for_mock("KFC"),
-    #                 restaurant_for_mock("Burger king"),
-    #             ]
+            def all(**kargs):
+                return [
+                    restaurant_for_mock("McDonald's"),
+                    restaurant_for_mock("KFC"),
+                    restaurant_for_mock("Burger king"),
+                ]
 
-    #     class match_userObj:
-    #         def __init__(self):
-    #             self.user2 = username()
-    #             self.user1 = username()
-    #             self.match_time = datetime.now(timezone.utc) - timedelta(days=1)
-    #             self.restaurants = restaurants_for_mock
+        class match_userObj:
+            def __init__(self):
+                self.user2 = username()
+                self.user1 = username()
+                self.match_time = datetime.now(timezone.utc) - timedelta(days=1)
+                self.restaurants = restaurants_for_mock
 
-    #     class result:
-    #         def __init__(self):
-    #             pass
+        class result:
+            def __init__(self):
+                pass
 
-    #         def order_by(self, p):
-    #             return [match_userObj(), match_userObj()]
+            def order_by(self, p):
+                return [match_userObj(), match_userObj()]
 
-    #     return result()
+        return result()
 
-    # def User_request_Obj(**kargs):
-    #     class interest_for_mock:
-    #         def __init__(self, name):
-    #             self.name = name
+    def User_request_Obj_get(**kargs):
+        class interest_for_mock:
+            def __init__(self, name):
+                self.name = name
 
-    #         def add(**kargs):
-    #             return "Added"
+            def add(**kargs):
+                return "Added"
 
-    #         def clear(**kargs):
-    #             return "Cleared"
+            def clear(**kargs):
+                return "Cleared"
 
-    #     class interests_for_mock:
-    #         def __init__(self, name):
-    #             pass
+        class interests_for_mock:
+            def __init__(self, name):
+                pass
 
-    #         def all(**kargs):
-    #             return [
-    #                 interest_for_mock("parties"),
-    #                 interest_for_mock("networking"),
-    #                 interest_for_mock("homework"),
-    #             ]
+            def all(**kargs):
+                return [
+                    interest_for_mock("parties"),
+                    interest_for_mock("networking"),
+                    interest_for_mock("homework"),
+                ]
 
-    #     class cuisine_for_mock:
-    #         def __init__(self, name):
-    #             self.name = name
-    #             pass
+        class cuisine_for_mock:
+            def __init__(self, name):
+                self.name = name
+                pass
 
-    #     class cuisines_for_mock:
-    #         def __init__(self, name):
-    #             pass
+        class cuisines_for_mock:
+            def __init__(self, name):
+                pass
 
-    #         def all(**kargs):
-    #             return [
-    #                 cuisine_for_mock("American"),
-    #                 cuisine_for_mock("Indian"),
-    #                 cuisine_for_mock("Chinese"),
-    #             ]
+            def all(**kargs):
+                return [
+                    cuisine_for_mock("American"),
+                    cuisine_for_mock("Indian"),
+                    cuisine_for_mock("Chinese"),
+                ]
 
-    #     class userObj:
-    #         def __init__(self):
-    #             self.service_type = "Monthly"
-    #             self.school = "Tandon School of Engineering"
-    #             self.time_stamp = "2019-11-6"
-    #             self.department = "Computer Science"
-    #             self.service_status = True
-    #             self.cuisines = cuisines_for_mock
-    #             self.interests = interests_for_mock
+        class userObj:
+            def __init__(self):
+                self.service_type = "Monthly"
+                self.school = "Tandon School of Engineering"
+                self.time_stamp = "2019-11-6"
+                self.department = "Computer Science"
+                self.service_status = True
+                self.cuisines = cuisines_for_mock
+                self.interests = interests_for_mock
+                self.service_status = True
 
-    #     return userObj()
+        return userObj()
 
-    # @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
-    # @mock.patch(
-    #     "homepage.views.UserRequestMatch.objects.filter", side_effect=User_match_Obj
-    # )
-    # @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    # def test_match_history_past(self, mock_login, mock_filter, mock_request):
-    #     response = self.client.get("/matchHistory/")
-    #     self.assertEqual(response.status_code, 200)
+    def User_request_Obj_filter(user):
+        class interest_for_mock:
+            def __init__(self, name):
+                self.name = name
+
+            def add(**kargs):
+                return "Added"
+
+            def clear(**kargs):
+                return "Cleared"
+
+        class interests_for_mock:
+            def __init__(self, name):
+                pass
+
+            def all(**kargs):
+                return [
+                    interest_for_mock("parties"),
+                    interest_for_mock("networking"),
+                    interest_for_mock("homework"),
+                ]
+
+        class cuisine_for_mock:
+            def __init__(self, name):
+                self.name = name
+                pass
+
+        class cuisines_for_mock:
+            def __init__(self, name):
+                pass
+
+            def all(**kargs):
+                return [
+                    cuisine_for_mock("American"),
+                    cuisine_for_mock("Indian"),
+                    cuisine_for_mock("Chinese"),
+                ]
+
+        class userObj:
+            def __init__(self):
+                self.service_type = "Monthly"
+                self.school = "Tandon School of Engineering"
+                self.time_stamp = "2019-11-6"
+                self.department = "Computer Science"
+                self.service_status = True
+                self.cuisines = cuisines_for_mock
+                self.interests = interests_for_mock
+                self.service_status = True
+
+            def exists(self):
+                return True
+
+        return userObj()
+
+    def mock_request_user(request):
+        return "user"
+
+    @mock.patch("homepage.views.get_user", side_effect=mock_request_user)
+    @mock.patch(
+        "homepage.views.UserRequest.objects.filter", side_effect=User_request_Obj_filter
+    )
+    @mock.patch(
+        "homepage.views.UserRequest.objects.get", side_effect=User_request_Obj_get
+    )
+    @mock.patch(
+        "homepage.views.UserRequestMatch.objects.filter", side_effect=User_match_Obj
+    )
+    @mock.patch("homepage.views.check_login", side_effect=login_mock)
+    def test_match_history_past(
+        self,
+        mock_login,
+        mock_filter,
+        mock_request_get,
+        mock_request_filter,
+        mock_request_user,
+    ):
+        response = self.client.get("/matchHistory/")
+        self.assertEqual(response.status_code, 200)
 
 
 class FeedbackViewTest(TestCase):

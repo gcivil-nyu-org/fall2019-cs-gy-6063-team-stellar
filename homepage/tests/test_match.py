@@ -1,6 +1,6 @@
 from django.test import TestCase
 from match import match_user
-from prepare import prepare
+from prepare_test import prepare
 
 
 class MatchTest(TestCase):

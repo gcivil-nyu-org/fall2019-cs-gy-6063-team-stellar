@@ -568,15 +568,15 @@ def next_available_day(user1):
     week = datetime.timedelta(weeks=1)
     day = datetime.timedelta(days=1)
     ur1 = user1
-    if ur1.service_type == "monthly":
+    if ur1.service_type == "Monthly":
         ur1.available_date = begining_of_week(today + month) + datetime.timedelta(
             days=first_day_prefer(ur1)
         )
-    elif ur1.service_type == "weekly":
+    elif ur1.service_type == "Weekly":
         ur1.available_date = begining_of_week(today + week) + datetime.timedelta(
             days=first_day_prefer(ur1)
         )
-    elif ur1.service_type == "daily":
+    elif ur1.service_type == "Daily":
         ur1.available_date = today + day
 
     ur1.save()
@@ -834,10 +834,9 @@ def match_user():
         next_available_day(ur)
     for un in next_turn_match_user:
         next_available_day_same_week(un)
-    # for each in next_turn_match_user + real_not_matched_user:
-    #     send_unmatch_email(each)
-    #
-    # next_available_day(u[1])
+
+    for each in next_turn_match_user + real_not_matched_user:
+        send_unmatch_email(each)
 
     return matched_user_request
 
