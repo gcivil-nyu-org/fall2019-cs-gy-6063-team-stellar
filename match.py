@@ -153,8 +153,11 @@ def get_yelp_link(restaurant):
         return -1
     yelp_link = yelp_result["businesses"][0]["url"]
     return yelp_link
-def my_len (somthing):
+
+
+def my_len(somthing):
     return len(somthing)
+
 
 def compose_email(
     userRequest1,

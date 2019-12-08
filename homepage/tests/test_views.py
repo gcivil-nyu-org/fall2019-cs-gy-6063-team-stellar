@@ -1180,6 +1180,8 @@ class AboutViewTest(TestCase):
     def test_not_login_user(self):
         response = self.client.get("/about/")
         self.assertEqual(response.status_code, 302)
+
+
 class Test404(TestCase):
     def test_404_page(self):
         response = self.client.get("/aboutasyhdsuaushd/")
