@@ -1,3 +1,7 @@
+$(document).ready(function(){
+    console.log("hahahahah")
+});
+
 $('#serviceToggle').prop('checked', userServiceStatus);
 
 $('#serviceToggle').change(function () {
