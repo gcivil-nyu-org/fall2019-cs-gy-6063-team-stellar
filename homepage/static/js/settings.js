@@ -42,7 +42,7 @@ $('#serviceToggle').change(function () {
             $("#overlay").hide();
             $("#alert-container").show();
             $("#alert-container").addClass("alert alert-success");
-            $("#alert-container").text("Your LunchNinja services have been " + statusMessage);
+            $("#alert-container").text("Your LunchNinja services have been " + statusMessage + "!!");
             setTimeout(function() { $("#alert-container").fadeOut(); }, 2000);
         },
         error: function () {
