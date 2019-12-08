@@ -4,6 +4,28 @@ $(document).ready(function(){
 
 $('#serviceToggle').prop('checked', userServiceStatus);
 
+$.urlParam = function(name){
+var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+      return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+
+if($.urlParam('from') == "service_page_on"){
+    $("#alert-container").show();
+    $("#alert-container").addClass("alert alert-success");
+    $("#alert-container").text("Thank you for using Lunch Ninja! Your Lunch Ninja service has been switched on. We'll send you a follow-up email when your matching is ready.");
+    setTimeout(function() { $("#alert-container").fadeOut(); }, 4000);
+}else if($.urlParam('from') == "service_page_off"){
+    $("#alert-container").show();
+    $("#alert-container").addClass("alert alert-success");
+    $("#alert-container").text("Thank you for using Lunch Ninja! We'll send you a follow-up email to inform you about your match based on your new preferences!");
+    setTimeout(function() { $("#alert-container").fadeOut(); }, 4000);
+}
+
 $('#serviceToggle').change(function () {
     $("#overlay").show();
     let toggleState = $(this).prop('checked');
@@ -20,7 +42,7 @@ $('#serviceToggle').change(function () {
             $("#overlay").hide();
             $("#alert-container").show();
             $("#alert-container").addClass("alert alert-success");
-            $("#alert-container").text("Your LunchNinja services have been " + statusMessage)
+            $("#alert-container").text("Your LunchNinja services have been " + statusMessage);
             setTimeout(function() { $("#alert-container").fadeOut(); }, 2000);
         },
         error: function () {
