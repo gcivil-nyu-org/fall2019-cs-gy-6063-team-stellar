@@ -223,14 +223,11 @@ $(document).on('submit', '#service_select_form', function (e) {
         data: service_request,
         success: function () {
             $("#overlay").hide();
-            window.location.href = "/settings/";
-            console.log("service_status is")
-            console.log(service_status)
             if(service_status == 0){
-                alert("Thank you for using Lunch Ninja! Your Lunch Ninja service has been switched on. We'll send you a follow-up email when your matching is ready.");
+                window.location.href = "/settings?from=service_page_on";
             }
             else {
-                alert("Thank you for using Lunch Ninja! We'll send you a follow-up email to inform you about your match based on your new preferences.");
+                window.location.href = "/settings?from=service_page_off";
             }
         },
         error: function () {

@@ -155,6 +155,10 @@ def get_yelp_link(restaurant):
     return yelp_link
 
 
+def my_len(somthing):
+    return len(somthing)
+
+
 def compose_email(
     userRequest1,
     userRequest2,
@@ -227,7 +231,7 @@ def compose_email(
     )
 
     # Add restaurant near school1
-    if not len(restaurants1) == 0:
+    if not my_len(restaurants1) == 0:
         html_content = html_content + "<p><b><i>Restaurants near your school:</p>"
         prevname = ""
 
@@ -270,7 +274,7 @@ def compose_email(
                     html_content = html_content + "<div>" + link_short + "</div>"
 
                 prevname = restaurant.name
-    if not len(restaurants2) == 0:
+    if not my_len(restaurants2) == 0:
         html_content = (
             html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
         )
@@ -554,7 +558,7 @@ def begining_of_week(day):
     return begining
 
 
-def find_day_prefer(user):
+def first_day_prefer(user):
     days = user.days.all()
     if len(days) == 0:
         return 0
@@ -562,33 +566,42 @@ def find_day_prefer(user):
         return user.days.all()[0].id
 
 
-def change_available_day(user1, user2):
+def next_available_day(user1):
+    today = datetime.date.today() + datetime.timedelta(days=1)
     month = relativedelta(months=1)
     week = datetime.timedelta(weeks=1)
     day = datetime.timedelta(days=1)
-    ur1 = UserRequest.objects.get(user_id=user1.id)
-    ur2 = UserRequest.objects.get(user_id=user2.id)
+    ur1 = user1
+    if ur1.service_type == "Monthly":
+        ur1.available_date = begining_of_week(today + month) + datetime.timedelta(
+            days=first_day_prefer(ur1)
+        )
+    elif ur1.service_type == "Weekly":
+        ur1.available_date = begining_of_week(today + week) + datetime.timedelta(
+            days=first_day_prefer(ur1)
+        )
+    elif ur1.service_type == "Daily":
+        ur1.available_date = today + day
 
-    first_available_weekday_u1 = begining_of_week(today) + datetime.timedelta(
-        days=find_day_prefer(ur1)
-    )
-    first_available_weekday_u2 = begining_of_week(today) + datetime.timedelta(
-        days=find_day_prefer(ur2)
-    )
-    if ur1.service_type == "monthly":
-        ur1.available_date = first_available_weekday_u1 + month
-    elif ur1.service_type == "weekly":
-        ur1.available_date = first_available_weekday_u1 + week
-    elif ur1.service_type == "daily":
-        ur1.available_date = first_available_weekday_u1 + day
-    if ur2.service_type == "Monthly":
-        ur2.available_date = first_available_weekday_u2 + month
-    elif ur2.service_type == "Weekly":
-        ur2.available_date = first_available_weekday_u2 + week
-    elif ur2.service_type == "Daily":
-        ur2.available_date = first_available_weekday_u2 + day
     ur1.save()
-    ur2.save()
+    return
+
+
+def next_available_day_same_week(user1):
+    day = datetime.timedelta(days=1)
+    today = datetime.date.today() + datetime.timedelta(days=1)
+    ur1 = user1
+    weekdays = ur1.days.all()
+    if ur1.service_type == "daily":
+        ur1.available_date = today + day
+    else:
+        for d in weekdays:
+            if d.id > today.weekday():
+                ur1.available_date = today + datetime.timedelta(
+                    days=(d.id - today.weekday())
+                )
+                break
+    ur1.save()
     return
 
 
@@ -627,14 +640,11 @@ def find_match_user(available_set):
     return match_request
 
 
-today = datetime.date.today() + datetime.timedelta(days=1)
-
-
 def get_matchpool():
     matchpool = set()
     reqlist = []
 
-    # today = datetime.date.today()
+    today = datetime.date.today() + datetime.timedelta(days=1)
     print(today)
     available_day_entry = UserRequest.objects.filter(available_date=today)
     # days_entry = Days_left.objects.filter(days=1)
@@ -742,7 +752,8 @@ def creat_match_matrix(matchpool, matchlist, preference_score):
 
 # match users base on match matrix
 # The matches with highest score will be consider first
-def match():
+def match_user():
+    today = datetime.date.today() + datetime.timedelta(days=1)
     matchpool, reqlist = get_matchpool()
     preference_score = {
         "cuisine": 10,
@@ -774,7 +785,7 @@ def match():
     # print(match_score_list)
     matched_user_request = []
     matched_user = []
-    not_matched_user = []
+    today_not_matched_user = []
     print(match_score_list)
     for user_tuple in match_score_list:
 
@@ -792,54 +803,61 @@ def match():
             matchpool.remove(user1)
             matchpool.remove(user2)
     for user in matchpool:
-        not_matched_user.append(user)
+        today_not_matched_user.append(user)
     save_matches(matched_user_request)
 
-    for u in not_matched_user:
+    for u in today_not_matched_user:
         print(u.user.username)
 
-    fake_not_matched_user = []
-    for user in not_matched_user:
+    next_turn_match_user = []
+    for user in today_not_matched_user:
         prefer_weekday = []
         for d in user.days.all():
             prefer_weekday.append(d.id)
         for i in prefer_weekday:
             if i > today.weekday():
-                user.available_date = begining_of_week(today) + datetime.timedelta(
-                    days=i
-                )
-                user.save()
-                fake_not_matched_user.append(user)
+                next_turn_match_user.append(user)
+                break
 
     real_not_matched_user = []
-    for user in not_matched_user:
-        if user not in fake_not_matched_user:
+    for user in today_not_matched_user:
+        if user not in next_turn_match_user:
             real_not_matched_user.append(user)
 
     print("matched user")
     print(matched_user_request)
-    print("fake not matched user")
-    print(fake_not_matched_user)
+    print("next turn match user")
+    print(next_turn_match_user)
     print("real_not_matched_user")
     print(real_not_matched_user)
+    for ut in matched_user_request:
+        next_available_day(ut[0])
+        next_available_day(ut[1])
 
-    for each in fake_not_matched_user + real_not_matched_user:
+    for ur in real_not_matched_user:
+        next_available_day(ur)
+    for un in next_turn_match_user:
+        next_available_day_same_week(un)
+
+    for each in next_turn_match_user + real_not_matched_user:
         send_unmatch_email(each)
 
     return matched_user_request
 
 
-matched_user_request = match()
-userlist = UserRequest.objects.all()
-for user in userlist:
-    if user in matched_user_request:
-        print("Matched")
-    print(user.user.username)
-    print(user.service_type)
-    print(user.days.all())
-    print(user.days.all())
-    print(user.available_date)
-
+match_user()
+# if __name__ == "__main__":
+#     print("CCCCCCCCCCCCCCCC")
+#     matched_user_request = match_user()
+#     userlist = UserRequest.objects.all()
+#     for user in userlist:
+#         if user in matched_user_request:
+#             print("Matched")
+#         print(user.user.username)
+#         print(user.service_type)
+#         print(user.days.all())
+#         print(user.days.all())
+#         print(user.available_date)
 
 # For testing mathcing algorithm
 # def send_test_email():

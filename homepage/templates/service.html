@@ -45,7 +45,7 @@
                <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
-                        <h4>Step 1 of 5</h4>
+                        <h5 class="selection-header">Step 1 of 5</h5>
                         <div class="dropdown col-md-6 center-page">
                         Select preferred type of service:
                            <select class="form-control" type="text" id="serviceSelect" name="{{selected_type}}">
@@ -80,8 +80,7 @@
                            </select>
                         </div>
                         <br><br>
-
-                        <h4>Step 2 of 5</h4>
+                        <h5 class="selection-header">Step 2 of 5</h5>
                         <div class="dropdown">
                             <div class="col-md-6 center-page">
                                  Select preferred school:
@@ -106,7 +105,7 @@
                         </div>
                      <br><br>
 
-                     <h4>Step 3 of 5</h4>
+                     <h5 class="selection-header">Step 3 of 5</h5>
                         <div class="col-md-6 center-page">
                         <p>Select preferred Cuisine( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending cuisines ):</p>
                            <select id="cuisineSelect" placeholder="Select upto 10 cuisines" multiple>
@@ -123,7 +122,7 @@
                         </div>
                         <br><br>
 
-                     <h4>Step 4 of 5</h4>
+                     <h5 class="selection-header">Step 4 of 5</h5>
                         <div class="col-md-6 center-page">
                         <p>Select preferred conversation type( <span><i class="fa fa fa-line-chart fire-icon"></i></span> - Indicates trending interests ):</p>
                            <select id="interestSelect" placeholder="Select upto 10 interests" multiple>
@@ -140,23 +139,22 @@
                         <br><br>
 
 
-                     <h4>Step 5 of 5</h4>
-                     <p>Select preferred priority of each preference selected:</p>
+                     <h5 class="selection-header">Step 5 of 5</h5>
                         <div class="col-md-6 center-page">
                            <div class="range-slider" id="department_slider" >
-                              Select priority for school/department:
+                              Select priority for selected school/department:
                               <input class="range-slider__range" id="department_slider_range" type="range" value="{{ selected_department_priority }}" min="1" max="10" step="1">
                               <span class="range-slider__value" id="department_slider_value" >{{ selected_department_priority }}</span>
                            </div>
                            <br>
                            <div class="range-slider" id="cuisine_slider" >
-                              Select priority for cuisines:
+                              Select priority for selected cuisines:
                               <input class="range-slider__range" id="cuisine_slider_range" type="range" value="{{ selected_cuisine_priority }}" min="1" max="10" step="1">
                               <span class="range-slider__value" id="cuisine_slider_value">{{ selected_cuisine_priority }}</span>
                            </div>
                            <br>
                            <div class="range-slider" id="interest_slider" >
-                              Select priority for conversation interests:
+                              Select priority for selected conversation interests:
                               <input class="range-slider__range" id="interest_slider_range" type="range" value="{{ selected_interest_priority }}" min="1" max="10" step="1">
                               <span class="range-slider__value" id="interest_slider_value">{{ selected_interest_priority }}</span>
                            </div>

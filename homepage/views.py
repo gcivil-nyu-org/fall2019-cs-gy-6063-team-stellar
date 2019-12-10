@@ -619,7 +619,7 @@ def feedback(request):
         return render(request, "error.html", context=context)
     matchpair = pair.split("'")[1]
     data = matchpair.split("-")
-    print(matchpair)
+    # print(matchpair)
     if request.method == "POST":
         # data = request.META.get("PATH_INFO")[1:].split("/")[-1].split("-")
         match_id = int(data[0])
