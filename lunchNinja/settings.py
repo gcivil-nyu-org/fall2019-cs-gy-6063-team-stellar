@@ -88,6 +88,15 @@ WSGI_APPLICATION = "lunchNinja.wsgi.application"
 #     }
 # }
 
+REDIS_URL = "redis://h:pa859449cd2026c08fe7e5cbd46c5ec980185c9ca404d1d9c2fcea3998e9148c5@ec2-18-210-232-186.compute-1.amazonaws.com:17629"
+
+CACHES = {
+    "default": {
+         "BACKEND": "redis_cache.RedisCache",
+         "LOCATION": os.environ.get('REDIS_URL'),
+    }
+}
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
