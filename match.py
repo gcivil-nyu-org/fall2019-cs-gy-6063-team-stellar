@@ -847,7 +847,6 @@ def match_user():
 
 match_user()
 # if __name__ == "__main__":
-#     print("CCCCCCCCCCCCCCCC")
 #     matched_user_request = match_user()
 #     userlist = UserRequest.objects.all()
 #     for user in userlist:
