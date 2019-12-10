@@ -22,7 +22,7 @@ def generateuser(N):
         password = "Stellar123!"
 
         # school
-        school_id = random.randint(1, School.objects.all().count())
+        school_id = 13
         # school_id = random.randint(2, 2)
         school = School.objects.filter(id=school_id)[0].name
 
