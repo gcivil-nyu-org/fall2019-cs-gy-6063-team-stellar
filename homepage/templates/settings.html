@@ -15,6 +15,7 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 	<!-- Custom styles for this template -->
 	<link href="{% static 'css/agency.css'%}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	<!-- Bootstrap and Jquery CSS and JS-->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
@@ -22,12 +23,14 @@
 	
 	<!-- Navigation -->
 	{% include "nav_bar.html" %}
-
+    {% csrf_token %}
 	<!-- Body -->
 	<div class="container">
 		<br>
+		<div id="alert-container" style="display:None" role="alert">
+		</div>
+		
 		<h3 id="active_service_header">Active Service</h3>
-		<a id="change_service_button" type="button" class="btn btn-warning" data-toggle="modal"  data-target="#myModal1" href="#myModal1">Change Service Preferences</a>
 		{% if user_request%}
 			<table id="service_table" class="table">
 				<thead>
@@ -41,8 +44,6 @@
                         {% if not user_request.service_type == "Daily" %}
                         <th scope="col">Preferred Weekday</th>
                         {% endif %}
-{#                        <th scope="col">Next Meeting</th>#}
-
 						<th scope="col">Service Status</th>
 
 					</tr>
@@ -72,10 +73,6 @@
 								{{user_request.preferred_weekday}}
 							</td>
                             {% endif %}
-{#                            <td>#}
-{##}
-{#								{{user_request.next_meet_day}}#}
-{#							</td>#}
 							<td>
 								<label class="switch">
 									<input id="serviceToggle" type="checkbox">
@@ -92,7 +89,6 @@
 	<br>
 		<h3 id="active_service_header">User Profile</h3>
 		<a id="change_service_button" type="button" class="btn btn-warning"  href="/password_reset/">Change Password</a>
-
 			<table id="service_table" class="table">
 				<thead>
 					<tr>
@@ -125,21 +121,18 @@
 			</table>
 	</div>
 
-	<!-- Pop-up models -->
-	{% include "service_pop_up.html" %}
-	
-	<!-- Footer -->
-	{% comment %} {% include "footer.html" %} {% endcomment %}
 </body>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/multiselect/2.2.9/js/multiselect.min.js"></script>
-<script type="text/javascript" src="{% static 'js/service-pop-up.js' %}"></script>
 <script type="text/javascript">
 	var userServiceStatus = '{{user_request.service_status}}' == 'True'? true:false
 </script>
 <script type="text/javascript" src="{% static 'js/settings.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/service-pop-up.js' %}"></script>
+<script>
+    function editprofile(){
+        alert("Thank you for using Lunch Ninja. If your information is registered wrong, please contact teamstellarse@outlook.com.")
+    }
+</script>
 
 </html>

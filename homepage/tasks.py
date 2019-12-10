@@ -18,8 +18,10 @@ from celery import task
 from subprocess import run, PIPE
 
 
-@task(ignore_result=True)
-def run_matching_algorithm():
+# @task(ignore_result=True)
+# def run_matching_algorithm():
+@background(schedule=timezone.localtime(timezone.now()).replace(hour=0, minute=1))
+def run_matching():
     run(["python", "match.py"], shell=False, stdout=PIPE)
 
 

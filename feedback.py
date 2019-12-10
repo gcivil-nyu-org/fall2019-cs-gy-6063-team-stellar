@@ -62,12 +62,12 @@ def send_email(html_content, attendee):
 
 def prepare_feedback():
     tomorrow = date.today() + timedelta(days=1)
-    print(tomorrow)
+    # print(tomorrow)
     # yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
     # matches = UserRequestMatch.objects.filer(match_time = yesterday)
     matches = UserRequestMatch.objects.filter(match_time__date=tomorrow)
     for each in matches:
-        print(each.id)
+        # print(each.id)
         user1 = each.user1
         user2 = each.user2
         html_content1 = compose_email(user1, user2, each)

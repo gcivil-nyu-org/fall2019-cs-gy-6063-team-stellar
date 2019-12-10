@@ -9,8 +9,9 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('user_account', '__first__'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("user_account", "__first__"),
+    ]
 
     operations = [
         migrations.CreateModel(
@@ -19,6 +20,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, max_length=100, null=True)),
             ],
+            options={"managed": False,},
             options={
                 'managed': False,
             },
@@ -32,6 +34,7 @@ class Migration(migrations.Migration):
             options={
                 'managed': False,
             },
+
         ),
         migrations.CreateModel(
             name='Department',
@@ -69,9 +72,11 @@ class Migration(migrations.Migration):
                 ('latitude', models.FloatField()),
                 ('longitude', models.FloatField()),
             ],
+
             options={
                 'managed': False,
             },
+
         ),
         migrations.CreateModel(
             name='School',
@@ -81,9 +86,11 @@ class Migration(migrations.Migration):
                 ('latitude', models.FloatField()),
                 ('longitude', models.FloatField()),
             ],
+
             options={
                 'managed': False,
             },
+
         ),
         migrations.CreateModel(
             name='Choice',
@@ -102,6 +109,7 @@ class Migration(migrations.Migration):
             options={
                 'managed': True,
             },
+
         ),
         migrations.CreateModel(
             name='Question',
@@ -140,9 +148,11 @@ class Migration(migrations.Migration):
                 ('interests', models.ManyToManyField(blank=True, to='homepage.Interests')),
                 ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='homepage.School')),
             ],
+
             options={
                 'managed': True,
             },
+
         ),
         migrations.CreateModel(
             name='Feedback',

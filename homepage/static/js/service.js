@@ -70,17 +70,12 @@ var rangeSlider = function () {
 
     departmentSlider.each(function () {
         service_request["department_priority"] = document.getElementById("department_slider_range").value;
-        departmentValue.each(function () {
 
+        departmentValue.each(function () {
             var departmentValue = $(this).prev().attr('value');
             $(this).html(departmentValue);
         });
 
-        // departmentRange.on('submit','#department_slider_range',function () {
-        //     alert(this.val());
-        //     service_request["department_priority"] = this.value;
-        //     $(this).next(departmentValue).html(this.value);
-        // });
         departmentRange.on('input', function () {
             service_request["department_priority"] = this.value;
             $(this).next(departmentValue).html(this.value);
@@ -110,6 +105,7 @@ var rangeSlider = function () {
 
     interestSlider.each(function () {
         service_request["interests_priority"] = document.getElementById("interest_slider_range").value;
+
         interestValue.each(function () {
             var value = $(this).prev().attr('value');
             $(this).html(value);
@@ -122,56 +118,6 @@ var rangeSlider = function () {
     });
 };
 
-rangeSlider();
-
-//
-// $("div[id^='myModal']").each(function () {
-//     var currentModal = $(this);
-//     let formData = {
-//         department: '',
-//         school: '',
-//         cuisines: []
-//     };
-//
-//     function showNextModal(){
-//         currentModal.modal('hide');
-//         currentModal.closest("div[id^='myModal']").nextAll("div[id^='myModal']").first().modal('show');
-//     }
-//
-//     //click next
-//     currentModal.find('.btn-next').click(function () {
-//         if (currentModal[0].id == "myModal3"){
-//             if(! $("#cuisineSelect").val().length){
-//                 alert("Please select at least 1 cuisine");
-//             }else{
-//                 showNextModal();
-//             }
-//         } else if (currentModal[0].id == "myModal4"){
-//             if (!$("#interestSelect").val().length) {
-//                 alert("Please select at least 1 conversation interest");
-//             } else {
-//                 showNextModal();
-//             }
-//         }else{
-//             showNextModal();
-//         }
-//
-//     });
-//
-//     //click prev
-//     currentModal.find('.btn-prev').click(function () {
-//         currentModal.modal('hide');
-//         currentModal.closest("div[id^='myModal']").prevAll("div[id^='myModal']").first().modal('show');
-//     });
-// });
-
-
-//Service request model data
-$(document).on('submit', '#service_select_form', function (e) {
-    e.preventDefault();
-    service_request['service_type'] = $("#serviceSelect option:selected").val();
-    service_request['days'] = $("#daysSelect").val();
-});
 
 $(document).ready(function () {
     var servicetype=document.getElementById("serviceSelect");
@@ -181,13 +127,22 @@ $(document).ready(function () {
     else{
         $('#daysSelectContainer').show();
     }
-
-
 });
 
 
+function switch_day() {
+    console.log("service changed")
+    console.log(document.getElementById("serviceSelect").value)
+    var daysSelectContainer=document.getElementById("daysSelectContainer");
+    if (document.getElementById("serviceSelect").value === 'Daily') {
+        daysSelectContainer.style.display = "none";
+    } else {
+        daysSelectContainer.style.display = "block";
+    }
+};
 
 $('#serviceSelect').on('change', function () {
+    console.log("service changed")
     if (this.value === 'Daily') {
         $('#daysSelectContainer').hide();
     }else{
@@ -195,12 +150,6 @@ $('#serviceSelect').on('change', function () {
     }
 });
 
-//School and department request model data
-$(document).on('submit', '#school_select_form', function (e) {
-    e.preventDefault();
-    service_request['school'] = $("#schoolSelect option:selected").val();
-    service_request['department'] = $("#departmentSelect option:selected").val();
-});
 
 //Department select
 $("#departmentSelect").change(function () {
@@ -224,13 +173,14 @@ $("#departmentSelect").change(function () {
         error: function () {
             $("#overlay").hide();
             alert('Unknown error ');
-        } 
+        }
     });
 });
 
 //School Select
 $("#schoolSelect").change(function () {
     var school_id = $(this).val();
+    console.log(school_id)
     $("#overlay").show();
     $.ajax({
         url: 'ajax/load_departments_homepage/',
@@ -250,51 +200,22 @@ $("#schoolSelect").change(function () {
         error: function () {
             $("#overlay").hide();
             alert('Unknown error ');
-        } 
+        }
     });
 });
 
-function skipschool(){
-    var skipschoolflag = true;
-    alert(skipschoolflag)
-    service_request['school'] = $("#schoolSelect option:selected").val();
-    service_request['department'] = $("#departmentSelect option:selected").val();
-    service_request["department_priority"] = 0;
-    return skipschoolflag;
-};
-
-function skipcuisine(){
-    var skipcuisineflag = true;
-    alert(skipcuisineflag)
-    service_request['cuisine'] = $("#cuisineSelect").val();
-    service_request["cuisine_priority"] = 0;
-    return skipcuisineflag;
-};
-
-function skipinterest(){
-    var skipinterstflag = true;
-    alert(skipinterstflag)
-    service_request['interests'] = $("#interestSelect").val();
-    service_request["interests_priority "] = 0;
-    return skipinterstflag;
-};
-
-//Cuisine model data
-$(document).on('submit', '#cuisine_select_form', function (e) {
-    e.preventDefault();
-    service_request['cuisine'] = $("#cuisineSelect").val();
-});
-
-//Interest model data
-$(document).on('submit', '#interest_select_form', function (e) {
-    e.preventDefault();
-    service_request['interests'] = $("#interestSelect").val();
-});
 
 //Priority model data
-$(document).on('submit', '#priority_select_form', function (e) {
+$(document).on('submit', '#service_select_form', function (e) {
     e.preventDefault();
     $("#overlay").show();
+    // service_request["department_priority"] = $('#department_slider_range').value;
+    service_request['service_type'] = $("#serviceSelect option:selected").val();
+    service_request['days'] = $("#daysSelect").val();
+    service_request['school'] = $("#schoolSelect option:selected").val();
+    service_request['department'] = $("#departmentSelect option:selected").val();
+    service_request['cuisine'] = $("#cuisineSelect").val();
+    service_request['interests'] = $("#interestSelect").val();
     service_request['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     $.ajax({
         type: 'POST',
@@ -302,17 +223,18 @@ $(document).on('submit', '#priority_select_form', function (e) {
         data: service_request,
         success: function () {
             $("#overlay").hide();
-            window.location.href = "/settings/";
-            if(service_status === 0){
-                alert("Thank you for using Lunch Ninja! Your Lunch Ninja service has been switched on. We'll send you a follow-up email when your matching is ready.");
+            if(service_status == 0){
+                window.location.href = "/settings?from=service_page_on";
             }
             else {
-                alert("Thank you for using Lunch Ninja! We'll send you a follow-up email to inform you about your match based on your new preferences.");
+                window.location.href = "/settings?from=service_page_off";
             }
         },
         error: function () {
             $("#overlay").hide();
             alert('Unknown error ');
-        }    
+        }
     })
 });
+
+rangeSlider();

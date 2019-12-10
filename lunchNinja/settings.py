@@ -136,8 +136,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = False
-
 # extension user
 AUTH_USER_MODEL = "user_account.LunchNinjaUser"
 

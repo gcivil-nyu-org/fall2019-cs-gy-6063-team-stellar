@@ -103,7 +103,14 @@ class UserserviceViewTest(TestCase):
     @mock.patch("homepage.views.render_to_string", side_effect=mock_email_string)
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
-    def test_authenticate_user(self, mock_authenticated, mock_request, mock_email_string, mock_email_message, mock_user):
+    def test_authenticate_user(
+        self,
+        mock_authenticated,
+        mock_request,
+        mock_email_string,
+        mock_email_message,
+        mock_user,
+    ):
         service_type_Obj = {
             "service_type": "Monthly",
             "school": "Tandon School of Engineering",
@@ -114,7 +121,7 @@ class UserserviceViewTest(TestCase):
                 "mail": "2345@nyu.edu",
             },
         }
-        response = self.client.post("/serviceRequest/", service_type_Obj)
+        response = self.client.post("/service/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 
     def User_request_Obj_raise_error(**kargs):
@@ -200,7 +207,7 @@ class UserserviceViewTest(TestCase):
         class user_for_mock:
             def __init__(self):
                 self.first_name = "donald"
-                self.email="abc@nyu,edu"
+                self.email = "abc@nyu,edu"
 
         return user_for_mock()
 
@@ -214,7 +221,13 @@ class UserserviceViewTest(TestCase):
     )
     @mock.patch("homepage.views.check_user_authenticated", side_effect=is_authenticated)
     def test_authenticate_user_object_not_exist(
-            self, mock_authenticated, mock_request, mock_userrequest, mock_email_string, mock_email_message, mock_user
+        self,
+        mock_authenticated,
+        mock_request,
+        mock_userrequest,
+        mock_email_string,
+        mock_email_message,
+        mock_user,
     ):
         service_type_Obj = {
             "service_type": "Monthly",
@@ -222,7 +235,7 @@ class UserserviceViewTest(TestCase):
             "department": "Computer Science",
             "user": {"first_name": "donald", "last_name": "trump"},
         }
-        response = self.client.post("/serviceRequest/", service_type_Obj)
+        response = self.client.post("/service/", service_type_Obj)
         self.assertEqual(response.status_code, 302)
 
     def test_view_url_exists_at_desired_location(self):
@@ -242,8 +255,8 @@ class UserserviceViewTest(TestCase):
         self.assertTrue(response, '<JsonResponse status_code=200, "application/json">')
 
     def test_not_post(self):
-        response = self.client.get("/serviceRequest/")
-        self.assertEqual(response.status_code, 302)
+        response = self.client.get("/service/")
+        self.assertEqual(response.status_code, 200)
 
 
 class IndexViewTest(TestCase):
@@ -278,13 +291,21 @@ class IndexViewTest(TestCase):
     def no_repeat_login(request):
         return True
 
-    @mock.patch("homepage.views.Department.objects.filter", side_effect=mock_department_filter)
+    @mock.patch(
+        "homepage.views.Department.objects.filter", side_effect=mock_department_filter
+    )
     @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
     @mock.patch("homepage.views.Department.objects.all", side_effect=mock_department)
     @mock.patch("homepage.views.School.objects.all", side_effect=mock_school)
     @mock.patch("homepage.views.check_login", side_effect=no_repeat_login)
-    def test_selected_preference(self, mock_index_login, mock_school, mock_department, mock_user,
-                                 mock_department_filter):
+    def test_selected_preference(
+        self,
+        mock_index_login,
+        mock_school,
+        mock_department,
+        mock_user,
+        mock_department_filter,
+    ):
         response = self.client.get("/homepage/")
         self.assertEqual(response.status_code, 200)
 
@@ -534,7 +555,7 @@ class MatchHistoryTest(TestCase):
 
         return result()
 
-    def User_request_Obj(**kargs):
+    def User_request_Obj_get(**kargs):
         class interest_for_mock:
             def __init__(self, name):
                 self.name = name
@@ -581,15 +602,86 @@ class MatchHistoryTest(TestCase):
                 self.service_status = True
                 self.cuisines = cuisines_for_mock
                 self.interests = interests_for_mock
+                self.service_status = True
 
         return userObj()
 
-    @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
+    def User_request_Obj_filter(user):
+        class interest_for_mock:
+            def __init__(self, name):
+                self.name = name
+
+            def add(**kargs):
+                return "Added"
+
+            def clear(**kargs):
+                return "Cleared"
+
+        class interests_for_mock:
+            def __init__(self, name):
+                pass
+
+            def all(**kargs):
+                return [
+                    interest_for_mock("parties"),
+                    interest_for_mock("networking"),
+                    interest_for_mock("homework"),
+                ]
+
+        class cuisine_for_mock:
+            def __init__(self, name):
+                self.name = name
+                pass
+
+        class cuisines_for_mock:
+            def __init__(self, name):
+                pass
+
+            def all(**kargs):
+                return [
+                    cuisine_for_mock("American"),
+                    cuisine_for_mock("Indian"),
+                    cuisine_for_mock("Chinese"),
+                ]
+
+        class userObj:
+            def __init__(self):
+                self.service_type = "Monthly"
+                self.school = "Tandon School of Engineering"
+                self.time_stamp = "2019-11-6"
+                self.department = "Computer Science"
+                self.service_status = True
+                self.cuisines = cuisines_for_mock
+                self.interests = interests_for_mock
+                self.service_status = True
+
+            def exists(self):
+                return True
+
+        return userObj()
+
+    def mock_request_user(request):
+        return "user"
+
+    @mock.patch("homepage.views.get_user", side_effect=mock_request_user)
+    @mock.patch(
+        "homepage.views.UserRequest.objects.filter", side_effect=User_request_Obj_filter
+    )
+    @mock.patch(
+        "homepage.views.UserRequest.objects.get", side_effect=User_request_Obj_get
+    )
     @mock.patch(
         "homepage.views.UserRequestMatch.objects.filter", side_effect=User_match_Obj
     )
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_match_history_next(self, mock_login, mock_filter, mock_request):
+    def test_match_history_next(
+        self,
+        mock_login,
+        mock_filter,
+        mock_request_get,
+        mock_request_filter,
+        mock_request_user,
+    ):
         response = self.client.get("/matchHistory/")
         self.assertEqual(response.status_code, 200)
 
@@ -638,7 +730,7 @@ class MatchHistoryTest(TestCase):
 
         return result()
 
-    def User_request_Obj(**kargs):
+    def User_request_Obj_get(**kargs):
         class interest_for_mock:
             def __init__(self, name):
                 self.name = name
@@ -685,15 +777,86 @@ class MatchHistoryTest(TestCase):
                 self.service_status = True
                 self.cuisines = cuisines_for_mock
                 self.interests = interests_for_mock
+                self.service_status = True
 
         return userObj()
 
-    @mock.patch("homepage.views.UserRequest.objects.get", side_effect=User_request_Obj)
+    def User_request_Obj_filter(user):
+        class interest_for_mock:
+            def __init__(self, name):
+                self.name = name
+
+            def add(**kargs):
+                return "Added"
+
+            def clear(**kargs):
+                return "Cleared"
+
+        class interests_for_mock:
+            def __init__(self, name):
+                pass
+
+            def all(**kargs):
+                return [
+                    interest_for_mock("parties"),
+                    interest_for_mock("networking"),
+                    interest_for_mock("homework"),
+                ]
+
+        class cuisine_for_mock:
+            def __init__(self, name):
+                self.name = name
+                pass
+
+        class cuisines_for_mock:
+            def __init__(self, name):
+                pass
+
+            def all(**kargs):
+                return [
+                    cuisine_for_mock("American"),
+                    cuisine_for_mock("Indian"),
+                    cuisine_for_mock("Chinese"),
+                ]
+
+        class userObj:
+            def __init__(self):
+                self.service_type = "Monthly"
+                self.school = "Tandon School of Engineering"
+                self.time_stamp = "2019-11-6"
+                self.department = "Computer Science"
+                self.service_status = True
+                self.cuisines = cuisines_for_mock
+                self.interests = interests_for_mock
+                self.service_status = True
+
+            def exists(self):
+                return True
+
+        return userObj()
+
+    def mock_request_user(request):
+        return "user"
+
+    @mock.patch("homepage.views.get_user", side_effect=mock_request_user)
+    @mock.patch(
+        "homepage.views.UserRequest.objects.filter", side_effect=User_request_Obj_filter
+    )
+    @mock.patch(
+        "homepage.views.UserRequest.objects.get", side_effect=User_request_Obj_get
+    )
     @mock.patch(
         "homepage.views.UserRequestMatch.objects.filter", side_effect=User_match_Obj
     )
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_match_history_past(self, mock_login, mock_filter, mock_request):
+    def test_match_history_past(
+        self,
+        mock_login,
+        mock_filter,
+        mock_request_get,
+        mock_request_filter,
+        mock_request_user,
+    ):
         response = self.client.get("/matchHistory/")
         self.assertEqual(response.status_code, 200)
 
@@ -744,7 +907,7 @@ class FeedbackViewTest(TestCase):
     )
     @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
     def test_post_feedback(
-            self, mock_lunchuser, mock_userreq, feedback_mock, question_mock
+        self, mock_lunchuser, mock_userreq, feedback_mock, question_mock
     ):
         service_type_Obj = {
             "attendance": "Yes!",
@@ -762,6 +925,10 @@ class FeedbackViewTest(TestCase):
 
     def test_incorrect_get_feedback_link(self):
         response = self.client.get("/feedback/2-3-4")
+        self.assertEqual(response.status_code, 200)
+
+    def test_incorrect_get_feedback_link2(self):
+        response = self.client.get("/feedback/2-3-4/3232")
         self.assertEqual(response.status_code, 200)
 
     def mock_match_history_filter(id):
@@ -830,12 +997,12 @@ class FeedbackViewTest(TestCase):
         side_effect=mock_match_history_filter,
     )
     def test_incorrect_get_user_feedback(
-            self,
-            mock_matchlunchuser_filter,
-            mock_matchlunchuser_get,
-            mock_lunch_user_filter,
-            mock_lunch_user_get,
-            mock_feedback_filter,
+        self,
+        mock_matchlunchuser_filter,
+        mock_matchlunchuser_get,
+        mock_lunch_user_filter,
+        mock_lunch_user_get,
+        mock_feedback_filter,
     ):
         response = self.client.get("/feedback/2-3")
         self.assertEqual(response.status_code, 200)
@@ -906,12 +1073,12 @@ class FeedbackViewTest(TestCase):
         side_effect=mock_match_history_filter,
     )
     def test_submitted_feedback(
-            self,
-            mock_matchlunchuser_filter,
-            mock_matchlunchuser_get,
-            mock_lunch_user_filter,
-            mock_lunch_user_get,
-            mock_feedback_filter,
+        self,
+        mock_matchlunchuser_filter,
+        mock_matchlunchuser_get,
+        mock_lunch_user_filter,
+        mock_lunch_user_get,
+        mock_feedback_filter,
     ):
         response = self.client.get("/feedback/2-3")
         self.assertEqual(response.status_code, 200)
@@ -982,29 +1149,40 @@ class FeedbackViewTest(TestCase):
         side_effect=mock_match_history_filter,
     )
     def test_correct_get_feedback(
-            self,
-            mock_matchlunchuser_filter,
-            mock_matchlunchuser_get,
-            mock_lunch_user_filter,
-            mock_lunch_user_get,
-            mock_feedback_filter,
+        self,
+        mock_matchlunchuser_filter,
+        mock_matchlunchuser_get,
+        mock_lunch_user_filter,
+        mock_lunch_user_get,
+        mock_feedback_filter,
     ):
         response = self.client.get("/feedback/2-3")
         self.assertEqual(response.status_code, 200)
 
+
 class AboutViewTest(TestCase):
     def login_mock(request):
         return True
+
     def get_modeldata(user):
         return {}
+
     def get_selected_data(self):
         return {}
+
     @mock.patch("homepage.views.get_selected_data", side_effect=get_selected_data)
-    @mock.patch("homepage.views.getModelData",side_effect=get_modeldata)
+    @mock.patch("homepage.views.getModelData", side_effect=get_modeldata)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
-    def test_login_user(self,login_mock,get_modeldata,get_selected_data):
+    def test_login_user(self, login_mock, get_modeldata, get_selected_data):
         response = self.client.get("/about/")
         self.assertEqual(response.status_code, 200)
+
     def test_not_login_user(self):
         response = self.client.get("/about/")
         self.assertEqual(response.status_code, 302)
+
+
+class Test404(TestCase):
+    def test_404_page(self):
+        response = self.client.get("/aboutasyhdsuaushd/")
+        self.assertEqual(response.status_code, 200)

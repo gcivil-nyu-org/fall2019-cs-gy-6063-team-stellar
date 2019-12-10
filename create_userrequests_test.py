@@ -34,7 +34,7 @@ def generateuser(N):
         user["user"] = user_obj
 
         # school
-        school_id = random.randint(1, School.objects.all().count())
+        school_id = 13
         user["school"] = School.objects.get(id=school_id)
 
         # service type

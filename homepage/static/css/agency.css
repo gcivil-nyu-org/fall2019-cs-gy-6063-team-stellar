@@ -885,6 +885,15 @@ button {
     border-right-color: transparent;
     border-radius: 50%;
 }
+
+.center-page{
+  margin: 0 auto;
+}
+
+.selection-header{
+  margin-left: 10%;
+}
+
 @keyframes rotate {
     0% {
         transform: rotate(0deg);
@@ -892,4 +901,9 @@ button {
     100% {
         transform: rotate(360deg);
     }
+}
+
+#progressBar{
+  width:100%;
+  height:100px;
 }

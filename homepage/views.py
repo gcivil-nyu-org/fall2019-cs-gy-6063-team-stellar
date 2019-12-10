@@ -34,8 +34,11 @@ from collections import Counter
 # Create your views here.
 Service_days = {"Daily": 1, "Weekly": 7, "Monthly": 30}
 
+
 def get_user(request):
     return request.user
+
+
 def merge():
     department = Department.objects.all()
     school = School.objects.all()
@@ -66,9 +69,6 @@ def merge():
     school_department["select school"] = department
 
     return school, department, school_department, department_school
-
-
-
 
 
 def check_login(request):
@@ -135,9 +135,8 @@ def getModelData(user):
         selected_school = user_request_instance.school
         selected_department = user_request_instance.department
 
-
         # When user selected preference school show all departments in that school
-        new_department_set=Department.objects.filter(school=selected_school)
+        new_department_set = Department.objects.filter(school=selected_school)
 
         for s in school_set:
             if not s == selected_school:
@@ -199,6 +198,12 @@ def get_selected_data(user):
         selected_department_priority = user_request_instance.department_priority
         selected_cuisine_priority = user_request_instance.cuisines_priority
         selected_interest_priority = user_request_instance.interests_priority
+        # if not UserRequest.objects.filter(user = user).count() == 0:
+        #     print(UserRequest.objects.get(user = user).service_status)
+        #     service_status = UserRequest.objects.get(user = user).service_status
+        # else:
+        #     service_status = False
+
         selected_info = {
             "selected_type": selected_type,
             "selected_school": selected_school,
@@ -209,6 +214,7 @@ def get_selected_data(user):
             "selected_department_priority": selected_department_priority,
             "selected_cuisine_priority": selected_cuisine_priority,
             "selected_interest_priority": selected_interest_priority,
+            # "servcie_status":
         }
     except Exception:
         selected_info = {
@@ -225,8 +231,22 @@ def index(request):
     if check_login(request):  # no repeat log in
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
+        if not UserRequest.objects.filter(user_id=request.user.id).count() == 0:
+
+            ur = UserRequest.objects.get(user_id=request.user.id).service_status
+            if ur is True:
+                service_status = 1
+            else:
+                service_status = 0
+        else:
+            service_status = 0
+        # context = Merge({"service_status": service_status}, preference_model_data, selected_info)
         return render(
-            request, "homepage.html", Merge({}, preference_model_data, selected_info)
+            request,
+            "homepage.html",
+            Merge(
+                {"service_status": service_status}, preference_model_data, selected_info
+            ),
         )
     return redirect("/login/")
 
@@ -249,7 +269,7 @@ def handle_ajax(request):
         return JsonResponse(response, safe=False)
 
 
-def user_service(request):
+def service(request):
     if request.method == "POST":
         if check_user_authenticated(request):
             service_type = request.POST["service_type"]
@@ -288,18 +308,14 @@ def user_service(request):
                 req.cuisines.clear()
                 req.interests.clear()
                 req.days.clear()
-
-
                 req.available_date = date.today() + timedelta(days=1)
                 req.time_stamp = datetime.now()
+                req.service_status = True
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
                 req.days.add(*selected_days_objects)
 
-                # day = Days_left.objects.get(user_id=logged_user.id)
-                # day.days = Service_days[req.service_type]
-                # day.save()
             except ObjectDoesNotExist:
                 req = UserRequest(
                     user=logged_user,
@@ -311,6 +327,7 @@ def user_service(request):
                     interests_priority=interests_priority,
                     available_date=date.today() + timedelta(days=1),
                 )
+                req.service_status = True
                 req.save()
                 req.cuisines.add(*cuisine_objects)
                 req.interests.add(*interests_objects)
@@ -328,7 +345,104 @@ def user_service(request):
         return redirect("/")
 
     else:
-        return redirect("/login/")
+        preference_model_data = getModelData(request.user)
+        selected_info = get_selected_data(request.user)
+        if not UserRequest.objects.filter(user_id=request.user.id).count() == 0:
+
+            ur = UserRequest.objects.get(user_id=request.user.id).service_status
+            if ur is True:
+                service_status = 1
+            else:
+                service_status = 0
+        else:
+            service_status = 0
+        # context = Merge({"service_status": service_status}, preference_model_data, selected_info)
+        return render(
+            request,
+            "service.html",
+            Merge(
+                {"service_status": service_status}, preference_model_data, selected_info
+            ),
+        )
+
+
+# def user_service(request):
+#     if request.method == "POST":
+#         if check_user_authenticated(request):
+#             service_type = request.POST["service_type"]
+#             school = request.POST["school"]
+#             school_object = School.objects.get(name=school)
+#             department = request.POST["department"]
+#             department_object = school_object.department_set.get(name=department)
+#             cuisines_priority = request.POST.get("cuisines_priority")
+#             department_priority = request.POST.get("department_priority")
+#             interests_priority = request.POST.get("interests_priority")
+#             cuisine_ids = request.POST.getlist("cuisine[]")
+#             cuisine_objects = Cuisine.objects.filter(id__in=cuisine_ids)
+#             cuisine_names = ", ".join([cuisine.name for cuisine in cuisine_objects])
+#
+#             interests_ids = request.POST.getlist("interests[]")
+#             interests_objects = Interests.objects.filter(id__in=interests_ids)
+#             interests_names = ", ".join(
+#                 [interest.name for interest in interests_objects]
+#             )
+#
+#             selected_days_ids = request.POST.getlist("days[]")
+#             selected_days_objects = Days.objects.filter(id__in=selected_days_ids)
+#             selected_days_names = ", ".join([day.day for day in selected_days_objects])
+#
+#             logged_user = request.user
+#
+#             # if request already exist then update the request otherwise update it
+#             try:
+#                 req = UserRequest.objects.get(pk=logged_user)
+#                 req.service_type = service_type
+#                 req.school = school_object
+#                 req.department = department_object
+#                 req.cuisines_priority = cuisines_priority
+#                 req.department_priority = department_priority
+#                 req.interests_priority = interests_priority
+#                 req.cuisines.clear()
+#                 req.interests.clear()
+#                 req.days.clear()
+#                 req.available_date = date.today() + timedelta(days=1)
+#                 req.time_stamp = datetime.now()
+#                 req.service_status = True
+#                 req.save()
+#                 req.cuisines.add(*cuisine_objects)
+#                 req.interests.add(*interests_objects)
+#                 req.days.add(*selected_days_objects)
+#
+#             except ObjectDoesNotExist:
+#                 req = UserRequest(
+#                     user=logged_user,
+#                     service_type=service_type,
+#                     school=school_object,
+#                     department=department_object,
+#                     cuisines_priority=cuisines_priority,
+#                     department_priority=department_priority,
+#                     interests_priority=interests_priority,
+#                     available_date=date.today() + timedelta(days=1),
+#                 )
+#                 req.service_status = True
+#                 req.save()
+#                 req.cuisines.add(*cuisine_objects)
+#                 req.interests.add(*interests_objects)
+#                 req.days.add(*selected_days_objects)
+#
+#             User_service_send_email_authenticated(
+#                 request,
+#                 service_type,
+#                 cuisine_names,
+#                 interests_names,
+#                 selected_days_names,
+#                 school,
+#                 department,
+#             )
+#         return redirect("/")
+#
+#     else:
+#         return redirect("/login/")
 
 
 def toggle_user_service(request):
@@ -391,6 +505,16 @@ def match_history(request):
 
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
+        user = get_user(request)
+        preference_selected_status = 0
+        if UserRequest.objects.filter(user=user).exists():
+            preference_selected_status = 1
+
+        next_lunch_status = 0
+        if len(next_lunch_matches) == 1 and preference_selected_status == 1:
+            if UserRequest.objects.get(user=user).service_status:
+                next_lunch_status = 1
+
         return render(
             request,
             "match_history.html",
@@ -398,6 +522,8 @@ def match_history(request):
                 {
                     "next_lunch_matches": next_lunch_matches,
                     "past_lunch_macthes": past_lunch_macthes,
+                    "preference_selected_status": preference_selected_status,
+                    "next_lunch_status": next_lunch_status,
                 },
                 preference_model_data,
                 selected_info,
@@ -452,12 +578,24 @@ def settings(request):
 
         preference_model_data = getModelData(request.user)
         selected_info = get_selected_data(request.user)
+        if not UserRequest.objects.filter(user_id=request.user.id).count() == 0:
 
+            ur = UserRequest.objects.get(user_id=request.user.id).service_status
+            if ur is True:
+                service_status = 1
+            else:
+                service_status = 0
+        else:
+            service_status = 0
         return render(
             request,
             "settings.html",
             Merge(
-                {"user_request": user_request, "user_profile": user_profile},
+                {
+                    "user_request": user_request,
+                    "user_profile": user_profile,
+                    "service_status": service_status,
+                },
                 preference_model_data,
                 selected_info,
             ),
@@ -481,7 +619,7 @@ def feedback(request):
         return render(request, "error.html", context=context)
     matchpair = pair.split("'")[1]
     data = matchpair.split("-")
-    print(matchpair)
+    # print(matchpair)
     if request.method == "POST":
         # data = request.META.get("PATH_INFO")[1:].split("/")[-1].split("-")
         match_id = int(data[0])
