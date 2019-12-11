@@ -28,10 +28,7 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(blank=True, max_length=100, null=True)),
             ],
-            options={
-                'managed': False,
-            },
-
+            options={"managed": False,},
         ),
         migrations.CreateModel(
             name="Days",
@@ -61,11 +58,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-
-            options={
-                'managed': False,
-            },
-
+            options={"managed": False,},
         ),
         migrations.CreateModel(
             name="Department",
@@ -118,10 +111,7 @@ class Migration(migrations.Migration):
                 ("latitude", models.FloatField()),
                 ("longitude", models.FloatField()),
             ],
-
-            options={
-                'managed': False,
-            },
+            options={"managed": False,},
         ),
         migrations.CreateModel(
             name="School",
@@ -139,10 +129,7 @@ class Migration(migrations.Migration):
                 ("latitude", models.FloatField()),
                 ("longitude", models.FloatField()),
             ],
-            options={
-                'managed': False,
-            },
-
+            options={"managed": False,},
         ),
         migrations.CreateModel(
             name="Choice",
@@ -174,11 +161,7 @@ class Migration(migrations.Migration):
                 ),
                 ("days", models.IntegerField()),
             ],
-
-            options={
-                'managed': True,
-            },
-
+            options={"managed": True,},
         ),
         migrations.CreateModel(
             name="Question",
@@ -276,10 +259,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                'managed': True,
-            },
-
+            options={"managed": True,},
         ),
         migrations.CreateModel(
             name="Feedback",

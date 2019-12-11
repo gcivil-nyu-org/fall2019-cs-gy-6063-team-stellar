@@ -30,7 +30,6 @@ def generateuser(N):
         departments = Department.objects.filter(school=school_id)
         departments_count = departments.count()
         if departments_count == 0:
-
             continue
         start_id = departments.first().id
         department_index = random.randint(1, departments_count)
@@ -64,7 +63,7 @@ if __name__ == "__main__":
         last_name="Hu",
         is_active=True,
     )
-    user.set_password("1234mnbv")
+    user.set_password("Stellar123!")
     user.save()
     user1 = LunchNinjaUser(
         username="up293",
@@ -99,4 +98,15 @@ if __name__ == "__main__":
     )
     user3.set_password("Stellar123!")
     user3.save()
-    generateuser(20)
+    user3 = LunchNinjaUser(
+        username="yz1281",
+        email="yz1281@nyu.edu",
+        school="Tisch School of the Arts",
+        department="Dance",
+        first_name="Tianyang",
+        last_name="Zhu",
+        is_active=True,
+    )
+    user3.set_password("Stellar123!")
+    user3.save()
+    # generateuser(20)
