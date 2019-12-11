@@ -98,15 +98,15 @@ if __name__ == "__main__":
     )
     user3.set_password("Stellar123!")
     user3.save()
-    user3 = LunchNinjaUser(
+    user4 = LunchNinjaUser(
         username="yz1281",
         email="yz1281@nyu.edu",
         school="Tisch School of the Arts",
-        department="Dance",
+        department="Photography & Imaging",
         first_name="Tianyang",
         last_name="Zhu",
         is_active=True,
     )
-    user3.set_password("Stellar123!")
-    user3.save()
+    user4.set_password("Stellar123!")
+    user4.save()
     # generateuser(20)
