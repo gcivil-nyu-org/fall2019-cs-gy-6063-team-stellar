@@ -280,24 +280,23 @@ def compose_email(
         html_content = (
             html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
         )
-        for resturant in restaurants2:
+        for restuarant in restaurants2:
             prevname = ""
-
-            if not prevname == restaurant.name:
-                link = get_yelp_link(resturant)
+            if not restuarant.name == prevname:
+                link = get_yelp_link(restuarant)
 
                 html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+                    html_content + "<p><b>" + restuarant.name.capitalize() + "</b></p>"
                 )
                 address = (
                     "Address: "
-                    + resturant.building
+                    + restuarant.building
                     + " "
-                    + resturant.street
+                    + restuarant.street
                     + ", "
-                    + resturant.borough
+                    + restuarant.borough
                     + " "
-                    + str(resturant.zipcode)
+                    + str(restuarant.zipcode)
                 )
                 html_content = html_content + "<p>" + address + "</p>"
                 if not link == -1:
@@ -306,10 +305,14 @@ def compose_email(
                     )
 
                     link_short = (
-                        "<a href='" + link + "'>" + resturant.name.capitalize() + "</a>"
+                        "<a href='"
+                        + link
+                        + "'>"
+                        + restuarant.name.capitalize()
+                        + "</a>"
                     )
                     html_content = html_content + "<div>" + link_short + "</div>"
-                prevname = restaurant.name
+                prevname = restuarant.name
 
     html_content = (
         html_content + "<br><p><b>" + "Not satisfied with the result?" + "</b></p>"
@@ -795,7 +798,7 @@ def match_user():
     print(match_score_list)
     for user_tuple in match_score_list:
 
-        if user_tuple[2] < 0:
+        if user_tuple[2] < -100:
             continue
         user_num1 = user_tuple[0]
         user_num2 = user_tuple[1]

@@ -9,7 +9,7 @@ class MatchTest(TestCase):
         match_user()
         self.assertEqual(1, 1)
 
-    # @mock.patch("match.my_len")
+    # @mock.patch("match.my_len",side_effect=)
     # def test_mock_match(self):
     #     prepare()
     #     match_user()
