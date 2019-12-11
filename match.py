@@ -798,7 +798,7 @@ def match_user():
     print(match_score_list)
     for user_tuple in match_score_list:
 
-        if user_tuple[2] < -100:
+        if user_tuple[2] < -1000:
             continue
         user_num1 = user_tuple[0]
         user_num2 = user_tuple[1]
