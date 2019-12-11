@@ -60,7 +60,7 @@ def send_unmatch_email(userrequest):
         + "We are working on finding a perfect match for you, but we could not find a match based on your service selection at this time.<br>"  # noqa: E501
         + "We will try again in next match cycle. You can update your preferences "
         + "<a href='"
-        + "http://lunch-ninja.herokuapp.com/settings/"
+        + "http://lunch-ninja.herokuapp.com/service"
         + "'>"
         + "here"
         + "</a>."
@@ -314,7 +314,7 @@ def compose_email(
     )
     html_content = (
         html_content
-        + "<a href='http:/lunch-ninja.herokuapp.com/settings'>Change your preference</a>"
+        + "<a href='http:/lunch-ninja.herokuapp.com/service'>Change your preference</a>"
     )
     # Add image
     # html_content = html_content + "<p> Not satisfied with the result? </p>"
