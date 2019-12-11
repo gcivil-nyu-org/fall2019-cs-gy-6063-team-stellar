@@ -890,6 +890,10 @@ button {
   margin: 0 auto;
 }
 
+.selection-header{
+  margin-left: 10%;
+}
+
 @keyframes rotate {
     0% {
         transform: rotate(0deg);
