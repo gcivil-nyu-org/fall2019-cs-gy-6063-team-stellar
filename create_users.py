@@ -102,7 +102,7 @@ if __name__ == "__main__":
         username="yz1281",
         email="yz1281@nyu.edu",
         school="Tisch School of the Arts",
-        department="Dance",
+        department="Photography & Imaging",
         first_name="Tianyang",
         last_name="Zhu",
         is_active=True,
