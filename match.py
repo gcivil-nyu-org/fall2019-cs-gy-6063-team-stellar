@@ -27,7 +27,7 @@ from homepage.models import (
     School,
     Department,
     Cuisine,
-    Interests
+    Interests,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -497,8 +497,8 @@ def send_invitations(userRequest, userMatch):
 def cuisine_filter(matchpool, req):
     # get the preferred cuisine
     cuisine_list = req.cuisines.all()
-    if len(cuisine_list)==0:
-        cuisine_list=Cuisine.objects.all()
+    if len(cuisine_list) == 0:
+        cuisine_list = Cuisine.objects.all()
     available_set = set()
     for c in cuisine_list:
         available_set = available_set.union(c.userrequest_set.all())
@@ -512,7 +512,7 @@ def interest_filter(matchpool, req):
     interests_list = req.interests.all()
     available_set = set()
     if len(interests_list):
-        interests_list=Interests.objects.all()
+        interests_list = Interests.objects.all()
     for i in interests_list:
         available_set = available_set.union(i.userrequest_set.all())
     available_set = available_set.intersection(matchpool)
