@@ -321,29 +321,7 @@ def match():
             matchpool.remove(user2)
     for user in matchpool:
         not_matched_user.append(user)
-    # print(matched_user)
-    # print(matched_user_request)
     save_matches(matched_user_request)
-    # print(matchpool)
-    # print(not_matched_user)
-    # print(len(not_matched_user))
-    # for u in not_matched_user:
-    #     print("    ")
-    #     # import pdb
-    #     # pdb.set_trace()
-    #     # print(u.__dict__)
-    #     print(u.cuisines.all())
-    #     print(u.department)
-    #     print(u.user.department)
-    #     print(u.interests.all())
-    #     print("department: %d"%u.department_priority)
-    #     print("interest: %d"%u.interests_priority)
-    #     print("cuisine: %d"%u.cuisines_priority)
-    #     match_history = UserRequestMatch.objects.filter(
-    #         Q(user1=u.user) | Q(user2=u.user)
-    #     )
-    #     print(u.user)
-    #     print(match_history)
 
 
 match()

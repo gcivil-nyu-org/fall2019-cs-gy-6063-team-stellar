@@ -8,5 +8,7 @@ coverage
 coveralls
 Faker
 numpy
+Celery
+django-celerybeat-status
+redis
 django-background-tasks
-six
