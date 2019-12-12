@@ -640,7 +640,7 @@ def save_matches(matches):
             request_match.restaurants.add(r)
         for r in restaurants2:
             request_match.restaurants.add(r)
-        # send_invitations(match, request_match)
+        send_invitations(match, request_match)
 
 
 def find_match_user(available_set):
@@ -856,6 +856,7 @@ def match_user():
 
 match_user()
 # if __name__ == "__main__":
+#     print("CCCCCCCCCCCCCCCC")
 #     matched_user_request = match_user()
 #     userlist = UserRequest.objects.all()
 #     for user in userlist:
@@ -870,10 +871,7 @@ match_user()
 # For testing mathcing algorithm
 # def send_test_email():
 #     # lookup user by id and send them a message
-#     email = EmailMessage(
-#         "Random Check Matching", "Checking Celery Match", to=["up293@nyu.edu"]
-#     )
+#     email = EmailMessage("Random Check", "Hi", to=["up293@nyu.edu"])
 #     email.send()
-
 
 # send_test_email()
