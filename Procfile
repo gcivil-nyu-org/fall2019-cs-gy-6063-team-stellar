@@ -7,4 +7,4 @@ release: python manage.py makemigrations homepage
 release: python manage.py migrate
 web: gunicorn lunchNinja.wsgi --log-file -
 worker: celery -A lunchNinja worker -l info
-beat:  celery -A luhNinja beat -l info
+beat:  celery -A lunchNinja beat -l info
