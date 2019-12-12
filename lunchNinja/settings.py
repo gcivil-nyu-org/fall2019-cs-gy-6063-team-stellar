@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "captcha",
-    "background_task",
+    "celery",
+    "celerybeat_status"
+    # "background_task",
 ]
 
 MIDDLEWARE = [
@@ -85,6 +87,7 @@ WSGI_APPLICATION = "lunchNinja.wsgi.application"
 #         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
 #     }
 # }
+
 
 DATABASES = {
     "default": {
@@ -139,8 +142,8 @@ AUTH_USER_MODEL = "user_account.LunchNinjaUser"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = "/static/"
+
 
 # SMTP Settings
 # EMAIL_USE_TLS = True
@@ -161,3 +164,6 @@ EMAIL_HOST_USER = "teamstellarse@gmail.com"
 EMAIL_HOST_PASSWORD = "Stellar123!"
 
 django_heroku.settings(locals(), test_runner=False)
+
+CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = "America/New_York"

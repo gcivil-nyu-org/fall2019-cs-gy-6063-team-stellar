@@ -498,9 +498,9 @@ class SettingViewTest(TestCase):
 
         return lunchuser_for_mock()
 
-    @mock.patch("homepage.views.UserRequest.objects.get", side_effect=raise_error)
-    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
     @mock.patch("homepage.views.check_login", side_effect=login_mock)
+    @mock.patch("homepage.views.LunchNinjaUser.objects.get", side_effect=mock_lunchuser)
+    @mock.patch("homepage.views.UserRequest.objects.get", side_effect=raise_error)
     def test_incorrect_setting(self, mock_login, mock_lunch, mock_userrequest):
         response = self.client.get("/settings/")
         self.assertEqual(response.status_code, 200)
