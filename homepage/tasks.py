@@ -18,13 +18,13 @@ from celery import task
 from subprocess import run, PIPE
 
 
-# @task(ignore_result=True)
-# def run_matching_algorithm():
-@background(schedule=timezone.localtime(timezone.now()).replace(hour=0, minute=1))
-def run_matching():
+@task(ignore_result=True)
+def run_matching_algorithm():
     run(["python", "match.py"], shell=False, stdout=PIPE)
 
-
+# @background(schedule=timezone.localtime(timezone.now()).replace(hour=0, minute=1))
+# def run_matching():
+    
 @task(ignore_result=True)
 def send_match_feedback():
     run(["python", "feedback.py"], shell=False, stdout=PIPE)
