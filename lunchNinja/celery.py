@@ -8,9 +8,12 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 
 app = Celery("lunchNinja")
 
-app.conf.update(
-    BROKER_URL=os.environ["REDIS_URL"], CELERY_RESULT_BACKEND=os.environ["REDIS_URL"]
-)
+if "REDIS_URL" in os.environ:
+    redis_url = os.environ["REDIS_URL"]
+else:
+    redis_url = "/"
+
+app.conf.update(BROKER_URL=redis_url, CELERY_RESULT_BACKEND=redis_url)
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
