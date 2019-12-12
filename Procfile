@@ -5,6 +5,7 @@ release: python datasource/dataprocess/database.py
 release: python manage.py makemigrations user_account
 release: python manage.py makemigrations homepage
 release: python manage.py migrate
+worker: celery -A lunchNinja worker -l info
+beat:  celery -A luhNinja beat -l info
 web: gunicorn lunchNinja.wsgi --log-file -
-heroku run celery -A lunchNinja worker -l info
-heroku run celery -A luhNinja beat -l info
+

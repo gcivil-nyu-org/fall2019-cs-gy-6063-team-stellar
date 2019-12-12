@@ -8,6 +8,7 @@ omit =
     prepare.py
     prepare_test.py
     lunchNinja/wsgi.py
+    lunchNinja/celery.py
     feedback.py
     addquestions.py
     create_usermatch.py
