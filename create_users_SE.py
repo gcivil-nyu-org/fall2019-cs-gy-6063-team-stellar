@@ -20,12 +20,6 @@ team_stellar = [
         "last_name": "Prakash",
     },
     {
-        "username": "ss12933",
-        "email": "ss12933@nyu.edu",
-        "first_name": "Shaurya",
-        "last_name": "Sethi",
-    },
-    {
         "username": "xh1255",
         "email": "xh1255@nyu.edu",
         "first_name": "Xinchi",
@@ -236,4 +230,5 @@ def generateuser(user_info):
 
 
 if __name__ == "__main__":
-    generateuser(team_stellar + software_engineering)
+    generateuser(team_stellar)
+    # + software_engineering)

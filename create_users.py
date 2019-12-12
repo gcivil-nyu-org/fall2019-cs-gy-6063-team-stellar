@@ -30,7 +30,6 @@ def generateuser(N):
         departments = Department.objects.filter(school=school_id)
         departments_count = departments.count()
         if departments_count == 0:
-
             continue
         start_id = departments.first().id
         department_index = random.randint(1, departments_count)
@@ -56,36 +55,58 @@ def generateuser(N):
 
 if __name__ == "__main__":
     user = LunchNinjaUser(
-        username="yixin",
+        username="yh3244",
         email="yh3244@nyu.edu",
         school="Tandon School of Engineering",
         department="Computer Science",
-        first_name="yx",
-        last_name="h",
+        first_name="Yixin",
+        last_name="Hu",
         is_active=True,
     )
-    user.set_password("1234mnbv")
+    user.set_password("Stellar123!")
     user.save()
     user1 = LunchNinjaUser(
-        username="Utkarsh",
-        email="huyixin3333@gmail.com",
+        username="up293",
+        email="up293@nyu.edu",
         school="Tandon School of Engineering",
         department="Computer Science",
-        first_name="utkarsh",
-        last_name="P",
+        first_name="Utkarsh",
+        last_name="Prakash",
         is_active=True,
     )
     user1.set_password("Stellar123!")
     user1.save()
     user2 = LunchNinjaUser(
-        username="Xinchi",
-        email="huyixin3333@hotmail.com",
+        username="xh1255",
+        email="xh1255@nyu.edu",
         school="Tandon School of Engineering",
         department="Computer Science",
-        first_name="xinchi",
-        last_name="huang",
+        first_name="Xinchi",
+        last_name="Huang",
         is_active=True,
     )
     user2.set_password("Stellar123!")
     user2.save()
-    generateuser(20)
+    user3 = LunchNinjaUser(
+        username="bv640",
+        email="bv640@nyu.edu",
+        school="Tandon School of Engineering",
+        department="Computer Science",
+        first_name="Bhaskar",
+        last_name="V",
+        is_active=True,
+    )
+    user3.set_password("Stellar123!")
+    user3.save()
+    user4 = LunchNinjaUser(
+        username="yz1281",
+        email="yz1281@nyu.edu",
+        school="Tisch School of the Arts",
+        department="Photography & Imaging",
+        first_name="Tianyang",
+        last_name="Zhu",
+        is_active=True,
+    )
+    user4.set_password("Stellar123!")
+    user4.save()
+    # generateuser(20)

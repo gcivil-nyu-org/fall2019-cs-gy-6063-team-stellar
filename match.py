@@ -26,6 +26,8 @@ from homepage.models import (
     Restaurant,
     School,
     Department,
+    Cuisine,
+    Interests,
 )  # noqa: E402
 from user_account.models import LunchNinjaUser  # noqa: E402
 
@@ -60,7 +62,7 @@ def send_unmatch_email(userrequest):
         + "We are working on finding a perfect match for you, but we could not find a match based on your service selection at this time.<br>"  # noqa: E501
         + "We will try again in next match cycle. You can update your preferences "
         + "<a href='"
-        + "http://lunch-ninja.herokuapp.com/settings/"
+        + "http://lunch-ninja.herokuapp.com/service"
         + "'>"
         + "here"
         + "</a>."
@@ -278,24 +280,23 @@ def compose_email(
         html_content = (
             html_content + "<p><b><i>Restaurants near your lunch partner's school:</p>"
         )
-        for resturant in restaurants2:
+        for restuarant in restaurants2:
             prevname = ""
-
-            if not prevname == restaurant.name:
-                link = get_yelp_link(resturant)
+            if not restuarant.name == prevname:
+                link = get_yelp_link(restuarant)
 
                 html_content = (
-                    html_content + "<p><b>" + resturant.name.capitalize() + "</b></p>"
+                    html_content + "<p><b>" + restuarant.name.capitalize() + "</b></p>"
                 )
                 address = (
                     "Address: "
-                    + resturant.building
+                    + restuarant.building
                     + " "
-                    + resturant.street
+                    + restuarant.street
                     + ", "
-                    + resturant.borough
+                    + restuarant.borough
                     + " "
-                    + str(resturant.zipcode)
+                    + str(restuarant.zipcode)
                 )
                 html_content = html_content + "<p>" + address + "</p>"
                 if not link == -1:
@@ -304,17 +305,21 @@ def compose_email(
                     )
 
                     link_short = (
-                        "<a href='" + link + "'>" + resturant.name.capitalize() + "</a>"
+                        "<a href='"
+                        + link
+                        + "'>"
+                        + restuarant.name.capitalize()
+                        + "</a>"
                     )
                     html_content = html_content + "<div>" + link_short + "</div>"
-                prevname = restaurant.name
+                prevname = restuarant.name
 
     html_content = (
         html_content + "<br><p><b>" + "Not satisfied with the result?" + "</b></p>"
     )
     html_content = (
         html_content
-        + "<a href='http:/lunch-ninja.herokuapp.com/settings'>Change your preference</a>"
+        + "<a href='http:/lunch-ninja.herokuapp.com/service'>Change your preference</a>"
     )
     # Add image
     # html_content = html_content + "<p> Not satisfied with the result? </p>"
@@ -495,6 +500,8 @@ def send_invitations(userRequest, userMatch):
 def cuisine_filter(matchpool, req):
     # get the preferred cuisine
     cuisine_list = req.cuisines.all()
+    if len(cuisine_list) == 0:
+        cuisine_list = Cuisine.objects.all()
     available_set = set()
     for c in cuisine_list:
         available_set = available_set.union(c.userrequest_set.all())
@@ -507,6 +514,8 @@ def interest_filter(matchpool, req):
     # get the preferred cuisine
     interests_list = req.interests.all()
     available_set = set()
+    if len(interests_list):
+        interests_list = Interests.objects.all()
     for i in interests_list:
         available_set = available_set.union(i.userrequest_set.all())
     available_set = available_set.intersection(matchpool)
@@ -789,7 +798,7 @@ def match_user():
     print(match_score_list)
     for user_tuple in match_score_list:
 
-        if user_tuple[2] < 0:
+        if user_tuple[2] < -1000:
             continue
         user_num1 = user_tuple[0]
         user_num2 = user_tuple[1]
