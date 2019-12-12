@@ -8,8 +8,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 
 app = Celery("lunchNinja")
 
-app.conf.update(BROKER_URL=os.environ['REDIS_URL'],
-                CELERY_RESULT_BACKEND=os.environ['REDIS_URL'])
+app.conf.update(
+    BROKER_URL=os.environ["REDIS_URL"], CELERY_RESULT_BACKEND=os.environ["REDIS_URL"]
+)
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
@@ -27,7 +28,7 @@ app.conf.beat_schedule = {
         "task": "homepage.tasks.run_matching_algorithm",
         "schedule": crontab(minute=0, hour=19),
     },
-    # Send feedback forms 
+    # Send feedback forms
     "send_match_feedback": {
         "task": "homepage.tasks.send_match_feedback",
         "schedule": crontab(minute=0, hour=14),
@@ -36,6 +37,7 @@ app.conf.beat_schedule = {
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
+
 
 @app.task(bind=True)
 def debug_task(self):
