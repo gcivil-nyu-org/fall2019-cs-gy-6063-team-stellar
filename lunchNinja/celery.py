@@ -7,7 +7,11 @@ from celery.task.schedules import crontab
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lunchNinja.settings")
 
 
+
 app = Celery("lunchNinja")
+
+app.conf.update(BROKER_URL=os.environ['REDIS_URL'],
+                CELERY_RESULT_BACKEND=os.environ['REDIS_URL'])
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
@@ -28,7 +32,7 @@ app.conf.beat_schedule = {
     # Run matching algorithm
     "run_matching_algorithm": {
         "task": "homepage.tasks.run_matching_algorithm",
-        "schedule": crontab(minute = '*/1'),
+        "schedule": crontab(minute="*/1"),
     },
     "send_match_feedback": {
         "task": "homepage.tasks.send_match_feedback",
