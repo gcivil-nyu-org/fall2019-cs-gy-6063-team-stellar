@@ -29,7 +29,8 @@ app.conf.beat_schedule = {
     # Run matching algorithm
     "run_matching_algorithm": {
         "task": "homepage.tasks.run_matching_algorithm",
-        "schedule": crontab(minute=0, hour=19),
+        # "schedule": crontab(minute=0, hour=19),
+    "schedule": crontab(minute="*/1"),
     },
     # Send feedback forms
     "send_match_feedback": {
